@@ -1,0 +1,7 @@
+[mysqld]
+character-set-server=utf8mb4
+collation-server=utf8mb4_bin
+lower_case_table_names = 1
+skip_ssl
+default-time-zone = 'Asia/Tokyo'
+
