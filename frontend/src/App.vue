@@ -45,7 +45,7 @@
 </template>
 
 <script>
-// import {Service} from "@/service/service"
+import {Service} from "@/service/service"
 
 export default {
 
@@ -54,7 +54,7 @@ export default {
     return{
       // testesId:null,
       // result:"",
-      login:true,
+      login:false,
       valueId:"",
       valuePass:""
     }
@@ -70,13 +70,16 @@ export default {
     //   })
     // },
     logins(){
-      alert(this.valueId+this.valuePass)
-    },
-    yataro(){
-
-    },
-    mori(){
-
+      Service.post("login",{
+        username: this.valueId,
+        password:this.valuePass
+      }).then(response =>{
+       //ログイン成功時の処理
+       console.log(response);
+       alert(this.valueId+this.valuePass)
+      }).catch(error =>{
+        console.log(error);
+      })
     }
   }
 }
