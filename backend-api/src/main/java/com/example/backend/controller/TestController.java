@@ -1,5 +1,6 @@
 package com.example.backend.controller;
 
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,7 +10,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.example.backend.domain.LoginRequest;
-import com.example.backend.domain.Testes;
+import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
 
 @RestController
@@ -19,20 +20,18 @@ class TestController{
     TestService testService;
 
     @GetMapping(path="/testes/{id}")
-    public Testes getTestes(@PathVariable("id") Integer id){
-        return testService.getTestes(id);
+    public User getUsers(@PathVariable("id") Integer id){
+        return testService.getUser(id);
     }
 
-    @GetMapping(path="/hello")
-    public String hello(){
-        return "hello world!!!";
+    @PostMapping(path="/aaa")
+    public User getUsers2(@RequestBody Integer id){
+        return testService.getUser(id);
     }
+
     @PostMapping(path="/login")
-    public String log(@RequestBody LoginRequest a){
-        String username = a.getUsername();
-        String password = a.getPassword();
-        System.out.println( username + "," +password);
-        return "";
+    public boolean loginUser(@RequestBody LoginRequest login){
+        return testService.loginUser(login.getUsername(), login.getPassword());
     }
 
 }

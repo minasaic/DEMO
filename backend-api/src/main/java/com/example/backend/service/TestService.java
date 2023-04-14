@@ -1,23 +1,42 @@
 package com.example.backend.service;
 
-import java.util.Optional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.example.backend.domain.Testes;
-import com.example.backend.repository.TestRepository;
+import com.example.backend.domain.User;
+import com.example.backend.repository.UserRepository;
+import com.example.backend.repository.PostsRepository;
+import com.example.backend.repository.FollowsRepository;
+import com.example.backend.repository.CommentsRepository;
+
 
 @Service
 public class TestService {
     @Autowired
-    TestRepository testRepository;
+    UserRepository urepo;
+    @Autowired
+    PostsRepository prepo;
+    @Autowired
+    FollowsRepository frepo;
+    @Autowired
+    CommentsRepository crepo;
+    
 
-    public Testes getTestes(Integer id){
-        Optional<Testes> testesOptional =testRepository.findById(id);
-        if(testesOptional.isPresent()){
-            return testesOptional.get();
-        }
-        return null;
+    public User getUser(Integer id){
+        User testesOptional =urepo.findById(id).get();
+        System.out.println(testesOptional.getName());
+        
+            return testesOptional;
     }
+
+    //ログインチェック
+    public boolean loginUser(String name,String password){
+        User user = urepo.findByName(name);
+        if(user.getPassword().equals(password)){
+            return true;
+        }
+        return false;
+    }
+
+   
 }
