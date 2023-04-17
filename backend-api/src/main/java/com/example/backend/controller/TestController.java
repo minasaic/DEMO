@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.multipart.MultipartFile;
 
+import com.example.backend.domain.CommentRequest;
+import com.example.backend.domain.FollowRequest;
 import com.example.backend.domain.LoginRequest;
+import com.example.backend.domain.PostRequest;
 import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
@@ -45,8 +47,8 @@ class TestController {
 
     // 新規登録
     @PostMapping(path = "/create")
-    public boolean createUser(@RequestBody LoginRequest login, String a) {
-        return testService.createUser(login.getUsername(), login.getPassword(), a);
+    public boolean createUser(@RequestBody LoginRequest login) {
+        return testService.createUser(login.getUsername(), login.getPassword(), login.getProfile_picture());
     }
 
     //ホーム画面
@@ -56,12 +58,11 @@ class TestController {
     }
     // 新規投稿
     @PostMapping(path = "/post")
-    public ResponseEntity<String> newPost(@RequestBody Integer id, @RequestBody MultipartFile file,
-            @RequestBody String caption) {
+    public ResponseEntity<String> newPost(@RequestBody PostRequest post) {
         try {
-            String filePath = "/asd/asd/asd/asd/" + file.getOriginalFilename();
-            file.transferTo(new File(filePath));
-            testService.createPost(id, filePath, caption);
+            String filePath = "/asd/asd/asd/asd/" + post.getFile().getOriginalFilename();
+            post.getFile().transferTo(new File(filePath));
+            testService.createPost(post.getId(),filePath,post.getCaption());
             return ResponseEntity.ok("投稿しました");
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました。");
@@ -70,14 +71,14 @@ class TestController {
 
     // コメント投稿
     @PostMapping(path = "/comment")
-    public boolean newComment(@RequestBody Integer user_id, @RequestBody Integer post_id, @RequestBody String comment) {
-        return testService.createComment(user_id, post_id, comment);
+    public boolean newComment(@RequestBody CommentRequest com) {
+        return testService.createComment(com.getUser_id(),com.getPost_id(),com.getComment());
     }
 
     // フォロー
     @PostMapping(path = "/follow")
-    public boolean follow(@RequestBody Integer followId, @RequestBody Integer followedId) {
-        return testService.followUser(followId, followedId);
+    public boolean follow(@RequestBody FollowRequest fol) {
+        return testService.followUser(fol.getFollower_id(),fol.getFollowing_id());
     }
 
     // フォロー解除
