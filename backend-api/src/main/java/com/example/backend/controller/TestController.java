@@ -1,37 +1,110 @@
 package com.example.backend.controller;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.domain.LoginRequest;
+import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
 
 @RestController
 @CrossOrigin
-class TestController{
+class TestController {
     @Autowired
     TestService testService;
 
-    @GetMapping(path="/testes/{id}")
-    public User getUsers(@PathVariable("id") Integer id){
+    @GetMapping(path = "/testes/{id}")
+    public User getUsers(@PathVariable("id") Integer id) {
         return testService.getUser(id);
     }
 
-    @PostMapping(path="/aaa")
-    public User getUsers2(@RequestBody Integer id){
+    @PostMapping(path = "/aaa")
+    public User getUsers2(@RequestBody Integer id) {
         return testService.getUser(id);
     }
 
-    @PostMapping(path="/login")
-    public boolean loginUser(@RequestBody LoginRequest login){
+    // ログイン
+    @PostMapping(path = "/login")
+    public boolean loginUser(@RequestBody LoginRequest login) {
         return testService.loginUser(login.getUsername(), login.getPassword());
+    }
+
+    // 新規登録
+    @PostMapping(path = "/create")
+    public boolean createUser(@RequestBody LoginRequest login, String a) {
+        return testService.createUser(login.getUsername(), login.getPassword(), a);
+    }
+
+    //ホーム画面
+    @PostMapping(path="/home")
+    public List<Posts> homepage(@RequestBody Integer id){
+        return testService.getPosts(id);
+    }
+    // 新規投稿
+    @PostMapping(path = "/post")
+    public ResponseEntity<String> newPost(@RequestBody Integer id, @RequestBody MultipartFile file,
+            @RequestBody String caption) {
+        try {
+            String filePath = "/asd/asd/asd/asd/" + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+            testService.createPost(id, filePath, caption);
+            return ResponseEntity.ok("投稿しました");
+        } catch (IOException e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました。");
+        }
+    }
+
+    // コメント投稿
+    @PostMapping(path = "/comment")
+    public boolean newComment(@RequestBody Integer user_id, @RequestBody Integer post_id, @RequestBody String comment) {
+        return testService.createComment(user_id, post_id, comment);
+    }
+
+    // フォロー
+    @PostMapping(path = "/follow")
+    public boolean follow(@RequestBody Integer followId, @RequestBody Integer followedId) {
+        return testService.followUser(followId, followedId);
+    }
+
+    // フォロー解除
+    @PostMapping(path = "/unfollow")
+    public boolean unfollow(@RequestBody Integer id) {
+        return testService.unfollow(id);
+    }
+
+    // いいね
+    @PostMapping(path = "/like")
+    public boolean like(@RequestBody Integer id) {
+        return testService.like(id);
+    }
+
+    // 投稿削除
+    @DeleteMapping(path = "/deletePost/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
+        String imagePath = testService.getPath(id);
+        File file = new File(imagePath);
+        if (file.exists()) {
+            file.delete();
+            testService.deletePost(id);
+            return ResponseEntity.ok("投稿を削除しました。");
+        } else {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("指定された投稿が見つかりませんでした。");
+        }
+
     }
 
 }

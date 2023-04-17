@@ -32,13 +32,36 @@
       <img src="./assets/1nstagramlogo.png" alt="LOGO">
       <br><br><br><br>
       <span>ID:</span>
-      <input type="id" name="userid" v-model=valueId>
+      <input type="id" name="id" v-model=valueId>
+      <br><br>
+      <span>名前:</span>
+      <input type="id" name="username" v-model=valueName>
       <br><br>
       <span>PASS:</span>
       <input type="password" name="userpass" v-model=valuePass>
       <br><br>
+      <span>userid:</span>
+      <input type="id" name="userid" v-model=valueUserId>
+      <br><br>
+      <span>postid:</span>
+      <input type="id" name="postid" v-model=valuePostId>
+      <br><br>
+      <span>写真:</span>
+      <input type="file" @change="onFileSelected">
+      <br><br>
+      <span>コメント:</span>
+      <input type="id" name="comment" v-model=valueComment>
+      <br><br>
+      
       <button type="button" @click="logins">ログイン</button>
-      <button>新規登録</button>
+      <button type="button" @click="create">新規登録</button>
+      <button type="button" @click="home">ホーム</button>
+      <button type="button" @click="post">新規投稿</button>
+      <button type="button" @click="comment">コメント投稿</button>
+      <button type="button" @click="follow">フォロー</button>
+      <button type="button" @click="unfollow">フォロー解除</button>
+      <button type="button" @click="like">いいね</button>
+      <button type="button" @click="deletePost">投稿削除</button>
       </div>
     </div>
   </div>
@@ -55,23 +78,26 @@ export default {
       // testesId:null,
       // result:"",
       login:false,
-      valueId:"",
-      valuePass:""
+      valueId:1,
+      valueName:"",
+      valuePass:"",
+      valueUserId:1,
+      valuePostId:1,
+      valueComment:""
     }
   },
   methods:{
-    // search(){
-    //   Service.get("testes/"+this.testesId).then(response => {
-    //     if(!response.data){
-    //       this.result="NO DATA"
-    //     }else{
-    //       this.result="NAME:" + response.data.name
-    //     }
-    //   })
-    // },
+    onFileSelected(event) {
+      const file = event.target.files[0]
+      this.uploadFile(file)
+    },
+    uploadFile(file) {
+      const formData = new FormData()
+      formData.append('file', file)
+    },
     logins(){
       Service.post("login",{
-        username: this.valueId,
+        username: this.valueName,
         password:this.valuePass
       }).then(response =>{
        //ログイン成功時の処理
@@ -79,6 +105,83 @@ export default {
        alert(this.valueId+this.valuePass)
       }).catch(error =>{
         console.log(error);
+        alert("sdf")
+      })
+    },
+    create(){
+      Service.post("create",{
+        username: this.valueName,
+        password:this.valuePass
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    home(){
+      Service.post("home",{
+        id:this.valueId
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    post(){
+      Service.post("post",{
+        id:this.valueId,
+        image:this.formData
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    comment(){
+      Service.post("comment",{
+        id:this.valueId,
+        postId:this.valuePostId,
+        comment:this.valueComment
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    follow(){
+      Service.post("follow",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    unfollow(){
+      Service.post("unfollow",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    like(){
+      Service.post("like",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    deletePost(){
+      Service.post("deletePost",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
       })
     }
   }
