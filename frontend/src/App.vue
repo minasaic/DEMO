@@ -32,7 +32,14 @@
       <img src="./assets/1nstagramlogo.png" alt="LOGO">
       <br><br><br><br>
       <span>ID:</span>
+<<<<<<< Updated upstream
       <input type="id" name="userid" v-model=valueId>
+=======
+      <!-- <input type="id" name="id" v-model=valueId> -->
+      <br><br>
+      <span>名前:</span>
+      <input type="id" name="username" v-model=valueName>
+>>>>>>> Stashed changes
       <br><br>
       <span>PASS:</span>
       <input type="password" name="userpass" v-model=valuePass>
@@ -46,7 +53,6 @@
 
 <script>
 import {Service} from "@/service/service"
-
 export default {
 
   name: 'App',
@@ -55,6 +61,7 @@ export default {
       // testesId:null,
       // result:"",
       login:false,
+<<<<<<< Updated upstream
       valueId:"",
       valuePass:""
     }
@@ -69,6 +76,28 @@ export default {
     //     }
     //   })
     // },
+=======
+      valueId:0,
+      valueName:"",
+      valuePass:"",
+      valueUserId:1,
+      valuePostId:1,
+      valueComment:""
+    }
+  },
+  methods:{
+    setId(valueId){
+      this.$store.commit('setId',valueId);
+    },
+    onFileSelected(event) {
+      const file = event.target.files[0]
+      this.uploadFile(file)
+    },
+    uploadFile(file) {
+      const formData = new FormData()
+      formData.append('file', file)
+    },
+>>>>>>> Stashed changes
     logins(){
       Service.post("login",{
         username: this.valueId,
@@ -76,9 +105,99 @@ export default {
       }).then(response =>{
        //ログイン成功時の処理
        console.log(response);
-       alert(this.valueId+this.valuePass)
+       alert(response.data);
+       if(response.data){
+        
+        this.login = response.data.bool;
+        this.valueId = response.data.id;
+        alert(this.valueId+this.valuePass);
+       } else{
+         alert("Wrong id or password.");
+       }
+      
+       
       }).catch(error =>{
         console.log(error);
+<<<<<<< Updated upstream
+=======
+        alert("エラー起きました。")
+      })
+    },
+    create(){
+      Service.post("create",{
+        username: this.valueName,
+        password:this.valuePass
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    home(){
+      Service.post("home",{
+        id:this.valueId
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    post(){
+      Service.post("post",{
+        id:this.valueId,
+        image:this.formData
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    comment(){
+      Service.post("comment",{
+        id:this.valueId,
+        postId:this.valuePostId,
+        comment:this.valueComment
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    follow(){
+      Service.post("follow",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    unfollow(){
+      Service.post("unfollow",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    like(){
+      Service.post("like",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    deletePost(){
+      Service.post("deletePost",{
+
+      }).then(response =>{
+        alert(response)
+      }).catch(error =>{
+        alert(error)
+>>>>>>> Stashed changes
       })
     }
   }
