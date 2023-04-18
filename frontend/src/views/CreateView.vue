@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 >{{ valueId }}</h1>
+        <h1 ></h1>
         <img src="" alt="選択した画像">
         <br><br><br>
         <input type="file">
@@ -16,8 +16,6 @@ export default {
   name: 'App',
   data(){
     return{
-      // testesId:null,
-      // result:"",
       login:false,
       valueId:null,
       valueName:"",

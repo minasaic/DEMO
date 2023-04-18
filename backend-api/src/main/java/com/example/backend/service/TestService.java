@@ -1,10 +1,17 @@
 package com.example.backend.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.example.backend.domain.Comments;
+import com.example.backend.domain.Follows;
+import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.repository.UserRepository;
+
 import com.example.backend.repository.PostsRepository;
 import com.example.backend.repository.FollowsRepository;
 import com.example.backend.repository.CommentsRepository;
@@ -32,19 +39,12 @@ public class TestService {
     //ログインチェック
     public boolean loginUser(String name,String password){
         User user = urepo.findByName(name);
-<<<<<<< Updated upstream
-        if(user.getPassword().equals(password)){
-=======
         if (user.getPassword().equals(password)) {
->>>>>>> Stashed changes
             return true;
         }
         return false;
     }
 
-<<<<<<< Updated upstream
-   
-=======
     public Integer getIdByName(String username) {
         return urepo.findByName(username).getId();
     }
@@ -131,5 +131,4 @@ public class TestService {
         return null;//とりあえずnullにする
     }
 
->>>>>>> Stashed changes
 }

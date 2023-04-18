@@ -32,14 +32,10 @@
       <img src="./assets/1nstagramlogo.png" alt="LOGO">
       <br><br><br><br>
       <span>ID:</span>
-<<<<<<< Updated upstream
-      <input type="id" name="userid" v-model=valueId>
-=======
       <!-- <input type="id" name="id" v-model=valueId> -->
       <br><br>
       <span>名前:</span>
       <input type="id" name="username" v-model=valueName>
->>>>>>> Stashed changes
       <br><br>
       <span>PASS:</span>
       <input type="password" name="userpass" v-model=valuePass>
@@ -61,22 +57,6 @@ export default {
       // testesId:null,
       // result:"",
       login:false,
-<<<<<<< Updated upstream
-      valueId:"",
-      valuePass:""
-    }
-  },
-  methods:{
-    // search(){
-    //   Service.get("testes/"+this.testesId).then(response => {
-    //     if(!response.data){
-    //       this.result="NO DATA"
-    //     }else{
-    //       this.result="NAME:" + response.data.name
-    //     }
-    //   })
-    // },
-=======
       valueId:0,
       valueName:"",
       valuePass:"",
@@ -97,10 +77,9 @@ export default {
       const formData = new FormData()
       formData.append('file', file)
     },
->>>>>>> Stashed changes
     logins(){
       Service.post("login",{
-        username: this.valueId,
+        username: this.valueName,
         password:this.valuePass
       }).then(response =>{
        //ログイン成功時の処理
@@ -118,8 +97,6 @@ export default {
        
       }).catch(error =>{
         console.log(error);
-<<<<<<< Updated upstream
-=======
         alert("エラー起きました。")
       })
     },
@@ -197,7 +174,6 @@ export default {
         alert(response)
       }).catch(error =>{
         alert(error)
->>>>>>> Stashed changes
       })
     }
   }

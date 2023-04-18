@@ -1,9 +1,5 @@
 package com.example.backend.controller;
 
-<<<<<<< Updated upstream
-
-import org.springframework.beans.factory.annotation.Autowired;
-=======
 import java.io.File;
 import java.io.IOException;
 import java.net.http.HttpResponse;
@@ -14,15 +10,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
->>>>>>> Stashed changes
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.backend.domain.CommentRequest;
+import com.example.backend.domain.FollowRequest;
 import com.example.backend.domain.LoginRequest;
+import com.example.backend.domain.PostRequest;
+import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
 
@@ -42,13 +42,6 @@ class TestController{
         return testService.getUser(id);
     }
 
-<<<<<<< Updated upstream
-    @PostMapping(path="/login")
-    public boolean loginUser(@RequestBody LoginRequest login){
-        return testService.loginUser(login.getUsername(), login.getPassword());
-    }
-
-=======
     // ログイン
     @PostMapping(path = "/login")
     public LoginRequest loginUser(@RequestBody LoginRequest login) {
@@ -132,7 +125,6 @@ class TestController{
 
     }
 
->>>>>>> Stashed changes
 }
 //  class Aaa {
 //     private boolean bool;
