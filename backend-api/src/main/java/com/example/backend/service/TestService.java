@@ -61,7 +61,7 @@ public class TestService {
 
     // ホームページ
     public List<Posts> getPosts(Integer id) {
-        Follows aa = frepo.findByFollowingd(id).get();
+        // Follows aa = frepo.findByFollowingd(id).get();
         List<Posts> post = new ArrayList<>();
         // for (int i = 0; i < aa.length; i++) {
         //     post.add(prepo.findById(aa[i]).get());

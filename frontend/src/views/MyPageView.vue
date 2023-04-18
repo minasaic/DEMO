@@ -3,7 +3,7 @@
         
     </div>
 </template>
-<script>
+<!-- <script>
 import {Service} from "@/service/service"
 
 export default {
@@ -129,4 +129,4 @@ export default {
     }
   }
 }
-</script>
+</script> -->

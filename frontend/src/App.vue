@@ -3,8 +3,8 @@
 
     <div v-if="login">
       <div id="title">
-      <h1>      <img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">
-1nstagram</h1>
+        {{ $store.state.id }}
+      <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
       </div>
       <nav>
         <span>メニュー</span>
@@ -49,8 +49,8 @@
 
 <script>
 import {Service} from "@/service/service"
+// import {mapState} from 'vuex'
 export default {
-
   name: 'App',
   data(){
     return{
@@ -65,18 +65,12 @@ export default {
       valueComment:""
     }
   },
-  methods:{
-    setId(valueId){
-      this.$store.commit('setId',valueId);
-    },
-    onFileSelected(event) {
-      const file = event.target.files[0]
-      this.uploadFile(file)
-    },
-    uploadFile(file) {
-      const formData = new FormData()
-      formData.append('file', file)
-    },
+  // computed: {
+  //   ...mapState (['id'])
+  // },
+
+  methods: {
+    //ログイン
     logins(){
       Service.post("login",{
         username: this.valueName,
@@ -84,12 +78,10 @@ export default {
       }).then(response =>{
        //ログイン成功時の処理
        console.log(response);
-       alert(response.data);
        if(response.data){
-        
         this.login = response.data.bool;
         this.valueId = response.data.id;
-        alert(this.valueId+this.valuePass);
+        // alert('ID : ' + this.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
        } else{
          alert("Wrong id or password.");
        }
@@ -109,6 +101,14 @@ export default {
       }).catch(error =>{
         alert(error)
       })
+    },
+    onFileSelected(event) {
+      const file = event.target.files[0]
+      this.uploadFile(file)
+    },
+    uploadFile(file) {
+      const formData = new FormData()
+      formData.append('file', file)
     },
     home(){
       Service.post("home",{

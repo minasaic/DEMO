@@ -5,16 +5,11 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
-    id: null
+    id: 0
   },
   mutations: {
-    set_Id(state, id) {
+    setId(state, id) {
       state.id = id;
-    }
-  },
-  actions:{
-    setId({commit},id){
-        commit('SET_ID',id);
     }
   },
   getters: {

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <h1 ></h1>
+        <!-- <h1 >{{id}}</h1> -->
         <img src="" alt="選択した画像">
         <br><br><br>
         <input type="file">
@@ -9,41 +9,30 @@
     </div>
 </template>
 <script>
-import {Service} from "@/service/service"
+// import {Service} from "@/service/service"
+// import { mapState } from 'vuex';
 
 export default {
 
-  name: 'App',
+  name: 'CreateView',
   data(){
     return{
-      login:false,
-      valueId:null,
-      valueName:"",
-      valuePass:"",
-      valueUserId:1,
-      valuePostId:1,
-      valueComment:""
     }
   },
-  computed: {
-    id(){
-        return  this.$store.getters.id;
-    }
-  },
-  methods:{
-    setId(valueId){
-        this.$store.state.id;
-    },
-    post(){
-      Service.post("post",{
-        id:this.valueId,
-        image:this.formData
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
+  // computed: {
+  //   ...mapState(['id'])
+  // },
+  methods: {
+    // post(){
+    //   Service.post("post",{
+    //     id:this.valueId,
+    //     image:this.formData
+    //   }).then(response =>{
+    //     alert(response)
+    //   }).catch(error =>{
+    //     alert(error)
+    //   })
+    // },
   }
 }
 </script>
