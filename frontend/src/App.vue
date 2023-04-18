@@ -3,7 +3,6 @@
 
     <div v-if="login">
       <div id="title">
-        {{ $store.state.id }}
       <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
       </div>
       <nav>
@@ -20,9 +19,6 @@
       <div id="change">
         <router-view/>
       </div>
-    <!-- <div v-if="result">
-      <span>{{ result }}</span>
-    </div> -->
     </div>
 
     <div v-else>
@@ -41,7 +37,7 @@
       <input type="password" name="userpass" v-model=valuePass>
       <br><br>
       <button type="button" @click="logins">ログイン</button>
-      <button>新規登録</button>
+      <button type="button" @click="create">新規登録</button>
       </div>
     </div>
   </div>
@@ -49,13 +45,12 @@
 
 <script>
 import {Service} from "@/service/service"
-// import {mapState} from 'vuex'
+import store from "./store"
+// import { mapState } from "vuex"
 export default {
   name: 'App',
   data(){
     return{
-      // testesId:null,
-      // result:"",
       login:false,
       valueId:0,
       valueName:"",
@@ -65,10 +60,9 @@ export default {
       valueComment:""
     }
   },
-  // computed: {
-  //   ...mapState (['id'])
+  // computed:{
+  //   ...mapState(['id']),
   // },
-
   methods: {
     //ログイン
     logins(){
@@ -76,30 +70,37 @@ export default {
         username: this.valueName,
         password:this.valuePass
       }).then(response =>{
-       //ログイン成功時の処理
+       //ログイン成功時の処理(axios通信成功時)
        console.log(response);
        if(response.data){
         this.login = response.data.bool;
-        this.valueId = response.data.id;
-        // alert('ID : ' + this.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
+        store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
+        alert('ID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
        } else{
          alert("Wrong id or password.");
        }
-      
-       
       }).catch(error =>{
         console.log(error);
         alert("エラー起きました。")
       })
+
     },
     create(){
       Service.post("create",{
         username: this.valueName,
         password:this.valuePass
       }).then(response =>{
-        alert(response)
+        console.log(response);
+        if(response.data){
+        this.login = response.data.bool;
+        store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
+        alert('アカウントが新規作成しました。'+'\nID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
+       } else{
+         alert('アカウント作成できません。');
+       }
       }).catch(error =>{
-        alert(error)
+        console.log(error);
+        alert('エラー起きました。')
       })
     },
     onFileSelected(event) {

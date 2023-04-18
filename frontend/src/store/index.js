@@ -1,5 +1,5 @@
-import Vuex from 'vuex';
 import Vue from 'vue';
+import Vuex from 'vuex';
 
 Vue.use(Vuex);
 
@@ -7,15 +7,22 @@ export default new Vuex.Store({
   state: {
     id: 0
   },
+  actions:{
+    setid(context,value){
+      context.commit('SETID',value)
+    }
+  },
   mutations: {
-    setId(state, id) {
-      state.id = id;
+    SETID(state, value) {
+      return state.id = value;
     }
   },
   getters: {
-    getId(state) {
-      return state.id;
-    }
+    // setId(state,value) {
+    //   state.id = value
+    //   console.log(state.id)
+    //   return state.id;
+    // }
   }
 });
 

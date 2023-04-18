@@ -75,14 +75,16 @@ class TestController{
     }
     // 新規投稿
     @PostMapping(path = "/post")
-    public ResponseEntity<String> newPost(@RequestBody PostRequest post) {
+    // public ResponseEntity<String> newPost(@RequestBody PostRequest post) {
+    public ResponseEntity<Boolean> newPost(@RequestBody PostRequest post) {
         try {
-            String filePath = "/asd/asd/asd/asd/" + post.getFile().getOriginalFilename();
+            System.out.println("テストテストテストテスト");
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile" + post.getFile().getOriginalFilename();
             post.getFile().transferTo(new File(filePath));
             testService.createPost(post.getId(),filePath,post.getCaption());
-            return ResponseEntity.ok("投稿しました");
+            return ResponseEntity.ok(true);
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました。");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
     }
 

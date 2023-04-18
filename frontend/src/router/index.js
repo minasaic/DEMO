@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue'
 import SearchView from '../views/SearchView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import CreateView from '../views/CreateView.vue'
+import UserPage from '../views/UserPageView.vue'
 
 Vue.use(VueRouter)
 
@@ -27,6 +28,11 @@ const routes = [
     path: '/create',
     name: 'create',
     component: CreateView
+ },
+ {
+   path: '/userpage',
+   name: 'userpage',
+   component:UserPage
  }
 ]
 
