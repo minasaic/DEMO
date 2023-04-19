@@ -1,7 +1,10 @@
 <template>
-    <div>
-        
-    </div>
+  <div>
+      <img src="../assets/profile.png" alt="LOGO" width="100" height="100">
+      <h1>アカウント：</h1>
+      <h2>フォロワー：</h2>
+  </div>
+  
 </template>
 <script>
 import {Service} from "@/service/service"

@@ -1,21 +1,32 @@
 <template>
   <div id="app">
-
     <div v-if="login">
       <div id="title">
-      <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
+      <router-link to="/">
+        <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
+        </router-link>
       </div>
-      <nav>
-        <span>メニュー</span>
-        <br>
-        <router-link to="/">Home</router-link>
-        <br>
-        <router-link to="/search">Search</router-link>
-        <br>
-        <router-link to="/create">Create</router-link>
-        <br>
-        <router-link to="/mypage">MyPage</router-link>
-      </nav>
+      <div class="btn_hover">
+        <nav>
+          <span>メニュー</span>
+          <br>
+          <br>
+          <img src="./assets/home.png" alt="LOGO" width="20" height="20">      
+          <router-link to="/" :style="{ backgroundColor: homeBgColor }" @mouseover="homeBgColor = 'lightgray'" @mouseleave="homeBgColor = ''">ホーム</router-link>
+          <br>
+          <br>
+          <img src="./assets/search.png" alt="LOGO" width="20" height="20">
+          <router-link to="/search" :style="{ backgroundColor: searchBgColor }" @mouseover="searchBgColor = 'lightgray'" @mouseleave="searchBgColor = ''">   検索</router-link>
+          <br>
+          <br>
+          <img src="./assets/plus.png" alt="LOGO" width="20" height="20">
+          <router-link to="/create" :style="{ backgroundColor: createBgColor }" @mouseover="createBgColor = 'lightgray'" @mouseleave="createBgColor = ''">   作成</router-link>
+          <br>
+          <br>
+          <img src="./assets/profile.png" alt="LOGO" width="20" height="20">
+          <router-link to="/mypage" :style="{ backgroundColor: mypageBgColor }" @mouseover="mypageBgColor = 'lightgray'" @mouseleave="mypageBgColor = ''">   プロフィール</router-link>
+        </nav>
+      </div>
       <div id="change">
         <router-view/>
       </div>
@@ -181,7 +192,8 @@ export default {
 }
 </script>
 
-<style>
+<style >
+
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -190,8 +202,43 @@ export default {
   color: #2c3e50;
   margin-top: 60px;
 }
+#title a {
+    font-family: Comic Sans MS; /* 筆記体のフォントを指定 */
+    text-decoration: none; /* リンクの下線を無効にする */
+    color: #090909; /* ボタンのデフォルトの文字色を指定 */
+  }
+
+nav a {
+    
+    text-decoration: none; /* リンクの下線を無効にする */
+    color: #090909; /* ボタンのデフォルトの文字色を指定 */
+    
+  }
+nav{
+  font-family: Comic Sans MS; /* 筆記体のフォントを指定 */
+}
+
+.btn_hover {
+  background-color: #ffffff;/*背景色*/
+  -webkit-transition: all 0.3s ease;/*ふわっとさせる間隔 Google Chrome、Safari*/
+  -moz-transition: all 0.3s ease;/*ふわっとさせる間隔 Firefox*/
+  -ms-transition: all 0.3s ease;/*ふわっとさせる間隔 IE*/
+  -o-transition: all 0.3s ease;/*ふわっとさせる間隔 Opera*/
+  transition: all  0.3s ease;/*ふわっとさせる間隔*/
+  padding:50px 0;/*文字と背景の余白*/
+  width: 220px;/*ボタン幅*/
+  color: #0c0c0c;/*文字の色*/
+  text-align: left;/*文字を揃える位置*/
+  border-radius: 1px;/*背景の角丸半径*/
+  cursor: pointer;/*ホバー時にカーソルの形状をポインターに*/ /* カーソルを合わせた際にボタンの文字色を変える */
+}
+  /* マウスオーバーした際の背景 */
+.btn_hover:hover {
+  background-color :#e4e4e4;/*背景色*/
+}
 
 #change {
   text-align: center;
 }
+
 </style>

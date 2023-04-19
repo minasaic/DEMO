@@ -1,6 +1,8 @@
 <template>
     <div>
-        <div>
+      <button @click="showFollowing">Following</button>
+      <button @click="showRandom">Random</button>
+        <div v-if="showFollowings">
             <img src="../assets/homeimg1.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>&nbsp;
             <img src="../assets/homeimg2.jpeg" alt="写真" width="300" height="300">
@@ -8,8 +10,7 @@
             <br>
             <router-link to="userpage">{{ username }}</router-link>
         </div>
-        <br>
-        <div>
+        <div v-if="showRandoms">
             <img src="../assets/homeimg3.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>&nbsp;
             <img src="../assets/homeimg4.jpeg" alt="写真" width="300" height="300">
@@ -26,10 +27,20 @@ export default {
   name: 'CreateView',
   data(){
     return{
-        username:'森上'
+        username:'森上',
+        showFollowings: true,
+        showRandoms: false
     }
   },
   methods:{
+    showFollowing(){
+      this.showFollowings = true
+      this.showRandoms = false
+    },
+    showRandom(){
+      this.showFollowings = false
+      this.showRandoms = true
+    },
     home(){
       Service.post("home",{
         id:store.state.id
