@@ -1,8 +1,8 @@
 INSERT INTO user(id,name,password,profile_picture)VALUES
 (1,'森上','pass','aaaaa'),
-(2,'矢口','yaguchi','asdfgdsf'),
-(3,'崔','saisai','safgdr'),
-(4,'acbhvnbmkhjguh','asdfg','asdfhghjyftydr');
+(2,'矢口','pass','asdfgdsf'),
+(3,'崔','pass','safgdr'),
+(4,'djjdjdjd','asdfg','asdfhghjyftydr');
 
 INSERT INTO posts(id,user_id,image,caption,likes)VALUES
 (1,2,'post','post',123);
