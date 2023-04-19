@@ -2,7 +2,7 @@ CREATE TABLE user(
 	id int NOT NULL AUTO_INCREMENT,
 	name VARCHAR(30) NOT NULL,
     password VARCHAR(30) NOT NULL,
-	profile_picture VARCHAR(255) NOT NULL,
+	profile_picture VARCHAR(255),
 	PRIMARY KEY (id)
 );
 CREATE TABLE posts(

@@ -12,19 +12,19 @@
           <br>
           <br>
           <img src="./assets/home.png" alt="LOGO" width="20" height="20">      
-          <router-link to="/" :style="{ backgroundColor: homeBgColor }" @mouseover="homeBgColor = 'lightgray'" @mouseleave="homeBgColor = ''">ホーム</router-link>
+          <router-link to="/" >ホーム</router-link>
           <br>
           <br>
           <img src="./assets/search.png" alt="LOGO" width="20" height="20">
-          <router-link to="/search" :style="{ backgroundColor: searchBgColor }" @mouseover="searchBgColor = 'lightgray'" @mouseleave="searchBgColor = ''">   検索</router-link>
+          <router-link to="/search">   検索</router-link>
           <br>
           <br>
           <img src="./assets/plus.png" alt="LOGO" width="20" height="20">
-          <router-link to="/create" :style="{ backgroundColor: createBgColor }" @mouseover="createBgColor = 'lightgray'" @mouseleave="createBgColor = ''">   作成</router-link>
+          <router-link to="/create" >   作成</router-link>
           <br>
           <br>
           <img src="./assets/profile.png" alt="LOGO" width="20" height="20">
-          <router-link to="/mypage" :style="{ backgroundColor: mypageBgColor }" @mouseover="mypageBgColor = 'lightgray'" @mouseleave="mypageBgColor = ''">   プロフィール</router-link>
+          <router-link to="/mypage" >   プロフィール</router-link>
         </nav>
       </div>
       <div id="change">
@@ -50,6 +50,7 @@
       <button type="button" @click="logins">ログイン</button>
       <button type="button" @click="create">新規登録</button>
       </div>
+      <button>idを渡す</button>
     </div>
   </div>
 </template>
@@ -192,7 +193,7 @@ export default {
 }
 </script>
 
-<style >
+<style scoped>
 
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;

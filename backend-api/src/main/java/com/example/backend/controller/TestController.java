@@ -6,6 +6,8 @@ import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.annotation.MultipartConfig;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
@@ -16,7 +18,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.domain.CommentRequest;
 import com.example.backend.domain.FollowRequest;
@@ -28,6 +32,7 @@ import com.example.backend.service.TestService;
 
 @RestController
 @CrossOrigin
+@MultipartConfig(fileSizeThreshold = 20971520, maxFileSize = 104857600, maxRequestSize = 524288000)
 class TestController{
     @Autowired
     TestService testService;
@@ -75,13 +80,12 @@ class TestController{
     }
     // 新規投稿
     @PostMapping(path = "/post")
-    // public ResponseEntity<String> newPost(@RequestBody PostRequest post) {
-    public ResponseEntity<Boolean> newPost(@RequestBody PostRequest post) {
+    public ResponseEntity<Boolean> newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
             System.out.println("テストテストテストテスト");
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile" + post.getFile().getOriginalFilename();
-            post.getFile().transferTo(new File(filePath));
-            testService.createPost(post.getId(),filePath,post.getCaption());
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile/" + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+            testService.createPost(id,filePath,text);
             return ResponseEntity.ok(true);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
