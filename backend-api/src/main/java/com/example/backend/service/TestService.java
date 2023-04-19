@@ -11,6 +11,7 @@ import com.example.backend.domain.Follows;
 import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.repository.UserRepository;
+
 import com.example.backend.repository.PostsRepository;
 import com.example.backend.repository.FollowsRepository;
 import com.example.backend.repository.CommentsRepository;
@@ -36,14 +37,17 @@ public class TestService {
     public boolean loginUser(String name, String password) {
         User user = urepo.findByName(name);
         if (user.getPassword().equals(password)) {
-            System.out.println("password");
             return true;
         }
         return false;
     }
 
+    public Integer getIdByName(String username) {
+        return urepo.findByName(username).getId();
+    }
+
     // 新規ユーザー登録
-    public boolean createUser(String name, String password, String profile_picture) {
+    public boolean createUser(String name, String password) {
         User user = new User();
         user.setName(name);
         user.setPassword(password);
@@ -54,11 +58,11 @@ public class TestService {
 
     // ホームページ
     public List<Posts> getPosts(Integer id) {
-        int[] aa = frepo.findFollower_IdById(id);
+        // Follows aa = frepo.findByFollowingd(id).get();
         List<Posts> post = new ArrayList<>();
-        for (int i = 0; i < aa.length; i++) {
-            post.add(prepo.findById(aa[i]).get());
-        }
+        // for (int i = 0; i < aa.length; i++) {
+        //     post.add(prepo.findById(aa[i]).get());
+        // }
         return post;
     }
 
@@ -120,7 +124,8 @@ public class TestService {
 
     // 投稿削除のためのパスをゲットする
     public String getPath(Integer id) {
-        return prepo.findPathById(id);
+        // return prepo.findPathById(id);
+        return null;//とりあえずnullにする
     }
 
 }
