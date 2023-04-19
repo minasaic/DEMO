@@ -1,7 +1,7 @@
 <template>
     <div>
         {{ $store.state.id }}
-        <img src="" alt="選択した画像">
+        <img :src="filePath" alt="選択した画像">
         <br><br><br>
         <input type="file" @change="uploadFile">
         <br><br><br>
@@ -18,8 +18,10 @@ export default {
   name: 'CreateView',
   data(){
     return{
-      file:null,
-      text:null
+      file: null,
+      text: null,
+      fileName: null,
+      filePath: null
     }
   },
   methods: {
@@ -36,8 +38,8 @@ export default {
         }}
       ).then(response =>{
         console.log(response);
-        alert(response);
-        alert(store.state.id);
+        this.filePath = response.data;
+        alert(response.data);
       }).catch(error =>{
         alert(error)
         alert('axios通信失敗しました。')

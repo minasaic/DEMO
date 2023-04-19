@@ -2,11 +2,16 @@ package com.example.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.http.HttpResponse;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.http.Part;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
@@ -82,14 +87,30 @@ class TestController{
     @PostMapping(path = "/post")
     public ResponseEntity<Boolean> newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            System.out.println("テストテストテストテスト");
             String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile/" + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            testService.createPost(id,filePath,text);
+            String staticPath = "../profile/"+file.getOriginalFilename(); //データベースに保存する相対パス
+            testService.createPost(id,staticPath,text);
             return ResponseEntity.ok(true);
         } catch (IOException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
         }
+    }
+    // @PostMapping(path = "/post")
+    // public String newPost(@RequestParam ("file") Part file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
+    //     String vueCliGeneratedFileName = testService.getVueCliName(file);
+    //     String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile/" + vueCliGeneratedFileName;
+    //     try (InputStream inputStream = file.getInputStream()) {
+    //         Files.copy(inputStream, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
+    //         return vueCliGeneratedFileName;
+    //     } catch (IOException e) {
+    //         return "Failed to upload file: " + vueCliGeneratedFileName + ", " + e.getMessage();
+    //     }
+    // }   
+    
+    @PostMapping(path="/test")
+    public String sai(@RequestBody Integer id){
+        return testService.getPath(id);
     }
 
     // コメント投稿
@@ -97,7 +118,6 @@ class TestController{
     public boolean newComment(@RequestBody CommentRequest com) {
         return testService.createComment(com.getUser_id(),com.getPost_id(),com.getComment());
     }
-
     // フォロー
     @PostMapping(path = "/follow")
     public boolean follow(@RequestBody FollowRequest fol) {
@@ -132,26 +152,3 @@ class TestController{
     }
 
 }
-//  class Aaa {
-//     private boolean bool;
-//     private Integer id;
-
-//     // コンストラクタ、getter、setter等
-
-//     // getter, setterの定義
-//     public boolean isBool() {
-//         return bool;
-//     }
-
-//     public void setBool(boolean bool) {
-//         this.bool = bool;
-//     }
-
-//     public Integer getId() {
-//         return id;
-//     }
-
-//     public void setId(Integer id) {
-//         this.id = id;
-//     }
-// }

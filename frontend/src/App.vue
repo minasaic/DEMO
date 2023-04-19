@@ -50,7 +50,6 @@
       <button type="button" @click="logins">ログイン</button>
       <button type="button" @click="create">新規登録</button>
       </div>
-      <button>idを渡す</button>
     </div>
   </div>
 </template>
