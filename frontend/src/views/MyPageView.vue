@@ -20,7 +20,8 @@ export default {
     return{
       username: null,
       followerCount: null,
-      followingCount: null
+      followingCount: null,
+      
     }
   },
   methods:{
