@@ -17,7 +17,7 @@ public class Posts extends GenericDomain{
     @Getter@Setter
     private Integer id;
     @Getter@Setter
-    private Integer user_id;
+    private Integer userid;
     @Getter@Setter
     private String image;
     @Getter@Setter

@@ -70,24 +70,34 @@ public class TestService {
     }
 
     //マイページ
-    public void mypage(Integer id){
-        
+    public List<Posts> mypage(Integer id){
+        System.out.println("あああああああああああああああああああああああああああああ");
+        return prepo.findByUserid(id);
     }
 
     // 新規投稿
     public boolean createPost(Integer id, String image, String caption) {
         Posts post = new Posts();
-        post.setUser_id(id);
+        post.setUserid(id);
         post.setImage(image);
         post.setCaption(caption);
         prepo.save(post);
         return true;
     }
+
+    //コメントを表示させる
+    public List<Comments> getCom(Integer id){
+        return crepo.findByPostid(id);
+    }
     // コメント投稿
     public boolean createComment(Integer user_id, Integer post_id, String comment) {
         Comments com = new Comments();
+        System.out.println("kikikikik聞き聞き聞き聞き聞き聞き聞き聞き聞きキキキキキキっっき行き一気聞き行き");
+        System.out.println(user_id);
+        System.out.println(post_id);
+        System.out.println(comment);
         com.setUser_id(user_id);
-        com.setPost_id(post_id);
+        com.setPostid(post_id);
         com.setComment(comment);
         crepo.save(com);
         return true;

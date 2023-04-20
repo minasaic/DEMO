@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.domain.CommentRequest;
+import com.example.backend.domain.Comments;
 import com.example.backend.domain.FollowRequest;
 import com.example.backend.domain.LoginRequest;
 import com.example.backend.domain.Posts;
@@ -59,13 +60,20 @@ class TestController{
     public List<Posts> homepage(@RequestBody Integer id){
         return testService.getPosts(id);
     }
+
+    //マイページ
+    @PostMapping(path="/mypage")
+    public List<Posts> mypage(@RequestBody Integer id){
+        System.out.println("あああああああああああああああああああああああああああああ");
+        return testService.mypage(id);
+    }
     // 新規投稿
     @PostMapping(path = "/post")
     public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            String filePath = "/Users/chikaramorigami/vue/DEMO/frontend/src/assets/" + file.getOriginalFilename();
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            String staticPath = file.getOriginalFilename(); //データベースに保存する相対パス
+            String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
             testService.createPost(id,staticPath,text);
             return staticPath;
         } catch (IOException e) {
@@ -78,10 +86,18 @@ class TestController{
         return testService.getPath(id);
     }
 
+    //コメントを表示させる
+    @PostMapping(path="/getcom")
+    public List<Comments> getcc(@RequestBody Integer id){
+        return testService.getCom(id);
+    }
+
     // コメント投稿
     @PostMapping(path = "/comment")
     public boolean newComment(@RequestBody CommentRequest com) {
-        return testService.createComment(com.getUser_id(),com.getPost_id(),com.getComment());
+        System.out.println("ああああああああああ");
+        System.out.println(com.getPostid());
+        return testService.createComment(com.getUser_id(),com.getPostid(),com.getComment());
     }
     // フォロー
     @PostMapping(path = "/follow")

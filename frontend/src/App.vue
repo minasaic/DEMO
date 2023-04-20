@@ -12,7 +12,7 @@
           <br>
           <br>
           <img src="./assets/home.png" alt="LOGO" width="20" height="20">      
-          <router-link to="/" >ホーム</router-link>
+          <router-link @click="home" to="/home" >ホーム</router-link>
           <br>
           <br>
           <img src="./assets/search.png" alt="LOGO" width="20" height="20">
@@ -24,7 +24,7 @@
           <br>
           <br>
           <img src="./assets/profile.png" alt="LOGO" width="20" height="20">
-          <router-link to="/mypage" >   プロフィール</router-link>
+          <router-link to="/mypage" > <button @click="mypage">mypage</button></router-link>
         </nav>
       </div>
       <div id="change">
@@ -49,6 +49,7 @@
       <br><br>
       <button type="button" @click="logins">ログイン</button>
       <button type="button" @click="create">新規登録</button>
+      
       </div>
     </div>
   </div>
@@ -124,9 +125,10 @@ export default {
     },
     home(){
       Service.post("home",{
-        id:this.valueId
+        id:store.state.id
       }).then(response =>{
-        alert(response)
+        console.log(response);
+        alert(response.data);
       }).catch(error =>{
         alert(error)
       })
@@ -187,7 +189,16 @@ export default {
       }).catch(error =>{
         alert(error)
       })
-    }
+    },
+    mypage(){
+      alert("崔baka")
+      Service.post("mypage",1).then(response =>{
+        console.log(response)
+        store.commit('MYPAGE',response.data);
+      }).catch(error =>{
+        alert(error)
+      })
+    },
   }
 }
 </script>
