@@ -3,6 +3,8 @@ package com.example.backend.service;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.servlet.http.Part;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -80,6 +82,20 @@ public class TestService {
         prepo.save(post);
         return true;
     }
+    // public String getVueCliName(Part file){
+    //     String vueCliGeneratedFileName = null;
+    //     String contentDisposition = file.getHeader("content-disposition");
+    //     if(contentDisposition != null){
+    //         String[] tokens = contentDisposition.split(";");
+    //         for (String token : tokens) {
+    //             if (token.trim().startsWith("filename=")) {
+    //                 vueCliGeneratedFileName = token.substring(token.indexOf("=") + 1).trim().replace("\"", "");
+    //             }
+    //         }
+    //     }
+    //     System.out.println("日本語：だよヨヨヨヨヨヨヨヨヨよ〜〜" + vueCliGeneratedFileName);
+    //     return vueCliGeneratedFileName;
+    // }
 
     // コメント投稿
     public boolean createComment(Integer user_id, Integer post_id, String comment) {
@@ -124,8 +140,8 @@ public class TestService {
 
     // 投稿削除のためのパスをゲットする
     public String getPath(Integer id) {
-        // return prepo.findPathById(id);
-        return null;//とりあえずnullにする
+         return prepo.findById(id).get().getImage();
+        //とりあえずnullにする
     }
 
 }

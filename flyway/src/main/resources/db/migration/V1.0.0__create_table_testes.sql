@@ -2,7 +2,11 @@ CREATE TABLE user(
 	id int NOT NULL AUTO_INCREMENT,
 	name VARCHAR(30) NOT NULL,
     password VARCHAR(30) NOT NULL,
+<<<<<<< HEAD
 	profile_picture VARCHAR(255) ,
+=======
+	profile_picture VARCHAR(255),
+>>>>>>> minamina
 	PRIMARY KEY (id)
 );
 CREATE TABLE posts(

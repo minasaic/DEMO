@@ -3,6 +3,7 @@
       <button @click="showFollowing">Following</button>
       <button @click="showRandom">Random</button>
         <div v-if="showFollowings">
+            <br>
             <img src="../assets/homeimg1.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>&nbsp;
             <img src="../assets/homeimg2.jpeg" alt="写真" width="300" height="300">
@@ -29,7 +30,8 @@ export default {
     return{
         username:'森上',
         showFollowings: true,
-        showRandoms: false
+        showRandoms: false,
+        path: null,
     }
   },
   methods:{
