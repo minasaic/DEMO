@@ -37,12 +37,8 @@ import com.example.backend.service.TestService;
 
 @RestController
 @CrossOrigin
-<<<<<<< HEAD
-class TestController {
-=======
 @MultipartConfig(fileSizeThreshold = 20971520, maxFileSize = 104857600, maxRequestSize = 524288000)
 class TestController{
->>>>>>> minamina
     @Autowired
     TestService testService;
 
@@ -122,69 +118,6 @@ class TestController{
     public boolean newComment(@RequestBody CommentRequest com) {
         return testService.createComment(com.getUser_id(),com.getPost_id(),com.getComment());
     }
-    // フォロー
-    @PostMapping(path = "/follow")
-    public boolean follow(@RequestBody FollowRequest fol) {
-        return testService.followUser(fol.getFollower_id(),fol.getFollowing_id());
-    }
-
-    // フォロー解除
-    @PostMapping(path = "/unfollow")
-    public boolean unfollow(@RequestBody Integer id) {
-        return testService.unfollow(id);
-    }
-
-    // いいね
-    @PostMapping(path = "/like")
-    public boolean like(@RequestBody Integer id) {
-        return testService.like(id);
-    }
-
-    // 投稿削除
-    @DeleteMapping(path = "/deletePost/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
-        String imagePath = testService.getPath(id);
-        File file = new File(imagePath);
-        if (file.exists()) {
-            file.delete();
-            testService.deletePost(id);
-            return ResponseEntity.ok("投稿を削除しました。");
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("指定された投稿が見つかりませんでした。");
-        }
-
-    }
-
-    // 新規登録
-    @PostMapping(path = "/create")
-    public boolean createUser(@RequestBody LoginRequest login) {
-        return testService.createUser(login.getUsername(), login.getPassword(), login.getProfile_picture());
-    }
-
-    //ホーム画面
-    @PostMapping(path="/home")
-    public List<Posts> homepage(@RequestBody Integer id){
-        return testService.getPosts(id);
-    }
-    // 新規投稿
-    @PostMapping(path = "/post")
-    public ResponseEntity<String> newPost(@RequestBody PostRequest post) {
-        try {
-            String filePath = "/asd/asd/asd/asd/" + post.getFile().getOriginalFilename();
-            post.getFile().transferTo(new File(filePath));
-            testService.createPost(post.getId(),filePath,post.getCaption());
-            return ResponseEntity.ok("投稿しました");
-        } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("ファイルのアップロードに失敗しました。");
-        }
-    }
-
-    // コメント投稿
-    @PostMapping(path = "/comment")
-    public boolean newComment(@RequestBody CommentRequest com) {
-        return testService.createComment(com.getUser_id(),com.getPost_id(),com.getComment());
-    }
-
     // フォロー
     @PostMapping(path = "/follow")
     public boolean follow(@RequestBody FollowRequest fol) {

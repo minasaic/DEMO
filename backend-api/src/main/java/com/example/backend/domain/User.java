@@ -12,15 +12,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "user")
 public class User extends GenericDomain{
-<<<<<<< HEAD
     @Id@Getter@Setter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-=======
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Getter@Setter
->>>>>>> minamina
     private Integer id;
     @Getter@Setter
     private String name;
