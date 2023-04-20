@@ -38,8 +38,7 @@ export default {
         }}
       ).then(response =>{
         console.log(response);
-        this.filePath = response.data;
-        alert(response.data);
+        this.filePath=require('../assets/' + response.data);
       }).catch(error =>{
         alert(error)
         alert('axios通信失敗しました。')

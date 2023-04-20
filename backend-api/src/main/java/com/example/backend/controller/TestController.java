@@ -2,24 +2,13 @@ package com.example.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.http.HttpResponse;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
 import java.util.List;
-import java.util.Map;
-
-import javax.servlet.annotation.MultipartConfig;
-import javax.servlet.http.Part;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,27 +19,14 @@ import org.springframework.web.multipart.MultipartFile;
 import com.example.backend.domain.CommentRequest;
 import com.example.backend.domain.FollowRequest;
 import com.example.backend.domain.LoginRequest;
-import com.example.backend.domain.PostRequest;
 import com.example.backend.domain.Posts;
-import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
 
 @RestController
 @CrossOrigin
-@MultipartConfig(fileSizeThreshold = 20971520, maxFileSize = 104857600, maxRequestSize = 524288000)
 class TestController{
     @Autowired
     TestService testService;
-
-    @GetMapping(path="/testes/{id}")
-    public User getUsers(@PathVariable("id") Integer id){
-        return testService.getUser(id);
-    }
-
-    @PostMapping(path="/aaa")
-    public User getUsers2(@RequestBody Integer id){
-        return testService.getUser(id);
-    }
 
     // ログイン
     @PostMapping(path = "/login")
@@ -85,28 +61,17 @@ class TestController{
     }
     // 新規投稿
     @PostMapping(path = "/post")
-    public ResponseEntity<Boolean> newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
+    public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile/" + file.getOriginalFilename();
+            String filePath = "/Users/chikaramorigami/vue/DEMO/frontend/src/assets/" + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            String staticPath = "../profile/"+file.getOriginalFilename(); //データベースに保存する相対パス
+            String staticPath = file.getOriginalFilename(); //データベースに保存する相対パス
             testService.createPost(id,staticPath,text);
-            return ResponseEntity.ok(true);
+            return staticPath;
         } catch (IOException e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(false);
+            return "sdfgh";
         }
     }
-    // @PostMapping(path = "/post")
-    // public String newPost(@RequestParam ("file") Part file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
-    //     String vueCliGeneratedFileName = testService.getVueCliName(file);
-    //     String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/profile/" + vueCliGeneratedFileName;
-    //     try (InputStream inputStream = file.getInputStream()) {
-    //         Files.copy(inputStream, Paths.get(filePath), StandardCopyOption.REPLACE_EXISTING);
-    //         return vueCliGeneratedFileName;
-    //     } catch (IOException e) {
-    //         return "Failed to upload file: " + vueCliGeneratedFileName + ", " + e.getMessage();
-    //     }
-    // }   
     
     @PostMapping(path="/test")
     public String sai(@RequestBody Integer id){
