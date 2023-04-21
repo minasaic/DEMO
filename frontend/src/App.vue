@@ -2,29 +2,30 @@
   <div id="app">
     <div v-if="login">
       <div id="title">
-      <router-link to="/">
+      <router-link to="/home">
         <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
         </router-link>
       </div>
-      <div class="btn_hover">
+      <div >
         <nav>
           <span>メニュー</span>
           <br>
-          <br>
-          <img src="./assets/home.png" alt="LOGO" width="20" height="20">      
-          <router-link @click="home" to="/home" >ホーム</router-link>
-          <br>
-          <br>
-          <img src="./assets/search.png" alt="LOGO" width="20" height="20">
-          <router-link to="/search">   検索</router-link>
+          <br>            
+          <router-link to="/" ><span class="btn_hover"><img src="./assets/home.png" alt="LOGO" width="20" height="20">
+             ホーム</span></router-link>
           <br>
           <br>
-          <img src="./assets/plus.png" alt="LOGO" width="20" height="20">
-          <router-link to="/create" >   作成</router-link>
+          <router-link to="/search"><span class="btn_hover"><img src="./assets/search.png" alt="LOGO" width="20" height="20">
+             検索</span></router-link>
+          <br>
+          <br>        
+          <router-link to="/create" ><span class="btn_hover"><img src="./assets/plus.png" alt="LOGO" width="20" height="20"> 
+            作成</span></router-link>
           <br>
           <br>
-          <img src="./assets/profile.png" alt="LOGO" width="20" height="20">
-          <router-link to="/mypage" > <button @click="mypage">mypage</button></router-link>
+          
+          <router-link to="/mypage" ><span class="btn_hover"><img src="./assets/profile.png" alt="LOGO" width="20" height="20"> 
+            プロフィール   </span></router-link>
         </nav>
       </div>
       <div id="change">
@@ -38,8 +39,6 @@
       <br><br><br><br>
       <img src="./assets/1nstagramlogo.png" alt="LOGO">
       <br><br><br><br>
-      <span>ID:</span>
-      <!-- <input type="id" name="id" v-model=valueId> -->
       <br><br>
       <span>名前:</span>
       <input type="id" name="username" v-model=valueName>
@@ -47,6 +46,7 @@
       <span>PASS:</span>
       <input type="password" name="userpass" v-model=valuePass>
       <br><br>
+      <br>
       <button type="button" @click="logins">ログイン</button>
       <button type="button" @click="create">新規登録</button>
       
@@ -58,18 +58,17 @@
 <script>
 import {Service} from "@/service/service"
 import store from "./store"
-// import { mapState } from "vuex"
 export default {
   name: 'App',
   data(){
     return{
       login:false,
-      valueId:0,
+      // valueId:0,
       valueName:"",
       valuePass:"",
-      valueUserId:1,
-      valuePostId:1,
-      valueComment:""
+      // valueUserId:1,
+      // valuePostId:1,
+      valueComment:"",
     }
   },
   // computed:{
@@ -143,17 +142,7 @@ export default {
         alert(error)
       })
     },
-    comment(){
-      Service.post("comment",{
-        id:this.valueId,
-        postId:this.valuePostId,
-        comment:this.valueComment
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
+
     follow(){
       Service.post("follow",{
 
@@ -190,15 +179,15 @@ export default {
         alert(error)
       })
     },
-    mypage(){
-      alert("崔baka")
-      Service.post("mypage",1).then(response =>{
-        console.log(response)
-        store.commit('MYPAGE',response.data);
-      }).catch(error =>{
-        alert(error)
-      })
-    },
+    // mypage(){
+    //   alert("崔baka")
+    //   Service.post("mypage",1).then(response =>{
+    //     console.log(response)
+    //     store.commit('MYPAGE',response.data);
+    //   }).catch(error =>{
+    //     alert(error)
+    //   })
+    // },
   }
 }
 </script>
@@ -236,16 +225,16 @@ nav{
   -ms-transition: all 0.3s ease;/*ふわっとさせる間隔 IE*/
   -o-transition: all 0.3s ease;/*ふわっとさせる間隔 Opera*/
   transition: all  0.3s ease;/*ふわっとさせる間隔*/
-  padding:50px 0;/*文字と背景の余白*/
-  width: 220px;/*ボタン幅*/
+  padding:10px 0;/*文字と背景の余白*/
+  width: 500px;/*ボタン幅*/
   color: #0c0c0c;/*文字の色*/
   text-align: left;/*文字を揃える位置*/
-  border-radius: 1px;/*背景の角丸半径*/
+  border-radius: 10px;/*背景の角丸半径*/
   cursor: pointer;/*ホバー時にカーソルの形状をポインターに*/ /* カーソルを合わせた際にボタンの文字色を変える */
 }
   /* マウスオーバーした際の背景 */
 .btn_hover:hover {
-  background-color :#e4e4e4;/*背景色*/
+  background-color :#ebeaea;/*背景色*/
 }
 
 #change {

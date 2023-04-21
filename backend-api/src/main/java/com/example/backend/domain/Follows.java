@@ -1,6 +1,8 @@
 package com.example.backend.domain;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
@@ -10,12 +12,14 @@ import lombok.Setter;
 @Entity
 @Table(name = "follows")
 public class Follows extends GenericDomain{
-    @Id@Getter@Setter
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Getter@Setter
     private Integer id;
     @Getter@Setter
-    private  Integer follower_id;
+    private  Integer follower;
     @Getter@Setter
-    private Integer following_id;
+    private Integer following;
 
     @Override
     protected Object keyObject() {

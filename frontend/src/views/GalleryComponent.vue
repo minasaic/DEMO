@@ -2,25 +2,24 @@
     <div>
         <div>
             <hr>
-            {{ getComments }}
+            <!-- commentテーブル    {{ getComments }} -->
             <hr>
-            <img :src="imgFileName" alt="post">
+            <img :src="postImgName" alt="post">
             <div v-for="(getComment) in getComments " :key="getComment.id">
             <span>{{ getComment.comment }}</span>
             </div>
             <br>
-            {{ caption }}
+            ・{{ caption }}
             <br>
-            <button @click="updateLike">like</button>
-            <button @click="showTextarea">comment</button>
+            <button @click="updateLike">{{ likeCount }} &nbsp; like</button>
+            <button @click="showTextBox = !showTextBox">comment</button>
             <br>
-            <div v-if="showText">
+            <div v-show="showTextBox">
                 <textarea  v-model="commentText" cols="30" rows="4"></textarea>
                 <br>
-                <button @click="updateComment ">確認</button>
-                <button>キャンセル</button>
+                <button @click="updateComment">確認</button>
+                <button @click="showTextBox = !showTextBox">キャンセル</button>
             </div>
-
         </div>
     </div>
 </template>
@@ -30,7 +29,7 @@ import store from '@/store';
 export default {
     name: 'GalleryComponent',
     props:{
-        imgFileName:{
+        postImgName:{
             type: String,
             required: true
         },
@@ -47,9 +46,13 @@ export default {
     data(){
         return {
             commentText:'',
-            showText: false,
-            getComments: ''
+            showTextBox: false,
+            getComments: '',
+            likeCount: 0
         }
+    },
+    created(){
+        this.showComments()
     },
     methods: {
         updateLike(){
@@ -59,7 +62,7 @@ export default {
             this.showText = true
             Service.post('getcom',this.id //commentテーブルのpost_id
             ).then(response =>{
-                alert(response)
+                console.log(response)
                 this.getComments = response.data;
             }).catch(error =>{
                 alert(error)
@@ -75,18 +78,20 @@ export default {
                 console.log(response);
                 this.commentText='';
                 //コメントがアップデート成功時に、コメント一覧を更新する
-                Service.post('getcom',this.id //commentテーブルのpost_id
+                this.showComments();
+            }).catch(error => {
+                alert(error);
+            })
+        },
+        showComments(){
+            Service.post('getcom',this.id //commentテーブルのpost_id
                 ).then(response =>{
                     console.log(response)
                     this.getComments = response.data;
                 }).catch(error =>{
                     alert(error)
                 })
-            }).catch(error => {
-                alert(error);
-            })
-        },
-    
+        }
     }
 }
 </script>

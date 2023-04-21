@@ -103,11 +103,25 @@ public class TestService {
         return true;
     }
 
+    // //フォロワー数とフォロー数の取得
+    // public  Integer getFollower(Integer id){
+    //     Integer testesOptional =frepo.countByFollowing(id);
+    //     Integer testesOptional2 = frepo.countByFollower(id);
+      
+    //         return testesOptional;
+    // }
+
+    //投稿を検索する
+    public List<Posts> search(String keyword){
+        List<Posts> a = prepo.findByCaptionLike( "%" + keyword.replaceAll("\"", "") + "%");
+        return a;
+    }
+
     // フォロー
     public boolean followUser(Integer followId, Integer followedId) {
         Follows follow = new Follows();
-        follow.setFollower_id(followId);
-        follow.setFollowing_id(followedId);
+        follow.setFollower(followId);
+        follow.setFollowing(followedId);
         frepo.save(follow);
         return true;
     }

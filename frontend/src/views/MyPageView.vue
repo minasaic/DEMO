@@ -1,16 +1,26 @@
 <template>
   <div>
-      <img src="../assets/profile.png" alt="LOGO" width="100" height="100">
+      <img src="" alt="プロフィール画像" width="100" height="100">
+      <button @click="showModal = true">設定</button>
+      <option-modal-view 
+        v-if="showModal" 
+        :title="modalTitle" 
+        @close="showModal = false" 
+        @save="saveModal">
+      </option-modal-view>
+      <br>
       <h1>アカウント：{{ username }}</h1>
       <h2>フォロワー：{{ followerCount }}</h2>
       <h2>フォロウィン：{{ followingCount }}</h2>
       過去の投稿一覧<hr>
-      <!-- postsテーブル     {{ $store.state.mypage }}       -->
-      <div v-for="(post) in $store.state.mypage " :key="post.id">
+      postsテーブル     {{ postTables }}      
+      <div v-for="(postTable) in postTables " :key="postTable.id">
+        forが動いた
         <GalleryComponent 
-          :id="post.id"
-          :imgFileName="getImageUrl(post.image)" 
-          :caption="post.caption"
+          :id="postTable.id"
+          :postImgName="getImageUrl(postTable.image)" 
+          :caption="postTable.caption"
+
           />
       </div>
 
@@ -21,31 +31,26 @@
 import {Service} from "@/service/service"
 import GalleryComponent from "./GalleryComponent.vue"
 import store from "@/store"
-export default {
+import OptionModalView from "./OptionModalView.vue"
 
+export default {
   name: 'App',
   components: {
-    GalleryComponent
+    GalleryComponent,
+    OptionModalView
   },
-  
   data(){
     return{
       username: null,
       followerCount: null,
       followingCount: null,
-      imgFileNames: store.state.mypage,
-    //   message:[{
-    //     id:1,name:'yataro',age:27
-    //   },
-    //   {
-    //     id:2,name:'morimori',age:27
-    //   },
-    //   {
-    //     id:3,name:'mina',age:26
-    //   }
-    // ],
-      
+      postTables: null,
+      showModal: false,
+      modalTitle: 'アカウント情報変更'
     }
+  },
+  created(){
+    this.myPage()
   },
   methods:{
     deletePost(){
@@ -59,7 +64,20 @@ export default {
     getImageUrl(imagePath){
       return require(`../assets/${imagePath}`)
 
-    }
+    },
+    myPage(){
+      // alert('やたろ！！！！！')
+      Service.post("mypage",store.state.id).then(response =>{
+        console.log(response);
+        this.postTables = response.data;
+      }).catch(error =>{
+        alert(error)
+      })
+    },
+    saveModal () {
+            // モーダルの保存処理を実行する
+            this.showModal = false
+    },
   }
 }
 </script>

@@ -64,7 +64,6 @@ class TestController{
     //マイページ
     @PostMapping(path="/mypage")
     public List<Posts> mypage(@RequestBody Integer id){
-        System.out.println("あああああああああああああああああああああああああああああ");
         return testService.mypage(id);
     }
     // 新規投稿
@@ -95,10 +94,24 @@ class TestController{
     // コメント投稿
     @PostMapping(path = "/comment")
     public boolean newComment(@RequestBody CommentRequest com) {
-        System.out.println("ああああああああああ");
         System.out.println(com.getPostid());
         return testService.createComment(com.getUser_id(),com.getPostid(),com.getComment());
     }
+
+    //フォロワー数とフォロー数をホーム画面に表示
+    // @PostMapping(path = "/")
+    // public void getFollower(@RequestBody Integer id) {
+    //     //TODO: process POST request
+        
+    //     //return testService.getFollower(id);
+    // }
+
+    //投稿を検索
+    @PostMapping(path = "/search")
+    public List<Posts> search(@RequestBody String keyword){
+        return testService.search(keyword);
+    }
+
     // フォロー
     @PostMapping(path = "/follow")
     public boolean follow(@RequestBody FollowRequest fol) {

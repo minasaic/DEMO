@@ -1,6 +1,6 @@
 INSERT INTO user(id,name,password,profile_picture)VALUES
 (1,'森上','pass','aaaaa'),
-(2,'矢口','pass','asdfgdsf'),
+(2,'qqq','qqq','qqq'),
 (3,'崔','pass','safgdr'),
 (4,'djjdjdjd','asdfg','asdfhghjyftydr');
 

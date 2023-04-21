@@ -26,7 +26,7 @@ export default {
   },
   methods: {
     uploadFile(event) {
-      this.file = event.target.files[0]
+      this.file = event.target.files[0];
     },
     post(){
       const formData = new FormData()

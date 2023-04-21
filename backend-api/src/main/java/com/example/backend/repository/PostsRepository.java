@@ -8,5 +8,6 @@ import com.example.backend.domain.Posts;
 
 public interface PostsRepository extends JpaRepository<Posts, Integer>{
     List<Posts> findByUserid(Integer user_id);
+    List<Posts> findByCaptionLike(String caption);
 }
 
