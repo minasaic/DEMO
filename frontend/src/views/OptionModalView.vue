@@ -49,21 +49,21 @@
     },
     methods:{
         saveUserImg(event){
-            this.changeUserImg = event.target.files[0];
-            this.path = URL.createObjectURL(this.changeUserImg);
-            alert(this.path);
+          this.changeUserImg = event.target.files[0];
+          this.path = URL.createObjectURL(this.changeUserImg);
+          alert(this.path);
         },
         saveUserChange(){
-            Service.post('change',{
-                changeUserImg : this.changeUserImg,
-                changeUserName:this.changeUserName,
-                ChangeUserName : this.changeUserPassword
-            }).then(Response => {
-                alert(Response);
+          Service.post('update',{
+              changeUserImg : this.changeUserImg,
+              changeUserName:this.changeUserName,
+              ChangeUserName : this.changeUserPassword
+          }).then(Response => {
+              alert(Response);
 
-            }).catch(error => {
-                alert(error)
-            })
+          }).catch(error => {
+              alert(error)
+          })
         }
     }
   }

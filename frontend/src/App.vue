@@ -9,24 +9,24 @@
           <span>メニュー</span>
           <br>
           <br>            
-          <router-link to="/home" ><span class="btn_hover"><img src="./assets/home.png" alt="LOGO" width="20" height="20">
+          <router-link to="/home" ><span class="btn_hover"><img  class="photo" src="./assets/home.png" alt="LOGO" width="20" height="20">
              ホーム</span></router-link>
           <br>
           <br>
-          <router-link to="/search"><span class="btn_hover"><img src="./assets/search.png" alt="LOGO" width="20" height="20">
+          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/search.png" alt="LOGO" width="20" height="20">
              検索</span></router-link>
           <br>
           <br>        
-          <router-link to="/create" ><span class="btn_hover"><img src="./assets/plus.png" alt="LOGO" width="20" height="20"> 
+          <router-link to="/create" ><span class="btn_hover"><img class="photo" src="./assets/plus.png" alt="LOGO" width="20" height="20"> 
             作成</span></router-link>
           <br>
           <br>
           
-          <router-link to="/mypage" ><span class="btn_hover"><img src="./assets/profile.png" alt="LOGO" width="20" height="20"> 
+          <router-link to="/mypage" ><span class="btn_hover"><img class="photo" src="./assets/profile.png" alt="LOGO" width="20" height="20"> 
             プロフィール   </span></router-link>
         </nav>
       </div>
-      <div id="main">
+      <div id="change">
         <router-view/>
       </div>
     </div>
@@ -76,14 +76,16 @@ export default {
     //ログイン
     logins(){
       Service.post("login",{
-        username: this.valueName,
+        name: this.valueName,
         password:this.valuePass
       }).then(response =>{
        //ログイン成功時の処理(axios通信成功時)
        console.log(response);
-       if(response.data){
-        this.login = response.data.bool;
+       if(response.data.id !== null){
+        this.login = true;
         store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
+        store.commit('SETNAME',response.data.name);
+alert(response.data.name);
         alert('ID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
        } else{
          alert("Wrong id or password.");
@@ -94,15 +96,17 @@ export default {
       })
 
     },
+    //アカウント新規作成
     create(){
       Service.post("create",{
-        username: this.valueName,
+        name: this.valueName,
         password:this.valuePass
       }).then(response =>{
         console.log(response);
-        if(response.data){
-        this.login = response.data.bool;
+        if(response.data.id !== null){
+        this.login = true;
         store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
+        store.commit('SETNAME',response.data.name);
         alert('アカウントが新規作成しました。'+'\nID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
        } else{
          alert('アカウント作成できません。');
@@ -112,38 +116,8 @@ export default {
         alert('エラー起きました。')
       })
     },
-    onFileSelected(event) {
-      const file = event.target.files[0]
-      this.uploadFile(file)
-    },
-    uploadFile(file) {
-      const formData = new FormData()
-      formData.append('file', file)
-    },
-    home(){
-      Service.post("home",{
-        id:store.state.id
-      }).then(response =>{
-        console.log(response);
-        alert(response.data);
-      }).catch(error =>{
-        alert(error)
-      })
-    },
-    post(){
-      Service.post("post",{
-        id:this.valueId,
-        image:this.formData
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
-
     follow(){
       Service.post("follow",{
-
       }).then(response =>{
         alert(response)
       }).catch(error =>{
@@ -152,40 +126,12 @@ export default {
     },
     unfollow(){
       Service.post("unfollow",{
-
       }).then(response =>{
         alert(response)
       }).catch(error =>{
         alert(error)
       })
     },
-    like(){
-      Service.post("like",{
-
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
-    deletePost(){
-      Service.post("deletePost",{
-
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
-    // mypage(){
-    //   alert("崔baka")
-    //   Service.post("mypage",1).then(response =>{
-    //     console.log(response)
-    //     store.commit('MYPAGE',response.data);
-    //   }).catch(error =>{
-    //     alert(error)
-    //   })
-    // },
   }
 }
 </script>
@@ -210,7 +156,6 @@ nav a {
     
     text-decoration: none; /* リンクの下線を無効にする */
     color: #090909; /* ボタンのデフォルトの文字色を指定 */
-    
   }
 nav{
   font-family: Comic Sans MS; /* 筆記体のフォントを指定 */
@@ -229,6 +174,7 @@ nav{
   text-align: left;/*文字を揃える位置*/
   border-radius: 10px;/*背景の角丸半径*/
   cursor: pointer;/*ホバー時にカーソルの形状をポインターに*/ /* カーソルを合わせた際にボタンの文字色を変える */
+  position: relative;
 }
   /* マウスオーバーした際の背景 */
 .btn_hover:hover {
@@ -246,8 +192,18 @@ nav{
   width: 220px;
   position: fixed;
   overflow: auto;
-  background: #bdf1bd;
+  background: #ffffff;
   padding: 20px;
+}
+
+.photo {
+  width: 13%;
+  height: auto;
+  transition: transform 0.1s ease-in-out;
+}
+.photo:hover {
+  transform: scale(1.2);
+  z-index: 1;
 }
 
 

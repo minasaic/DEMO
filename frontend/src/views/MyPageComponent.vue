@@ -1,17 +1,18 @@
 <template>
-    <div id="main">
+    <div id="main" class="instagram-post">
         <div>
             <hr>
             <!-- commentテーブル    {{ getComments }} -->
             <hr>
-            <img :src="postImgName" alt="post">
-            <div v-for="(getComment) in getComments " :key="getComment.id">
-            <span>{{ getComment.comment }}</span>
+            <img :src="vueCliUrl" alt="post">
+            <br>
+            <div class="caption">{{ caption }}</div>
+            <br>
+            <div v-for="(getComment) in getComments " :key="getComment.id" >
+                <span >{{ getComment.user_id}} : {{ getComment.comment }}</span>
             </div>
-            <br>
-            ・{{ caption }}
-            <br>
-            <button @click="updateLike">{{ likeCount }} &nbsp; like</button>
+            <br><br>
+            <button @click="updateLike">{{ likesCount }} &nbsp; like</button>
             <button @click="showTextBox = !showTextBox">comment</button>
             <br>
             <div v-show="showTextBox">
@@ -27,7 +28,7 @@
 import { Service } from '@/service/service';
 import store from '@/store';
 export default {
-    name: 'GalleryComponent',
+    name: 'MypageComponent',
     props:{
         postImgName:{
             type: String,
@@ -41,18 +42,25 @@ export default {
             type: Number,
             required: true
         },
+        likesCount:{
+            type: Number,
+            required: true
+        }
 
     },
     data(){
         return {
-            commentText:'',
             showTextBox: false,
+            vueCliUrl: '',
+            commentText: '',
             getComments: '',
             likeCount: 0
+
         }
     },
     created(){
         this.showComments()
+        this.getVueCliUrl()
     },
     methods: {
         updateLike(){
@@ -85,13 +93,17 @@ export default {
         },
         showComments(){
             Service.post('getcom',this.id //commentテーブルのpost_id
-                ).then(response =>{
-                    console.log(response)
-                    this.getComments = response.data;
-                }).catch(error =>{
-                    alert(error)
-                })
-        }
+            ).then(response =>{
+                console.log(response)
+                this.getComments = response.data;
+            }).catch(error =>{
+                alert(error)
+            })
+        },
+        getVueCliUrl(){
+            this.vueCliUrl = require(`../assets/${this.postImgName}`);
+            return this.vueCliUrl;
+        },
     }
 }
 </script>
@@ -101,5 +113,38 @@ export default {
   box-sizing: border-box;
   margin-left: 220px;
   padding: 20px 40px;
+}
+
+</style>
+<style scoped>
+img{
+  width: 300px;
+  height: 300px;
+}
+
+.instagram-post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.instagram-post img {
+  width: 100%;
+  max-width: 500px;
+}
+
+.instagram-post .caption {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.instagram-post .likes,
+.instagram-post .comments {
+  margin-top: 5px;
+  font-size: 14px;
+  text-align: center;
 }
 </style>

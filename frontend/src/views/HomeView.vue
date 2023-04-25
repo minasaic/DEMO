@@ -2,37 +2,44 @@
     <div id="main">
       <button @click="showFollowing">Following</button>
       <button @click="showRandom">Random</button>
-        <div v-if="showFollowings">
-            <br>
-            <img src="../assets/homeimg1.jpeg" alt="写真" width="300" height="300">
-            <button @click="like">like</button>&nbsp;
-            <img src="../assets/homeimg2.jpeg" alt="写真" width="300" height="300">
-            <button @click="like">like</button>
-            <br>
-            <router-link to="userpage">{{ username }}</router-link>
+        <div v-show="showFollowings" v-for="(data) in datas" :key="data.id">
+          <!-- {{ data }} -->
+          <UserPageComponent
+            :postImgName="data.image" 
+            :caption = data.caption
+            :userId = data.userid
+            :postId = data.id
+            :likesCount = data.likes
+          />
         </div>
-        <div v-if="showRandoms">
+        <div v-show="showRandoms">
             <img src="../assets/homeimg3.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>&nbsp;
             <img src="../assets/homeimg4.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>
             <br>
-            <router-link to="userpage">{{ username }}</router-link>
+            <!-- <router-link to="userpage">{{ username }}</router-link> -->
         </div>
     </div>
 </template>
 <script>
 import {Service} from "@/service/service"
 import store from '@/store'
+import UserPageComponent from "./UserPageComponent.vue"
 export default {
   name: 'CreateView',
+  components:{
+    UserPageComponent
+  },
   data(){
     return{
-        username:'森上',
         showFollowings: true,
         showRandoms: false,
-        path: null,
+        datas: null        
     }
+  },
+  created(){
+    this.home()
   },
   methods:{
     showFollowing(){
@@ -44,10 +51,10 @@ export default {
       this.showRandoms = true
     },
     home(){
-      Service.post("home",{
-        id:store.state.id
-      }).then(response =>{
+      Service.post("home",store.state.id
+      ).then(response =>{
         console.log(response);
+        this.datas = response.data;
       }).catch(error =>{
         alert(error)
       })

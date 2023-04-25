@@ -54,24 +54,22 @@ public class TestService {
         User user = new User();
         user.setName(name);
         user.setPassword(password);
-        // user.setProfile_picture(profile_picture);
         urepo.save(user);
         return true;
     }
 
-    // ホームページ
-    public List<Posts> getPosts(Integer id) {
-        // Follows aa = frepo.findByFollowingd(id).get();
-        List<Posts> post = new ArrayList<>();
-        // for (int i = 0; i < aa.length; i++) {
-        //     post.add(prepo.findById(aa[i]).get());
-        // }
-        return post;
+   // ホームページ
+   public List<Posts> getPosts(Integer id) { //ログインしたアカウントのidをコントローラーから受け取った
+    List<Posts> post = new ArrayList<>(); //インスタンス化
+    List<Follows> follow = frepo.findByFollowingid(id); //Followsテーブルからカラム(Following)※idがフォローしているアカウントのレコードを取ってくる
+    for(int i = 0 ; i < follow.size(); i++){ //for文でlistの要素全てのFollowerをxに入れる
+        post.addAll(prepo.findByUserid(follow.get(i).getFollowerid())); 
     }
+    return post;
+}
 
     //マイページ
     public List<Posts> mypage(Integer id){
-        System.out.println("あああああああああああああああああああああああああああああ");
         return prepo.findByUserid(id);
     }
 
@@ -92,7 +90,6 @@ public class TestService {
     // コメント投稿
     public boolean createComment(Integer user_id, Integer post_id, String comment) {
         Comments com = new Comments();
-        System.out.println("kikikikik聞き聞き聞き聞き聞き聞き聞き聞き聞きキキキキキキっっき行き一気聞き行き");
         System.out.println(user_id);
         System.out.println(post_id);
         System.out.println(comment);
@@ -103,25 +100,29 @@ public class TestService {
         return true;
     }
 
-    // //フォロワー数とフォロー数の取得
-    // public  Integer getFollower(Integer id){
-    //     Integer testesOptional =frepo.countByFollowing(id);
-    //     Integer testesOptional2 = frepo.countByFollower(id);
-      
-    //         return testesOptional;
-    // }
+    //フォロワー数とフォロー数の取得
+    public  List<Integer> getFollowCount(Integer id){
+        List<Integer> followCount= new ArrayList<>();
+        followCount.add(frepo.countByFollowingid(id));
+        followCount.add(frepo.countByFollowerid(id));
+            return followCount;
+    }
 
     //投稿を検索する
     public List<Posts> search(String keyword){
         List<Posts> a = prepo.findByCaptionLike( "%" + keyword.replaceAll("\"", "") + "%");
-        return a;
+        if(a != null){
+            return a;
+        }
+            return null;
+        
     }
 
     // フォロー
     public boolean followUser(Integer followId, Integer followedId) {
         Follows follow = new Follows();
-        follow.setFollower(followId);
-        follow.setFollowing(followedId);
+        follow.setFollowerid(followId);
+        follow.setFollowingid(followedId);
         frepo.save(follow);
         return true;
     }

@@ -24,7 +24,7 @@ CREATE TABLE comments(
 );
 CREATE TABLE follows(
     id int NOT NULL AUTO_INCREMENT,
-    follower_id int NOT NULL,
-    following_id int NOT NULL,
+    followerid int NOT NULL,
+    followingid int NOT NULL,
     PRIMARY KEY (id)
 );

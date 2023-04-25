@@ -16,11 +16,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.example.backend.domain.CommentRequest;
 import com.example.backend.domain.Comments;
-import com.example.backend.domain.FollowRequest;
-import com.example.backend.domain.LoginRequest;
+import com.example.backend.domain.Follows;
 import com.example.backend.domain.Posts;
+import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
 
 @RestController
@@ -31,35 +30,33 @@ class TestController{
 
     // ログイン
     @PostMapping(path = "/login")
-    public LoginRequest loginUser(@RequestBody LoginRequest login) {
-        LoginRequest log = new LoginRequest();
-        if(testService.loginUser(login.getUsername(),login.getPassword())){
-         log.setBool(true);
-         log.setId(testService.getIdByName(login.getUsername()));
-        return log;
+    public User loginUser(@RequestBody User user) {
+        if(testService.loginUser(user.getName(),user.getPassword())){
+         user.setId(testService.getIdByName(user.getName()));
+        return user;
         }
-        log.setBool(false);
-        return log;
-    }
+        return user;
+        }
+    
 
     // 新規登録
     @PostMapping(path = "/create")
-    public LoginRequest createUser(@RequestBody LoginRequest login) {
-        LoginRequest log = new LoginRequest();
-        if(testService.createUser(login.getUsername(), login.getPassword())){
-            log.setBool(true);
-            log.setId(testService.getIdByName(login.getUsername()));
-            return log;
+    public User createUser(@RequestBody User user) {
+        if(testService.createUser(user.getName(), user.getPassword())){
+            user.setId(testService.getIdByName(user.getName()));
+            return user;
         }
-        log.setBool(false);
-        return log;
-    }
+        return user;
+        }
+    
 
     //ホーム画面
     @PostMapping(path="/home")
     public List<Posts> homepage(@RequestBody Integer id){
         return testService.getPosts(id);
     }
+
+    
 
     //マイページ
     @PostMapping(path="/mypage")
@@ -93,18 +90,18 @@ class TestController{
 
     // コメント投稿
     @PostMapping(path = "/comment")
-    public boolean newComment(@RequestBody CommentRequest com) {
+    public boolean newComment(@RequestBody Comments com) {
+        System.out.println("eええええええええええ");
+        System.out.println(com.getUser_id());
         System.out.println(com.getPostid());
         return testService.createComment(com.getUser_id(),com.getPostid(),com.getComment());
     }
 
-    //フォロワー数とフォロー数をホーム画面に表示
-    // @PostMapping(path = "/")
-    // public void getFollower(@RequestBody Integer id) {
-    //     //TODO: process POST request
-        
-    //     //return testService.getFollower(id);
-    // }
+    //フォロワーとフォロー数を取得
+    @PostMapping(path = "/followdata")
+    public List<Integer> getFollow(@RequestBody Integer id) {
+        return testService.getFollowCount(id);
+    }
 
     //投稿を検索
     @PostMapping(path = "/search")
@@ -114,8 +111,8 @@ class TestController{
 
     // フォロー
     @PostMapping(path = "/follow")
-    public boolean follow(@RequestBody FollowRequest fol) {
-        return testService.followUser(fol.getFollower_id(),fol.getFollowing_id());
+    public boolean follow(@RequestBody Follows fol) {
+        return testService.followUser(fol.getFollowerid(),fol.getFollowingid());
     }
 
     // フォロー解除

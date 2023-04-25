@@ -17,9 +17,9 @@ public class Follows extends GenericDomain{
     @Getter@Setter
     private Integer id;
     @Getter@Setter
-    private  Integer follower;
+    private  Integer followerid;
     @Getter@Setter
-    private Integer following;
+    private Integer followingid;
 
     @Override
     protected Object keyObject() {

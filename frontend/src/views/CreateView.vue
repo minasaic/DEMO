@@ -1,7 +1,7 @@
 <template>
     <div id="main">
-        {{ $store.state.id }}
-        <img :src="filePath" alt="選択した画像">
+        <!-- {{ $store.state.id }} -->
+        <img :src="path" alt="選択した画像">
         <br><br><br>
         <input type="file" @change="uploadFile">
         <br><br><br>
@@ -21,12 +21,14 @@ export default {
       file: null,
       text: null,
       fileName: null,
-      filePath: null
+      path: null
     }
   },
   methods: {
     uploadFile(event) {
       this.file = event.target.files[0];
+      this.path = URL.createObjectURL(this.file);
+      alert(this.path);
     },
     post(){
       const formData = new FormData()
@@ -38,7 +40,7 @@ export default {
         }}
       ).then(response =>{
         console.log(response);
-        this.filePath=require('../assets/' + response.data);
+        // this.filePath=require('../assets/' + response.data);
         this.text = '';
       }).catch(error =>{
         alert(error)
@@ -53,5 +55,11 @@ export default {
   box-sizing: border-box;
   margin-left: 220px;
   padding: 20px 40px;
+}
+</style>
+<style scoped>
+img{
+  width: 300px;
+  height: 300px;
 }
 </style>

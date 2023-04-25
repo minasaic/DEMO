@@ -12,15 +12,14 @@
       <h1>アカウント：{{ username }}</h1>
       <h2>フォロワー：{{ followerCount }}</h2>
       <h2>フォロウィン：{{ followingCount }}</h2>
-      過去の投稿一覧<hr>
-      postsテーブル     {{ postTables }}      
+      過去の投稿一覧
+      <!-- postsテーブル     {{ postTables }}       -->
       <div v-for="(postTable) in postTables " :key="postTable.id">
-        forが動いた
-        <GalleryComponent 
+        <MyPageComponent 
           :id="postTable.id"
-          :postImgName="getImageUrl(postTable.image)" 
+          :postImgName="postTable.image" 
           :caption="postTable.caption"
-
+          :likesCount="postTable.likes"
           />
       </div>
 
@@ -29,19 +28,19 @@
 </template>
 <script>
 import {Service} from "@/service/service"
-import GalleryComponent from "./GalleryComponent.vue"
+import MyPageComponent from "./MyPageComponent.vue"
 import store from "@/store"
 import OptionModalView from "./OptionModalView.vue"
 
 export default {
   name: 'App',
   components: {
-    GalleryComponent,
+    MyPageComponent,
     OptionModalView
   },
   data(){
     return{
-      username: null,
+      username: store.state.name,
       followerCount: null,
       followingCount: null,
       postTables: null,
@@ -49,8 +48,9 @@ export default {
       modalTitle: 'アカウント情報変更'
     }
   },
-  created(){
+  created(){       //このページになったら自動で動くもの
     this.myPage()
+    this.getFollowerCount()
   },
   methods:{
     deletePost(){
@@ -61,22 +61,26 @@ export default {
         alert(error)
       })
     },
-    getImageUrl(imagePath){
-      return require(`../assets/${imagePath}`)
-
-    },
     myPage(){
-      // alert('やたろ！！！！！')
-      Service.post("mypage",store.state.id).then(response =>{
+      Service.post("mypage",store.state.id).then(response => {
         console.log(response);
         this.postTables = response.data;
       }).catch(error =>{
         alert(error)
       })
     },
+    getFollowerCount(){
+      Service.post("followdata",store.state.id).then(response => {
+        console.log(response);
+        this.followingCount = response.data[0];
+        this.followerCount = response.data[1];
+      }).catch(error => {
+        alert(error)
+      })
+    },
     saveModal () {
-            // モーダルの保存処理を実行する
-            this.showModal = false
+      // モーダルの保存処理を実行する
+      this.showModal = false
     },
   }
 }
