@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
       <button @click="showFollowing">Following</button>
       <button @click="showRandom">Random</button>
         <div v-if="showFollowings">
@@ -63,3 +63,11 @@ export default {
   }
 }
 </script>
+
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>

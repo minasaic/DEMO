@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         {{ $store.state.id }}
         <img :src="filePath" alt="選択した画像">
         <br><br><br>
@@ -48,3 +48,10 @@ export default {
   }
 }
 </script>
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>

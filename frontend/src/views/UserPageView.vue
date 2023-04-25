@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <h1>user acount page</h1>
         <br><br><br>
         <img src="" alt="ユーザプロフィール画像">
@@ -46,3 +46,11 @@ export default {
  
 }
 </script>
+
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>

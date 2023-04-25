@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="main">
       <img src="" alt="プロフィール画像" width="100" height="100">
       <button @click="showModal = true">設定</button>
       <option-modal-view 
@@ -81,3 +81,11 @@ export default {
   }
 }
 </script>
+
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>

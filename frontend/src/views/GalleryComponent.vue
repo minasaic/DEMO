@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <div>
             <hr>
             <!-- commentテーブル    {{ getComments }} -->
@@ -95,3 +95,11 @@ export default {
     }
 }
 </script>
+
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>

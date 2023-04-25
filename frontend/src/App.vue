@@ -1,17 +1,15 @@
 <template>
   <div id="app">
-    <div v-if="login">
-      <div id="title">
+    <div v-if="login" >
+      <div id="sub">
       <router-link to="/home">
         <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
         </router-link>
-      </div>
-      <div >
         <nav>
           <span>メニュー</span>
           <br>
           <br>            
-          <router-link to="/" ><span class="btn_hover"><img src="./assets/home.png" alt="LOGO" width="20" height="20">
+          <router-link to="/home" ><span class="btn_hover"><img src="./assets/home.png" alt="LOGO" width="20" height="20">
              ホーム</span></router-link>
           <br>
           <br>
@@ -28,7 +26,7 @@
             プロフィール   </span></router-link>
         </nav>
       </div>
-      <div id="change">
+      <div id="main">
         <router-view/>
       </div>
     </div>
@@ -240,5 +238,17 @@ nav{
 #change {
   text-align: center;
 }
+
+#sub {
+  box-sizing: border-box;
+  top: 50px;
+  height: 100%;
+  width: 220px;
+  position: fixed;
+  overflow: auto;
+  background: #bdf1bd;
+  padding: 20px;
+}
+
 
 </style>

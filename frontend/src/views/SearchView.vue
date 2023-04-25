@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div id="main">
         <h1>検索</h1>
         <input type="search" v-model=searchInput>
         <button @click="getSearch">search</button>
@@ -31,3 +31,10 @@ import {Service} from "@/service/service"
         }
     }
 </script>
+<style>
+#main {
+  box-sizing: border-box;
+  margin-left: 220px;
+  padding: 20px 40px;
+}
+</style>
