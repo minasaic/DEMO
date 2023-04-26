@@ -66,7 +66,7 @@ public class TestService {
         post.addAll(prepo.findByUserid(follow.get(i).getFollowerid())); 
     }
     return post;
-}
+}    //serect　* from follows where followingid = id
 
     //マイページ
     public List<Posts> mypage(Integer id){
@@ -79,6 +79,7 @@ public class TestService {
         post.setUserid(id);
         post.setImage(image);
         post.setCaption(caption);
+        post.setLikes(0);
         prepo.save(post);
         return true;
     }
@@ -119,12 +120,12 @@ public class TestService {
     }
 
     // フォロー
-    public boolean followUser(Integer followId, Integer followedId) {
+    public Integer followUser(Integer followerid, Integer followingid) {
         Follows follow = new Follows();
-        follow.setFollowerid(followId);
-        follow.setFollowingid(followedId);
+        follow.setFollowerid(followerid);
+        follow.setFollowingid(followingid);
         frepo.save(follow);
-        return true;
+        return frepo.findByFolloweridAndFollowingid(followerid,followingid).get().getId();
     }
 
     // フォロー解除
@@ -132,23 +133,22 @@ public class TestService {
         frepo.deleteById(id);
         return true;
     }
-
-    // // いいね機能　
-    // public boolean like(Integer id) {
-    //     Posts plus = prepo.findById(id).get();
-    //     Posts pos = new Posts();
-    //     pos.setId(id);
-    //     pos.setLikes(plus.getLikes() + 1);
-    //     prepo.save(pos);
-    //     return true;
-    // }
+    //フォロー判断
+    public boolean judge(Integer followerid, Integer followingid){
+        if(frepo.findByFolloweridAndFollowingid(followerid,followingid).get() != null){
+            return true;
+        }else{
+            return false;
+        }
+    }
 
         // いいね機能 修正後
-    public boolean like(Integer id) {
+    public Integer like(Integer id) {
         Posts post = prepo.findById(id).get();
         post.setLikes(post.getLikes() + 1);
         prepo.save(post);
-        return true;
+        Posts a = prepo.findById(id).get(); 
+        return a.getLikes();
     }
 
     // 投稿削除

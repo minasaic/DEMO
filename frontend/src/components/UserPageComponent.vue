@@ -5,7 +5,7 @@
             <!-- commentテーブル    {{ getComments }} -->
             <img :src="vueCliUrl" alt="post">
             <br>
-            <router-link to="/userpage">ユーザID : {{ userId }} </router-link>
+            <router-link :to="{path: '/userpage/' + userId}">ユーザID : {{ userId }} </router-link>
             <br>
             ・{{ caption }}
             <br><br>
@@ -74,7 +74,7 @@ export default {
     methods: {
         setStoreUserId(){
             store.commit('SETUSERID',this.userId);
-            alert(store.state.userId);
+            // alert(store.state.userId);
         },
         showTextarea(){
             this.showText = true

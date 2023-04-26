@@ -53,7 +53,6 @@ export default {
             vueCliUrl: '',
             commentText: '',
             getComments: '',
-            likeCount: 0
 
         }
     },
@@ -100,15 +99,13 @@ export default {
             return this.vueCliUrl;
         },
         createLike(){
-            Service.post('like',store.state.id).then(response => {
+            Service.post('like',this.id).then(response => {
                 console.log(response);
+                this.$emit('update-likes', response.data)
             }).catch(error => {
                 alert(error)
             })
         },
-        getNewLikeCount(){
-            Service.post()
-        }
     }
 }
 </script>

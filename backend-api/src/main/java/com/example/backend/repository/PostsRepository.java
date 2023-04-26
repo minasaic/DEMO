@@ -12,5 +12,6 @@ public interface PostsRepository extends JpaRepository<Posts, Integer>{
 
     List<Posts> findByUserid(Integer user_id);
     List<Posts> findByCaptionLike(String caption);
+    Integer findByLikes(Integer likes);
 }
 

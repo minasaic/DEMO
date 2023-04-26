@@ -111,7 +111,7 @@ class TestController{
 
     // フォロー
     @PostMapping(path = "/follow")
-    public boolean follow(@RequestBody Follows fol) {
+    public Integer follow(@RequestBody Follows fol) {
         return testService.followUser(fol.getFollowerid(),fol.getFollowingid());
     }
 
@@ -123,8 +123,14 @@ class TestController{
 
     // いいね
     @PostMapping(path = "/like")
-    public boolean like(@RequestBody Integer id) {
+    public Integer like(@RequestBody Integer id) {
         return testService.like(id);
+    }
+
+    //フォローしてるかどうかの判断
+    @PostMapping(path="/followJudge")
+    public boolean aaa(@RequestBody Follows fol){
+        return testService.judge(fol.getFollowerid(),fol.getFollowingid());
     }
 
     // 投稿削除

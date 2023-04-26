@@ -1,14 +1,14 @@
 <template>
     <div id="main">
         <img src="" alt="プロフィール画像" width="100" height="100"> &nbsp;&nbsp;
-        <b>アカウント：{{ userName }}</b> 
+        <b>アカウント：{{ userName }} {{ userId }}</b> 
         <br>
         <b>フォロワー：{{ followerCount }}</b>
         <br>
         <b>フォロウィン：{{ followingCount }}</b>
         <br>
-        <button @click="follow">follow</button>
-        <button @click="unfollow">unfollow</button>
+        <button v-if="!followJudgement()" @click="follow">follow</button>
+        <button v-else @click="unfollow">unfollow</button>
         <br><br>
         <div>
             過去の投稿一覧
@@ -36,6 +36,7 @@ export default {
         UserComponent
     },
     created(){       //このページになったら自動で動くもの
+        this.userId = this.$route.params.userId
         this.myPage()
         this.getFollowerCount()
     },
@@ -44,20 +45,29 @@ export default {
             userName: null,
             followerCount: null,
             followingCount: null,
-            userDatas: null
+            userDatas: null,
+            userId: null,
+            followsid: null
         }
+    },
+    mounted(){
+        // this.userId = parseInt(this.$route.params.userId)
+        
+        // alert(this.userId)
+
     },
     methods:{
         myPage(){
-            Service.post("mypage",store.state.userId).then(response => {
+            Service.post("mypage",this.userId).then(response => {
                 console.log(response);
                 this.userDatas = response.data;
+                alert(this.userDatas)
             }).catch(error =>{
                 alert(error)
             })
         },
         getFollowerCount(){
-            Service.post("followdata",store.state.userId).then(response => {
+            Service.post("followdata",this.userId).then(response => {
                 console.log(response);
                 this.followingCount = response.data[0];
                 this.followerCount = response.data[1];
@@ -67,20 +77,31 @@ export default {
         },
         follow(){
             Service.post("follow",{
-                Following_id : store.state.id,  //自分のId
-                Follower_id : this.anotherId    //フォロしたいユーザのId
+                followerid : this.userId ,   //フォロしたいユーザのId
+                followingid : store.state.id //自分のId
             }).then(response =>{
-                alert(response)
+                console.log(response);
+                this.followsid = response.data;
             }).catch(error =>{
                 alert(error)
             })
         },
         unfollow(){
             Service.post("unfollow",{
-                Following_id : store.state.id,  //自分のId
-                Follower_id : this.anotherId    //フォロしたくないユーザのId
+                followerid : this.userId ,   //フォロしたくないユーザのId
+                followingid : store.state.id  //自分のId
             }).then(response =>{
                 alert(response)
+            }).catch(error =>{
+                alert(error)
+            })
+        },
+        followJudgement(){
+            Service.post("followJudge",{
+                followerid : this.userId ,   //フォロしたいユーザのId
+                followingid : store.state.id //自分のId
+            }).then(response =>{
+                return response.data
             }).catch(error =>{
                 alert(error)
             })

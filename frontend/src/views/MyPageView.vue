@@ -24,6 +24,7 @@
         :postImgName="postTable.image" 
         :caption="postTable.caption"
         :likesCount="postTable.likes"
+        @update-likes="updateLikes($event,postTable.id)"
         />
     </div>
   </div>
@@ -84,6 +85,10 @@ export default {
         alert(error)
       })
     },
+    updateLikes(likes,postId) {
+      const postIndex = this.postTables.findIndex(post => post.id === postId);
+      this.postTables[postIndex].likes = likes;    
+    }
   }
 }
 </script>
