@@ -7,7 +7,8 @@ export default new Vuex.Store({
   state: {
     id: 0,
     name: null,
-    mypage: null
+    userId:null,
+    mypage: null,
   },
   actions:{
     setid(context,value){
@@ -21,6 +22,9 @@ export default new Vuex.Store({
     },
     SETNAME(state, value) {
       return state.name = value;
+    },
+    SETUSERID(state, value) {
+      return state.userId = value;
     }
     // MYPAGE(state,object){
     //   return state.mypage = object

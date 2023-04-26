@@ -133,13 +133,21 @@ public class TestService {
         return true;
     }
 
-    // いいね機能
+    // // いいね機能　
+    // public boolean like(Integer id) {
+    //     Posts plus = prepo.findById(id).get();
+    //     Posts pos = new Posts();
+    //     pos.setId(id);
+    //     pos.setLikes(plus.getLikes() + 1);
+    //     prepo.save(pos);
+    //     return true;
+    // }
+
+        // いいね機能 修正後
     public boolean like(Integer id) {
-        Posts plus = prepo.findById(id).get();
-        Posts pos = new Posts();
-        pos.setId(id);
-        pos.setLikes(plus.getLikes() + 1);
-        prepo.save(pos);
+        Posts post = prepo.findById(id).get();
+        post.setLikes(post.getLikes() + 1);
+        prepo.save(post);
         return true;
     }
 

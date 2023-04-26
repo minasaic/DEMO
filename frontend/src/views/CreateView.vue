@@ -28,7 +28,7 @@ export default {
     uploadFile(event) {
       this.file = event.target.files[0];
       this.path = URL.createObjectURL(this.file);
-      alert(this.path);
+      // alert(this.path);
     },
     post(){
       const formData = new FormData()
@@ -50,13 +50,6 @@ export default {
   }
 }
 </script>
-<style>
-#main {
-  box-sizing: border-box;
-  margin-left: 220px;
-  padding: 20px 40px;
-}
-</style>
 <style scoped>
 img{
   width: 300px;

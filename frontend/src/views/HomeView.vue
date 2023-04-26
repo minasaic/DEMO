@@ -25,7 +25,7 @@
 <script>
 import {Service} from "@/service/service"
 import store from '@/store'
-import UserPageComponent from "./UserPageComponent.vue"
+import UserPageComponent from "../components/UserPageComponent.vue"
 export default {
   name: 'CreateView',
   components:{
@@ -70,11 +70,3 @@ export default {
   }
 }
 </script>
-
-<style>
-#main {
-  box-sizing: border-box;
-  margin-left: 220px;
-  padding: 20px 40px;
-}
-</style>

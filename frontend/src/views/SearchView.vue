@@ -23,7 +23,7 @@
 
 <script>
 import {Service} from "@/service/service"
-import UserPageComponent from "./UserPageComponent.vue"
+import UserPageComponent from "../components/UserPageComponent.vue"
     export default{
         name:'SearchView',
         components:{
@@ -52,13 +52,7 @@ import UserPageComponent from "./UserPageComponent.vue"
         }
     }
 </script>
-<style>
-#main {
-  box-sizing: border-box;
-  margin-left: 220px;
-  padding: 20px 40px;
-}
-</style>
+
 <style scoped>
 img{
   width: 300px;

@@ -2,14 +2,14 @@
   <div id="app">
     <div v-if="login" >
       <div id="sub">
-      <router-link to="/home">
+      <router-link to="/">
         <h1><img src="./assets/1nstagramlogo.png" alt="LOGO" width="150" height="100">1nstagram</h1>
         </router-link>
         <nav>
           <span>メニュー</span>
           <br>
           <br>            
-          <router-link to="/home" ><span class="btn_hover"><img  class="photo" src="./assets/home.png" alt="LOGO" width="20" height="20">
+          <router-link to="/" ><span class="btn_hover"><img  class="photo" src="./assets/home.png" alt="LOGO" width="20" height="20">
              ホーム</span></router-link>
           <br>
           <br>
@@ -85,7 +85,7 @@ export default {
         this.login = true;
         store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
         store.commit('SETNAME',response.data.name);
-alert(response.data.name);
+        alert(response.data.name);
         alert('ID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
        } else{
          alert("Wrong id or password.");
@@ -187,7 +187,7 @@ nav{
 
 #sub {
   box-sizing: border-box;
-  top: 50px;
+  top: 5px;
   height: 100%;
   width: 220px;
   position: fixed;

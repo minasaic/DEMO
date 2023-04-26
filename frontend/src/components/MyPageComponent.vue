@@ -1,18 +1,17 @@
 <template>
-    <div id="main">
+    <div id="main" class="instagram-post">
         <div>
-            <hr>
             <!-- commentテーブル    {{ getComments }} -->
+            <hr>
             <img :src="vueCliUrl" alt="post">
             <br>
-            <router-link to="/userpage">ユーザID : {{ userId }} </router-link>
+            <div class="caption">{{ caption }}</div>
             <br>
-            ・{{ caption }}
-            <br><br>
-            <div v-for="(getComment) in getComments " :key="getComment.id">
-                <span>{{ getComment.user_id }} : {{ getComment.comment }}</span>
+            <div v-for="(getComment) in getComments " :key="getComment.id" >
+                <span >{{ getComment.user_id}} : {{ getComment.comment }}</span>
             </div>
-            <button @click="updateLike">{{ likeCount }} &nbsp; like</button>
+            <br><br>
+            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
             <button @click="showTextBox = !showTextBox">comment</button>
             <br>
             <div v-show="showTextBox">
@@ -27,9 +26,8 @@
 <script>
 import { Service } from '@/service/service';
 import store from '@/store';
-// import store from '@/store';
 export default {
-    name: 'UserPageComponent',
+    name: 'MypageComponent',
     props:{
         postImgName:{
             type: String,
@@ -39,18 +37,10 @@ export default {
             type: String,
             required: true
         },
-        postId:{
+        id:{
             type: Number,
             required: true
         },
-        userId:{
-            type: Number,
-            required: true
-        },
-        // userName:{
-        //     type: String,
-        //     required: true
-        // },
         likesCount:{
             type: Number,
             required: true
@@ -61,19 +51,20 @@ export default {
         return {
             showTextBox: false,
             vueCliUrl: '',
-            commentText:'',
+            commentText: '',
             getComments: '',
             likeCount: 0
+
         }
     },
-    created(){    //このコンポネートが読み取れた時点、動くもの
+    created(){
         this.showComments()
         this.getVueCliUrl()
     },
     methods: {
         showTextarea(){
             this.showText = true
-            Service.post('getcom',this.postId //commentテーブルのpost_id
+            Service.post('getcom',this.id //commentテーブルのpost_id
             ).then(response =>{
                 console.log(response)
                 this.getComments = response.data;
@@ -82,10 +73,9 @@ export default {
             })
         },
         updateComment(){
-            alert(this.userId)
             Service.post('comment',{
-                user_id:store.state.id, //ストアに保存したid
-                postid:this.postId,
+                user_id:store.state.id,
+                postid:this.id,
                 comment: this.commentText
             }).then(response => {
                 console.log(response);
@@ -97,7 +87,7 @@ export default {
             })
         },
         showComments(){
-            Service.post('getcom',this.postId //commentsテーブルのpost_id
+            Service.post('getcom',this.id //commentテーブルのpost_id
             ).then(response =>{
                 console.log(response)
                 this.getComments = response.data;
@@ -109,23 +99,48 @@ export default {
             this.vueCliUrl = require(`../assets/${this.postImgName}`);
             return this.vueCliUrl;
         },
-        updateLike(){
-
+        createLike(){
+            Service.post('like',store.state.id).then(response => {
+                console.log(response);
+            }).catch(error => {
+                alert(error)
+            })
+        },
+        getNewLikeCount(){
+            Service.post()
         }
     }
 }
 </script>
-
-<style>
-/* #main {
-  box-sizing: border-box;
-  margin-left: 220px;
-  padding: 20px 40px;
-} */
-</style>
 <style scoped>
 img{
   width: 300px;
   height: 300px;
 }
+
+/* .instagram-post {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.instagram-post img {
+  width: 100%;
+  max-width: 500px;
+}
+
+.instagram-post .caption {
+  margin-top: 10px;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+}
+
+.instagram-post .likes,
+.instagram-post .comments {
+  margin-top: 5px;
+  font-size: 14px;
+  text-align: center;
+} */
 </style>

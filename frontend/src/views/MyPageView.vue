@@ -1,36 +1,38 @@
 <template>
   <div id="main">
-      <img src="" alt="プロフィール画像" width="100" height="100">
-      <button @click="showModal = true">設定</button>
-      <option-modal-view 
-        v-if="showModal" 
-        :title="modalTitle" 
-        @close="showModal = false" 
-        @save="saveModal">
-      </option-modal-view>
-      <br>
-      <h1>アカウント：{{ username }}</h1>
-      <h2>フォロワー：{{ followerCount }}</h2>
-      <h2>フォロウィン：{{ followingCount }}</h2>
-      過去の投稿一覧
-      <!-- postsテーブル     {{ postTables }}       -->
-      <div v-for="(postTable) in postTables " :key="postTable.id">
-        <MyPageComponent 
-          :id="postTable.id"
-          :postImgName="postTable.image" 
-          :caption="postTable.caption"
-          :likesCount="postTable.likes"
-          />
-      </div>
-
+    <img src="" alt="プロフィール画像" width="100" height="100">
+    <button @click="showModal = true">設定</button>
+    <option-modal-view 
+      v-if="showModal" 
+      :title="modalTitle" 
+      @close="showModal = false" 
+      @save="saveModal">
+    </option-modal-view>
+    <br>
+    <b>アカウント：{{ username }}</b>
+    <br>
+    <b>フォロワー：{{ followerCount }}</b>
+    <br>
+    <b>フォロウィン：{{ followingCount }}</b>
+    <br>
+    過去の投稿一覧
+    <hr>
+    <!-- postsテーブル     {{ postTables }}       -->
+    <div v-for="(postTable) in postTables " :key="postTable.id">
+      <MyPageComponent 
+        :id="postTable.id"
+        :postImgName="postTable.image" 
+        :caption="postTable.caption"
+        :likesCount="postTable.likes"
+        />
+    </div>
   </div>
-  
 </template>
 <script>
 import {Service} from "@/service/service"
-import MyPageComponent from "./MyPageComponent.vue"
+import MyPageComponent from "../components/MyPageComponent.vue"
 import store from "@/store"
-import OptionModalView from "./OptionModalView.vue"
+import OptionModalView from "../components/OptionModalView.vue"
 
 export default {
   name: 'App',
@@ -53,14 +55,6 @@ export default {
     this.getFollowerCount()
   },
   methods:{
-    deletePost(){
-      Service.post("deletePost",{
-      }).then(response =>{
-        console.log(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
     myPage(){
       Service.post("mypage",store.state.id).then(response => {
         console.log(response);
@@ -82,14 +76,14 @@ export default {
       // モーダルの保存処理を実行する
       this.showModal = false
     },
+    deletePost(){
+      Service.post("deletePost",{
+      }).then(response =>{
+        console.log(response)
+      }).catch(error =>{
+        alert(error)
+      })
+    },
   }
 }
 </script>
-
-<style>
-#main {
-  box-sizing: border-box;
-  margin-left: 220px;
-  padding: 20px 40px;
-}
-</style>

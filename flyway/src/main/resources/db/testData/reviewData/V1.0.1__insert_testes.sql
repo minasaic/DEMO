@@ -13,16 +13,16 @@ INSERT INTO user(id,name,password,profile_picture)VALUES
 
 
 INSERT INTO posts(id,userid,image,caption,likes)VALUES
-(1,1,'homeimg1.jpeg','post',123),
-(2,3,'homeimg1.jpeg','post',123),
-(3,4,'homeimg1.jpeg','post',123),
-(4,5,'homeimg1.jpeg','post',123),
-(5,6,'homeimg1.jpeg','post',123),
-(6,7,'homeimg1.jpeg','post',123),
-(7,8,'homeimg1.jpeg','post',123),
-(8,9,'homeimg1.jpeg','post',123),
-(9,10,'homeimg1.jpeg','post',123),
-(10,11,'homeimg1.jpeg','post',123);
+(1,1,'homeimg1.jpeg','post',1),
+(2,3,'homeimg1.jpeg','post',2),
+(3,4,'homeimg1.jpeg','post',3),
+(4,5,'homeimg1.jpeg','post',4),
+(5,6,'homeimg1.jpeg','post',5),
+(6,7,'homeimg1.jpeg','post',6),
+(7,8,'homeimg1.jpeg','post',7),
+(8,9,'homeimg1.jpeg','post',8),
+(9,10,'homeimg1.jpeg','post',9),
+(10,11,'homeimg1.jpeg','post',10);
 
 
 INSERT INTO follows(id,followerid,followingid)VALUES
