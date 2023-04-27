@@ -74,8 +74,7 @@ public class TestService {
 
     //アカウント編集　変更
     public boolean update(String staticPath, Integer id, String name, String password){
-        User user = new User();
-        user.setId(id);
+        User user = urepo.findById(id).get();
         user.setProfile_picture(staticPath);
         user.setName(name);
         user.setPassword(password);

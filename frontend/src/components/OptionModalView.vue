@@ -54,7 +54,6 @@ export default {
     saveUserImg(event) {
       this.changeUserImg = event.target.files[0];
       this.profile = require('../assets/' + this.changeUserImg.name);
-      alert(this.profile)
       this.path = URL.createObjectURL(this.changeUserImg);
     },
     saveUserChange() {
@@ -69,9 +68,10 @@ export default {
         }
       }
       ).then(response => {
-        alert(response);
+        console.log(response)
         store.commit('SETNAME', this.changeUserName);
         store.commit('SETPROFILE', this.profile);
+        this.$emit('close')
       }).catch(error => {
         alert(error)
       })
