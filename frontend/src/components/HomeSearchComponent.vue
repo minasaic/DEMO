@@ -5,12 +5,14 @@
             <!-- commentテーブル    {{ getComments }} -->
             <img :src="vueCliUrl" alt="post">
             <br>
+            <router-link :to="{name: 'userpage' , params: {userId: userId}}">ユーザID : {{ userId }} </router-link>
+            <br>
             ・{{ caption }}
             <br><br>
             <div v-for="(getComment) in getComments " :key="getComment.id">
                 <span>{{ getComment.user_id }} : {{ getComment.comment }}</span>
             </div>
-            <button @click="updateLike">{{ likeCount }} &nbsp; like</button>
+            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
             <button @click="showTextBox = !showTextBox">comment</button>
             <br>
             <div v-show="showTextBox">
@@ -25,6 +27,7 @@
 <script>
 import { Service } from '@/service/service';
 import store from '@/store';
+// import store from '@/store';
 export default {
     name: 'UserPageComponent',
     props:{
@@ -66,8 +69,13 @@ export default {
     created(){    //このコンポネートが読み取れた時点、動くもの
         this.showComments()
         this.getVueCliUrl()
+        this.setStoreUserId()
     },
     methods: {
+        setStoreUserId(){
+            store.commit('SETUSERID',this.userId);
+            // alert(store.state.userId);
+        },
         showTextarea(){
             this.showText = true
             Service.post('getcom',this.postId //commentテーブルのpost_id
@@ -106,9 +114,14 @@ export default {
             this.vueCliUrl = require(`../assets/${this.postImgName}`);
             return this.vueCliUrl;
         },
-        updateLike(){
-
-        }
+        createLike(){
+            Service.post('like',this.postId).then(response => {
+                console.log(response);
+                this.$emit('update-likes', response.data)
+            }).catch(error => {
+                alert(error)
+            })
+        },
     }
 }
 </script>

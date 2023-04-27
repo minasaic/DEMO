@@ -1,18 +1,19 @@
 <template>
     <div id="main">
         <h1>検索</h1>
-        <input type="search" v-model=searchInput>
+        <input @keyup.enter="getSearch" type="search" v-model=searchInput>
         <button @click="getSearch">search</button>
         <br><br><br>
         <div >{{ returnSearchs }}</div>
         <div v-for="(returnSearch) in returnSearchs" :key="returnSearch.id">
-            <UserPageComponent
+            <HomeSearchComponent
             :postImgName="returnSearch.image" 
             :caption = returnSearch.caption
             :userId = returnSearch.userid
             :postId = returnSearch.id
             :userName = returnSearch.userName
             :likesCount = returnSearch.likes
+            @update-likes="updateLikes($event,returnSearch.id)"
           />
         <div >
             当てはまる投稿がないです。
@@ -23,11 +24,11 @@
 
 <script>
 import {Service} from "@/service/service"
-import UserPageComponent from "../components/UserPageComponent.vue"
+import HomeSearchComponent from "../components/HomeSearchComponent.vue"
     export default{
         name:'SearchView',
         components:{
-            UserPageComponent
+            HomeSearchComponent
         },
         data(){
             return{
@@ -48,7 +49,10 @@ import UserPageComponent from "../components/UserPageComponent.vue"
                     alert(error)
                 })
             },
-
+            updateLikes(likes,postId) {
+                const postIndex = this.returnSearchs.findIndex(post => post.id === postId);
+                this.returnSearchs[postIndex].likes = likes;    
+            }
         }
     }
 </script>

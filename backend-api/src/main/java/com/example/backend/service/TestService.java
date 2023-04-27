@@ -32,8 +32,7 @@ public class TestService {
     public User getUser(Integer id){
         User testesOptional =urepo.findById(id).get();
         System.out.println(testesOptional.getName());
-        
-            return testesOptional;
+        return testesOptional;
     }
 
     //ログインチェック
@@ -71,6 +70,17 @@ public class TestService {
     //マイページ
     public List<Posts> mypage(Integer id){
         return prepo.findByUserid(id);
+    }
+
+    //アカウント編集　変更
+    public boolean update(String staticPath, Integer id, String name, String password){
+        User user = new User();
+        user.setId(id);
+        user.setProfile_picture(staticPath);
+        user.setName(name);
+        user.setPassword(password);
+        urepo.save(user);
+        return true;
     }
 
     // 新規投稿
@@ -134,15 +144,18 @@ public class TestService {
         return true;
     }
     //フォロー判断
-    public boolean judge(Integer followerid, Integer followingid){
-        if(frepo.findByFolloweridAndFollowingid(followerid,followingid).get() != null){
-            return true;
+    public Integer judge(Integer followerid, Integer followingid){
+        Follows asa = frepo.findByFolloweridAndFollowingid(followerid,followingid).get();
+        System.out.println("ああああああああああああああっっっっっっっっっk");
+
+        if( asa!= null){
+           return  asa.getId();
         }else{
-            return false;
+            return null;
         }
     }
 
-        // いいね機能 修正後
+    // いいね機能 修正後
     public Integer like(Integer id) {
         Posts post = prepo.findById(id).get();
         post.setLikes(post.getLikes() + 1);

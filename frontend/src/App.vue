@@ -39,10 +39,10 @@
       <br><br><br><br>
       <br><br>
       <span>名前:</span>
-      <input type="id" name="username" v-model=valueName>
+      <input type="id" name="username" v-model=valueName />
       <br><br>
       <span>PASS:</span>
-      <input type="password" name="userpass" v-model=valuePass>
+      <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" />
       <br><br>
       <br>
       <button type="button" @click="logins">ログイン</button>
@@ -61,17 +61,11 @@ export default {
   data(){
     return{
       login:false,
-      // valueId:0,
       valueName:"",
       valuePass:"",
-      // valueUserId:1,
-      // valuePostId:1,
       valueComment:"",
     }
   },
-  // computed:{
-  //   ...mapState(['id']),
-  // },
   methods: {
     //ログイン
     logins(){
@@ -116,28 +110,11 @@ export default {
         alert('エラー起きました。')
       })
     },
-    follow(){
-      Service.post("follow",{
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
-    unfollow(){
-      Service.post("unfollow",{
-      }).then(response =>{
-        alert(response)
-      }).catch(error =>{
-        alert(error)
-      })
-    },
   }
 }
 </script>
 
 <style scoped>
-
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -205,6 +182,4 @@ nav{
   transform: scale(1.2);
   z-index: 1;
 }
-
-
 </style>

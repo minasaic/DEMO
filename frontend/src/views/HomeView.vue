@@ -1,15 +1,16 @@
 <template>
     <div id="main">
       <button @click="showFollowing">Following</button>
-      <button @click="showRandom">Random</button>
+      <button @click="showRandom">Random</button><br>
+      datas: {{ datas }}
         <div v-show="showFollowings" v-for="(data) in datas" :key="data.id">
-          <!-- {{ data }} -->
-          <UserPageComponent
+          <HomeSearchComponent
             :postImgName="data.image" 
             :caption = data.caption
             :userId = data.userid
             :postId = data.id
             :likesCount = data.likes
+            @update-likes="updateLikes($event,data.id)"
           />
         </div>
         <div v-show="showRandoms">
@@ -18,18 +19,17 @@
             <img src="../assets/homeimg4.jpeg" alt="写真" width="300" height="300">
             <button @click="like">like</button>
             <br>
-            <!-- <router-link to="userpage">{{ username }}</router-link> -->
         </div>
     </div>
 </template>
 <script>
 import {Service} from "@/service/service"
 import store from '@/store'
-import UserPageComponent from "../components/UserPageComponent.vue"
+import HomeSearchComponent from "../components/HomeSearchComponent.vue"
 export default {
   name: 'CreateView',
   components:{
-    UserPageComponent
+    HomeSearchComponent
   },
   data(){
     return{
@@ -67,6 +67,10 @@ export default {
         alert(error)
       })
     },
+    updateLikes(likes,postId) {
+      const postIndex = this.datas.findIndex(post => post.id === postId);
+      this.datas[postIndex].likes = likes;    
+    }
   }
 }
 </script>

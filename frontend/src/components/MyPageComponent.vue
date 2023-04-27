@@ -27,7 +27,7 @@
 import { Service } from '@/service/service';
 import store from '@/store';
 export default {
-    name: 'MypageComponent',
+    name: 'HomeSearchComponent',
     props:{
         postImgName:{
             type: String,
@@ -99,9 +99,9 @@ export default {
             return this.vueCliUrl;
         },
         createLike(){
-            Service.post('like',this.id).then(response => {
+            Service.post('like',this.id).then(response => { //postidを渡す
                 console.log(response);
-                this.$emit('update-likes', response.data)
+                this.$emit('update-likes', response.data) // 最新のデータがreturnする
             }).catch(error => {
                 alert(error)
             })

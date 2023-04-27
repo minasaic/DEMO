@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <img src="" alt="プロフィール画像" width="100" height="100">
+    <img :src="file" alt="プロフィール画像" width="100" height="100">
     <button @click="showModal = true">設定</button>
     <option-modal-view 
       v-if="showModal" 
@@ -9,11 +9,11 @@
       @save="saveModal">
     </option-modal-view>
     <br>
-    <b>アカウント：{{ username }}</b>
+    <b>アカウント：{{ $store.state.name }}</b>
     <br>
     <b>フォロワー：{{ followerCount }}</b>
     <br>
-    <b>フォロウィン：{{ followingCount }}</b>
+    <b>フォロー：{{ followingCount }}</b>
     <br>
     過去の投稿一覧
     <hr>
@@ -41,19 +41,20 @@ export default {
     MyPageComponent,
     OptionModalView
   },
+  created(){       //このページになったら自動で動くもの
+    // this.getProfile()
+    this.myPage()
+    this.getFollowerCount()
+  },
   data(){
     return{
-      username: store.state.name,
       followerCount: null,
       followingCount: null,
       postTables: null,
       showModal: false,
-      modalTitle: 'アカウント情報変更'
+      modalTitle: 'アカウント情報変更',
+      file: null
     }
-  },
-  created(){       //このページになったら自動で動くもの
-    this.myPage()
-    this.getFollowerCount()
   },
   methods:{
     myPage(){
@@ -63,6 +64,14 @@ export default {
       }).catch(error =>{
         alert(error)
       })
+    },
+    getProfile(){
+      Service.post("profile",store.state.id).then(response => {
+        console.log(response);
+        this.file = response.data;
+      }).catch(error => {
+        alert(error);
+      }) 
     },
     getFollowerCount(){
       Service.post("followdata",store.state.id).then(response => {
@@ -88,7 +97,7 @@ export default {
     updateLikes(likes,postId) {
       const postIndex = this.postTables.findIndex(post => post.id === postId);
       this.postTables[postIndex].likes = likes;    
-    }
+    },
   }
 }
 </script>

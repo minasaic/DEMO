@@ -5,23 +5,25 @@
         <br>
         <b>フォロワー：{{ followerCount }}</b>
         <br>
-        <b>フォロウィン：{{ followingCount }}</b>
+        <b>フォロー：{{ followingCount }}</b>
         <br>
-        <button v-if="!followJudgement()" @click="follow">follow</button>
-        <button v-else @click="unfollow">unfollow</button>
+        <button v-show="aaa" @click="unfollow">unfollow</button>
+        <button v-show="!aaa" @click="follow">follow</button>
         <br><br>
         <div>
             過去の投稿一覧
         </div>
         <hr>
         <div v-for="(userData) in userDatas" :key="userData.id">
-          <!-- {{ data }} -->
-          <UserComponent
+          poststable {{ userData }}
+          <UserPageComponent
             :postImgName="userData.image" 
             :caption = userData.caption
             :userId = userData.userid
             :postId = userData.id
             :likesCount = userData.likes
+            @update-likes="updateLikes($event,userData.id)"
+
           />
         </div>
     </div>
@@ -29,14 +31,15 @@
 <script>
 import {Service} from "@/service/service"
 import store from '@/store'
-import UserComponent from "@/components/UserComponent.vue"
+import UserPageComponent from "@/components/UserPageComponent.vue"
 export default {
     name:'UserComponents',
     components:{
-        UserComponent
+        UserPageComponent
     },
     created(){       //このページになったら自動で動くもの
         this.userId = this.$route.params.userId
+        this.followJudgement()
         this.myPage()
         this.getFollowerCount()
     },
@@ -47,24 +50,29 @@ export default {
             followingCount: null,
             userDatas: null,
             userId: null,
-            followsid: null
+            followsid: null,
+            aaa: null
         }
     },
     mounted(){
         // this.userId = parseInt(this.$route.params.userId)
         
         // alert(this.userId)
-
     },
     methods:{
         myPage(){
             Service.post("mypage",this.userId).then(response => {
+                alert(this.userId)
                 console.log(response);
                 this.userDatas = response.data;
-                alert(this.userDatas)
+                console.log( "aaaa" +this.userDatas)
             }).catch(error =>{
                 alert(error)
             })
+        },
+        updateLikes(likes,postId) {
+            const postIndex = this.userDatas.findIndex(post => post.id === postId);
+            this.userDatas[postIndex].likes = likes;    
         },
         getFollowerCount(){
             Service.post("followdata",this.userId).then(response => {
@@ -82,16 +90,16 @@ export default {
             }).then(response =>{
                 console.log(response);
                 this.followsid = response.data;
+                this.aaa = true;
             }).catch(error =>{
                 alert(error)
             })
         },
         unfollow(){
-            Service.post("unfollow",{
-                followerid : this.userId ,   //フォロしたくないユーザのId
-                followingid : store.state.id  //自分のId
-            }).then(response =>{
+            Service.post("unfollow",this.followsid
+            ).then(response =>{
                 alert(response)
+                this.aaa = false;
             }).catch(error =>{
                 alert(error)
             })
@@ -101,11 +109,18 @@ export default {
                 followerid : this.userId ,   //フォロしたいユーザのId
                 followingid : store.state.id //自分のId
             }).then(response =>{
-                return response.data
+                alert(response.data)
+                if(response.data !== null){
+                    this.aaa = true;
+                    this.followsid = response.data;
+                }else{
+                    this.aaa = false;
+                }
             }).catch(error =>{
-                alert(error)
+                alert("followJudg"+error)
             })
-        }
+        },
+
     }
 }
 </script>

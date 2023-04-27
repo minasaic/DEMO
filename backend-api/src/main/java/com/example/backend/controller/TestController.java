@@ -37,7 +37,6 @@ class TestController{
         }
         return user;
         }
-    
 
     // 新規登録
     @PostMapping(path = "/create")
@@ -49,20 +48,38 @@ class TestController{
         return user;
         }
     
-
     //ホーム画面
     @PostMapping(path="/home")
     public List<Posts> homepage(@RequestBody Integer id){
         return testService.getPosts(id);
     }
 
-    
-
     //マイページ
     @PostMapping(path="/mypage")
     public List<Posts> mypage(@RequestBody Integer id){
         return testService.mypage(id);
     }
+
+    //アカウント編集・変更
+    @PostMapping(path = "/update")
+    public boolean update(
+        @RequestParam ("file") MultipartFile file,
+        @RequestParam ("id") Integer id,
+        @RequestParam ("name") String name, 
+        @RequestParam ("password") String password) {
+        try {
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" + file.getOriginalFilename();
+            file.transferTo(new File(filePath));
+            String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
+            return testService.update(staticPath,id,name,password);
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
+    //　my page にプロフィール画像を表示する
+    
+
     // 新規投稿
     @PostMapping(path = "/post")
     public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
@@ -124,12 +141,13 @@ class TestController{
     // いいね
     @PostMapping(path = "/like")
     public Integer like(@RequestBody Integer id) {
+        System.out.println("aaあああああああああああああああああ");
         return testService.like(id);
     }
 
     //フォローしてるかどうかの判断
     @PostMapping(path="/followJudge")
-    public boolean aaa(@RequestBody Follows fol){
+    public Integer aaa(@RequestBody Follows fol){
         return testService.judge(fol.getFollowerid(),fol.getFollowingid());
     }
 
