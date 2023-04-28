@@ -48,7 +48,7 @@ public class TestService {
         return urepo.findByName(username).getId();
     }
 
-    public String getProfile(Integer id){
+    public String getProfileById(Integer id){
         return urepo.findById(id).get().getProfile_picture();
     }
 
