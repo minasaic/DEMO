@@ -35,7 +35,7 @@
       <div id="titles" style="text-align: center;">
       <h1>1nstagram</h1>
       <br><br><br><br>
-      <img src="./assets/1nstagramlogo.png" alt="LOGO">
+      <img src="./assets/system/1nstagramlogo.1845a292.png" alt="LOGO">
       <br><br><br><br>
       <br><br>
       <span>名前:</span>

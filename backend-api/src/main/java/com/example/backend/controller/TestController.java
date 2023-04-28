@@ -70,7 +70,7 @@ class TestController{
         @RequestParam ("name") String name, 
         @RequestParam ("password") String password) {
         try {
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" + file.getOriginalFilename();
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/" + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
             return testService.update(staticPath,id,name,password);
@@ -86,7 +86,7 @@ class TestController{
     @PostMapping(path = "/post")
     public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" + file.getOriginalFilename();
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
             testService.createPost(id,staticPath,text);

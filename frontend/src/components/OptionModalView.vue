@@ -7,7 +7,10 @@
           <span>
             <img :src="path" alt="選択した画像" width="250px" height="250px">
             <br>
-            プロフィール写真<input type="file" @change="saveUserImg">
+            <label for="file-upload" class="custom-file-upload">
+              <i class="fa fa-cloud-upload"></i> プロフィール写真
+            </label>
+            <input id="file-upload" type="file" @change="saveUserImg">
             <br>
             アカウント名：<input type="text" v-model="changeUserName">
             <br>
@@ -65,8 +68,7 @@ export default {
       Service.post('update', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
-        }
-      }
+        }}
       ).then(response => {
         console.log(response)
         store.commit('SETNAME', this.changeUserName);

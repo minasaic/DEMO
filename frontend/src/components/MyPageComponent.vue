@@ -96,7 +96,7 @@ export default {
             })
         },
         getVueCliUrl(){
-            this.vueCliUrl = require(`../assets/${this.postImgName}`);
+            this.vueCliUrl = require(`../assets/post/${this.postImgName}`);
             return this.vueCliUrl;
         },
         createLike(){
