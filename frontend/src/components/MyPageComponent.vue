@@ -28,7 +28,7 @@
 import { Service } from '@/service/service';
 import store from '@/store';
 export default {
-    name: 'HomeSearchComponent',
+    name: 'MyPageComponent',
     props:{
         postImgName:{
             type: String,

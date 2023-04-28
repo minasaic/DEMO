@@ -1,15 +1,15 @@
 INSERT INTO user(id,name,password,profile_picture)VALUES
-(1,'森上','pass','aaaaa'),
-(2,'qqq','qqq','qqq'),
-(3,'崔','pass','safgdr'),
-(4,'矢口','pass','asdfhghjyftydr'),
-(5,'稲垣','pass','asdfhghjyftydr'),
-(6,'三間','pass','asdfhghjyftydr'),
-(7,'中村','pass','asdfhghjyftydr'),
-(8,'長澤','pass','asdfhghjyftydr'),
-(9,'加藤','pass','asdfhghjyftydr'),
-(10,'宮澤','pass','asdfhghjyftydr'),
-(11,'古郡','pass','asdfhghjyftydr');
+(1,'森上','pass','homeimg4.jpeg'),
+(2,'qqq','qqq','homeimg4.jpeg'),
+(3,'崔','pass','homeimg4.jpeg'),
+(4,'矢口','pass','homeimg4.jpeg'),
+(5,'稲垣','pass','homeimg4.jpeg'),
+(6,'三間','pass','homeimg4.jpeg'),
+(7,'中村','pass','homeimg4.jpeg'),
+(8,'長澤','pass','homeimg4.jpeg'),
+(9,'加藤','pass','homeimg4.jpeg'),
+(10,'宮澤','pass','homeimg4.jpeg'),
+(11,'古郡','pass','homeimg4.jpeg');
 
 
 INSERT INTO posts(id,userid,image,caption,likes)VALUES

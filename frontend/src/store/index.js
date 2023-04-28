@@ -15,7 +15,6 @@ export default new Vuex.Store({
     setid(context,value){
       context.commit('SETID',value)
     },
-    
   },
   mutations: {
     SETID(state, value) {

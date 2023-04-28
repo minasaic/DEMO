@@ -82,11 +82,11 @@ export default {
         store.commit('SETPROFILE',response.data.profile_picture);
         alert( 'ID : ' + store.state.id + '\nName : '+ response.data.name +  '\n'  + 'PASSWORD : ' + this.valuePass+'\n'+ store.state.profile);
        } else{
-         alert("Wrong id or password.");
+         alert("パスワードが間違ってます。");
        }
       }).catch(error =>{
         console.log(error);
-        alert("エラー起きました。")
+        alert("名前が間違っているか、アカウントが存在しません。")
       })
 
     },

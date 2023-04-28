@@ -33,7 +33,7 @@ class TestController{
     public User loginUser(@RequestBody User user) {
         if(testService.loginUser(user.getName(),user.getPassword())){
          user.setId(testService.getIdByName(user.getName()));
-         user.setProfile_picture(testService.getProfile(user.getId()));
+         user.setProfile_picture(testService.getProfileById(user.getId()));
         return user;
         }
         return user;
@@ -44,7 +44,7 @@ class TestController{
     public User createUser(@RequestBody User user) {
         if(testService.createUser(user.getName(), user.getPassword())){
             user.setId(testService.getIdByName(user.getName()));
-            user.setProfile_picture(testService.getProfile(user.getId()));
+            user.setProfile_picture(testService.getProfileById(user.getId()));
             return user;
         }
         return user;

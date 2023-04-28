@@ -33,7 +33,7 @@ import {Service} from "@/service/service"
 import store from '@/store'
 import UserPageComponent from "@/components/UserPageComponent.vue"
 export default {
-    name:'UserComponents',
+    name:'UserPageView',
     components:{
         UserPageComponent
     },

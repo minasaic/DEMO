@@ -29,7 +29,7 @@ import { Service } from '@/service/service';
 import store from '@/store';
 // import store from '@/store';
 export default {
-    name: 'UserPageComponent',
+    name: 'HomeSearchComponent',
     props:{
         postImgName:{
             type: String,

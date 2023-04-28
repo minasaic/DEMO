@@ -36,7 +36,7 @@ import store from "@/store"
 import OptionModalView from "../components/OptionModalView.vue"
 
 export default {
-  name: 'App',
+  name: 'MyPageView',
   components: {
     MyPageComponent,
     OptionModalView
@@ -92,7 +92,11 @@ export default {
       this.postTables[postIndex].likes = likes;    
     },
     profilea(){
-      return require('../assets/'+ store.state.profile);
+      if(store.state.profile !== null){
+        return require('../assets/'+ store.state.profile);
+      } else {
+        return '';
+      }
     }
   }
 }

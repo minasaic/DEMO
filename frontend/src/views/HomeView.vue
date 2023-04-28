@@ -12,6 +12,7 @@
             :likesCount = data.likes
             @update-likes="updateLikes($event,data.id)"
           />
+          <b>{{data.likes}}</b>
         </div>
         <div v-show="showRandoms">
             <img src="../assets/homeimg3.jpeg" alt="写真" width="300" height="300">
@@ -27,7 +28,7 @@ import {Service} from "@/service/service"
 import store from '@/store'
 import HomeSearchComponent from "../components/HomeSearchComponent.vue"
 export default {
-  name: 'CreateView',
+  name: 'HomeView',
   components:{
     HomeSearchComponent
   },
