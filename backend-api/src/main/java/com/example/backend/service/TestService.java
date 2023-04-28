@@ -48,6 +48,10 @@ public class TestService {
         return urepo.findByName(username).getId();
     }
 
+    public String getProfile(Integer id){
+        return urepo.findById(id).get().getProfile_picture();
+    }
+
     // 新規ユーザー登録
     public boolean createUser(String name, String password) {
         User user = new User();

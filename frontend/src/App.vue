@@ -79,8 +79,8 @@ export default {
         this.login = true;
         store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
         store.commit('SETNAME',response.data.name);
-        alert(response.data.name);
-        alert('ID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
+        store.commit('SETPROFILE',response.data.profile_picture);
+        alert( 'ID : ' + store.state.id + '\nName : '+ response.data.name +  '\n'  + 'PASSWORD : ' + this.valuePass+'\n'+ store.state.profile);
        } else{
          alert("Wrong id or password.");
        }
@@ -101,7 +101,8 @@ export default {
         this.login = true;
         store.commit('SETID',response.data.id);  //responseされたIdをストア内stateのidにセット
         store.commit('SETNAME',response.data.name);
-        alert('アカウントが新規作成しました。'+'\nID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass);
+        store.commit('SETPROFILE',response.data.profile_picture);
+        alert('アカウントが新規作成しました。'+'\nID : ' + store.state.id +  '\n'  + 'PASSWORD : ' + this.valuePass +'\n'+ store.state.profile);
        } else{
          alert('アカウント作成できません。');
        }

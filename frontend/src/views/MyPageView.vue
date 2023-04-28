@@ -1,6 +1,6 @@
 <template>
   <div id="main">
-    <img :src="file" alt="プロフィール画像" width="100" height="100">
+    <img :src="profilea()" alt="プロフィール画像" width="100" height="100">
     <button @click="showModal = true">設定</button>
     <option-modal-view 
       v-if="showModal" 
@@ -53,7 +53,7 @@ export default {
       postTables: null,
       showModal: false,
       modalTitle: 'アカウント情報変更',
-      file: null
+      profile: null
     }
   },
   methods:{
@@ -61,17 +61,10 @@ export default {
       Service.post("mypage",store.state.id).then(response => {
         console.log(response);
         this.postTables = response.data;
+        // this.profile = require('../assets/'+ store.state.profile);
       }).catch(error =>{
         alert(error)
       })
-    },
-    getProfile(){
-      Service.post("profile",store.state.id).then(response => {
-        console.log(response);
-        this.file = response.data;
-      }).catch(error => {
-        alert(error);
-      }) 
     },
     getFollowerCount(){
       Service.post("followdata",store.state.id).then(response => {
@@ -98,6 +91,9 @@ export default {
       const postIndex = this.postTables.findIndex(post => post.id === postId);
       this.postTables[postIndex].likes = likes;    
     },
+    profilea(){
+      return require('../assets/'+ store.state.profile);
+    }
   }
 }
 </script>

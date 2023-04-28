@@ -33,6 +33,7 @@ class TestController{
     public User loginUser(@RequestBody User user) {
         if(testService.loginUser(user.getName(),user.getPassword())){
          user.setId(testService.getIdByName(user.getName()));
+         user.setProfile_picture(testService.getProfile(user.getId()));
         return user;
         }
         return user;
@@ -43,6 +44,7 @@ class TestController{
     public User createUser(@RequestBody User user) {
         if(testService.createUser(user.getName(), user.getPassword())){
             user.setId(testService.getIdByName(user.getName()));
+            user.setProfile_picture(testService.getProfile(user.getId()));
             return user;
         }
         return user;
@@ -152,18 +154,16 @@ class TestController{
     }
 
     // 投稿削除
-    @DeleteMapping(path = "/deletePost/{id}")
-    public ResponseEntity<String> deletePost(@PathVariable Integer id) {
-        String imagePath = testService.getPath(id);
+    @PostMapping(path = "/deletepost")
+    public boolean deletePost(@RequestBody Integer id) {
+        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" +testService.getPath(id);
         File file = new File(imagePath);
         if (file.exists()) {
             file.delete();
             testService.deletePost(id);
-            return ResponseEntity.ok("投稿を削除しました。");
+            return true;
         } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("指定された投稿が見つかりませんでした。");
+            return false;
         }
-
     }
-
 }

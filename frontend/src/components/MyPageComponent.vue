@@ -13,6 +13,7 @@
             <br><br>
             <button @click="createLike">{{ likesCount }} &nbsp; like</button>
             <button @click="showTextBox = !showTextBox">comment</button>
+            <button @click="deletePost">delete</button>
             <br>
             <div v-show="showTextBox">
                 <textarea  v-model="commentText" cols="30" rows="4"></textarea>
@@ -106,6 +107,14 @@ export default {
                 alert(error)
             })
         },
+        deletePost(){
+            Service.post('deletepost',this.id).then(response => {
+                console.log(response);
+                alert('削除しました。')
+            }).catch(error => {
+                alert(error)
+            })
+        }
     }
 }
 </script>
