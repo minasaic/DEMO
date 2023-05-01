@@ -5,18 +5,25 @@ Vue.use(Vuex);
 
 export default new Vuex.Store({
   state: {
+    pageBoolean: false,
+    signSigu: true,
     id: 0,
     name: null,
     userId: null,
     profile: null,
-    mypage: null,
   },
   actions:{
     setid(context,value){
-      context.commit('SETID',value)
+      context.commit('SETID',value);
     },
   },
   mutations: {
+    SETSIGNSIGU(state, value) {
+      return state.signSigu = value;
+    },
+    SETPAGEBOOLEAN(state, value){
+      return state.pageBoolean = value;
+    },
     SETID(state, value) {
       return state.id = value;
     },
@@ -29,9 +36,7 @@ export default new Vuex.Store({
     SETPROFILE(state,value){
       return state.profile =  value;
     }
-    // MYPAGE(state,object){
-    //   return state.mypage = object
-    // }
+
   },
   getters: {
     // setId(state,value) {

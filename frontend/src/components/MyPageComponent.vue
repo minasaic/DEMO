@@ -1,9 +1,9 @@
-<template>
+<!-- <template>
     <div id="main" class="instagram-post">
         <div>
-            <!-- commentテーブル    {{ getComments }} -->
+             commentテーブル    {{ getComments }} 
             <hr>
-            <img :src="vueCliUrl" alt="post">
+            <img class="postDetelImg" :src="vueCliUrl" alt="post">
             <br>
             <div class="caption">{{ caption }}</div>
             <br>
@@ -12,6 +12,31 @@
             </div>
             <br><br>
             <button @click="createLike">{{ likesCount }} &nbsp; like</button>
+            <button @click="showTextBox = !showTextBox">comment</button>
+            <button @click="deletePost">delete</button>
+            <br>
+            <div v-show="showTextBox">
+                <textarea  v-model="commentText" cols="30" rows="4"></textarea>
+                <br>
+                <button @click="updateComment">確認</button>
+                <button @click="showTextBox = !showTextBox">キャンセル</button>
+            </div>
+        </div>
+    </div>
+</template> -->
+<template>
+    <div id="mypage-container" class="instagram-post">
+        <div class="mypage-header"> 
+            <button class="close-button" @click="$emit('close')">X</button>
+        </div>
+        <div class="mypage-body">
+            <img class="mypage-img" :src="vueCliUrl" alt="post">
+            <p class="mypage-caption">{{ caption }}</p>
+            <p class="mypage-likes">いいね数: {{likesCount}}</p>
+            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
+            <ul v-for="(getComment) in getComments " :key="getComment.id" >
+                <li >{{ getComment.user_id}} : {{ getComment.comment }}</li>
+            </ul>
             <button @click="showTextBox = !showTextBox">comment</button>
             <button @click="deletePost">delete</button>
             <br>
@@ -46,7 +71,6 @@ export default {
             type: Number,
             required: true
         }
-
     },
     data(){
         return {
@@ -118,35 +142,39 @@ export default {
     }
 }
 </script>
-<style scoped>
-img{
-  width: 300px;
+<style>
+.mypage-container {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  z-index: 2;
+}
+
+.mypage-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.mypage-title {
+  font-size: 20px;
+  margin: 0;
+}
+
+.close-button {
+  font-size: 20px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+}
+
+.mypage-img {
+  width: 100%;
   height: 300px;
 }
-
-/* .instagram-post {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-bottom: 20px;
-}
-
-.instagram-post img {
-  width: 100%;
-  max-width: 500px;
-}
-
-.instagram-post .caption {
-  margin-top: 10px;
-  font-size: 16px;
-  font-weight: bold;
-  text-align: center;
-}
-
-.instagram-post .likes,
-.instagram-post .comments {
-  margin-top: 5px;
-  font-size: 14px;
-  text-align: center;
-} */
 </style>

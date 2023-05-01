@@ -52,7 +52,7 @@ export default {
       changeUserPassword: '',
       profile: null
     }
-  },
+  }, 
   methods: {
     saveUserImg(event) {
       this.changeUserImg = event.target.files[0];

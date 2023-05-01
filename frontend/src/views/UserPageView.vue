@@ -125,10 +125,10 @@ export default {
 }
 </script>
 
-<style>
+<!-- <style>
 #main {
   box-sizing: border-box;
   margin-left: 70px;
   /* padding: 20px 40px; */
 }
-</style>
+</style> -->

@@ -5,10 +5,22 @@ import SearchView from '../views/SearchView.vue'
 import MyPageView from '../views/MyPageView.vue'
 import CreateView from '../views/CreateView.vue'
 import UserPage from '../views/UserPageView.vue'
+import CreateAcount from '../views/CreateAccount.vue'
+import LoginView from '../views/LoginView.vue'
 
 Vue.use(VueRouter)
 
 const routes = [
+ {
+   path: '/createaccount',
+   name: 'createaccount',
+   component: CreateAcount
+ },
+ {
+   path: '/login',
+   name: 'login',
+   component: LoginView
+ },
  {
     path: '/',
     name: 'home',
