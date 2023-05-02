@@ -1,40 +1,30 @@
 <template>
-  <div id="main">
-    <img :src="profilea()" alt="プロフィール画像" width="100" height="100">
+  <div id="main" class="photo-gallery">
+    <img :src="profilea()" class="round-image" alt="プロフィール画像" width="100" height="100">
     <button @click="showModal = true">
-      <img  class="photo" src="../assets/set.png" alt="LOGO" width="20" height="20">
+      <img class="photo" src="../assets/set.png" alt="LOGO" width="20" height="20">
     </button>
-    <option-modal-view 
-      v-if="showModal" 
-      :title="modalTitle" 
-      @close="showModal = false" 
-      @save="showModal = false">
+    <option-modal-view v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
     </option-modal-view>
     <br>
     <b>アカウント：{{ $store.state.name }}</b>
     <br>
-    <b>フォロワー：{{ followerCount }}</b>
+    <b>フォロワー：{{ followerCount }}人</b>
     <br>
-    <b>フォロー：{{ followingCount }}</b>
+    <b>フォロー：{{ followingCount }}人</b>
     <br>
-    過去の投稿一覧
+    投稿 &nbsp; {{ postCount }}件
     <hr>
     <!-- postsテーブル     {{ postTables }}       -->
-    <div class="postContainer">
-      <div v-for="(postTable) in postTables " :key="postTable.id">
-        <img class="postImg" @click="showMyPageComponent = postTable" :src="getVueCliUrl(postTable.image)" alt="投稿画像">
+    <div class="photo-grid">
+      <div class="photo" v-for="(postTable, index) in postTables " :key="postTable.id"
+        @click="showMyPages(index, postTable.id)">
+        <img :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
-      <MyPageComponent 
-        v-show="showMyPageComponent" 
-        v-if="showMyPageComponent"
-        :id="showMyPageComponent.id" 
-        :postImgName="showMyPageComponent.image"
-        :caption="showMyPageComponent.caption" 
-        :likesCount="showMyPageComponent.likes" 
-        @close="showMyPageComponent = null"
-        />
-        <!-- @update-likes="updateLikes($event, showMyPageComponent.id) -->
-        <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
+      <MyPageComponent v-show="showMyPageComponent" :postTableObject="postTableObject"
+        :commentTableObject="commentTableObject" @close="showMyPageComponent = false" />
+      <!-- @update-likes="updateLikes($event, showMyPageComponent.id) -->
+      <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
   </div>
 </template>
@@ -54,6 +44,7 @@ export default {
     // this.getProfile()
     this.myPage()
     this.getFollowerCount()
+    this.getPostCount()
   },
   data() {
     return {
@@ -62,8 +53,11 @@ export default {
       postTables: null,
       showModal: false,
       showMyPageComponent: null,
+      postTableObject: null,
+      commentTableObject: null,
       modalTitle: 'アカウント情報変更',
-      profile: null
+      profile: null,
+      postCount: null
     }
   },
   methods: {
@@ -72,6 +66,18 @@ export default {
         console.log(response);
         this.postTables = response.data;
         // this.profile = require('../assets/'+ store.state.profile);
+      }).catch(error => {
+        alert(error)
+      })
+    },
+    showMyPages(index, postId) {
+      this.showMyPageComponent = true;
+      this.postTableObject = this.postTables[index];
+      //クリックした写真のコメントテーブルを取得する
+      Service.post('getcom', postId//commentテーブルのpost_id
+      ).then(response => {
+        console.log(response)
+        this.commentTableObject = response.data;
       }).catch(error => {
         alert(error)
       })
@@ -111,21 +117,35 @@ export default {
     getVueCliUrl(imgUrl) {
       return require(`../assets/post/${imgUrl}`);
     },
+    //投稿数を取得
+    getPostCount() {
+      Service.post("postdata", store.state.id).then(response => {
+        console.log(response);
+        this.postCount = response.data;
+      }).catch(error => {
+        alert(error)
+      })
+    },
   }
 }
 </script>
+
 <style>
-.postContainer {
-  display: flex;
-  flex-wrap: wrap;
+.round-image {
+  border-radius: 50%;
 }
 
-.postImg {
-  width: 200px;
-  height: 200px;
-  margin: 10px;
-  object-fit: cover;     /* 画像サイズを無理やり調整せず、正方形に切り取る */
-  cursor: pointer;        /* 画像をボタンみたいにボタン、マウスが画像に移動したら指の様になる*/
+.photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-gap: 20px;
+}
+
+.photo-grid img {
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+  cursor: pointer;
 }
 
 .overlay {

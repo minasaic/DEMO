@@ -38,10 +38,11 @@ export default {
         UserPageComponent
     },
     created(){       //このページになったら自動で動くもの
-        const user_Id = sessionStorage.getItem('user_id')
-        if(user_Id){
-            store.commit('SETUSERID', user_Id)
-            this.userId = user_Id
+        const userId = sessionStorage.getItem('user_id')
+        if(userId){
+            store.commit('SETUSERID', userId)
+            this.userId = userId
+            alert('getItem'+this.userId)
         }
 
         this.followJudgement()
@@ -122,7 +123,7 @@ export default {
                     this.aaa = false;
                 }
             }).catch(error =>{
-                alert("followJudg"+error)
+                alert("followJudg     "+error)
             })
         },
 

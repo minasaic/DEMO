@@ -5,7 +5,11 @@
             <!-- commentテーブル    {{ getComments }} -->
             <img :src="vueCliUrl" alt="post">
             <br>
-            <router-link :to="{name: 'userpage' , params: {userId: userId}}" @click="setStoreUserId">ユーザID : {{ userId }} </router-link>
+            <router-link :to="{name: 'userpage' , params: {userId: userId}}">
+                <button @click="setStoreUserId">
+                    ユーザID : {{ userId }} 
+                </button>
+            </router-link>
             <br>
             ・{{ caption }}
             <br><br>
@@ -68,13 +72,12 @@ export default {
     created(){    //このコンポネートが読み取れた時点、動くもの
         this.showComments()
         this.getVueCliUrl()
-        this.setStoreUserId()
     },
     methods: {
         setStoreUserId(){
             store.commit('SETUSERID',this.userId);
-            sessionStorage.setItem('user_id',this.userId)
-            // alert(store.state.userId);
+            sessionStorage.setItem('user_id',this.userId);
+            alert('setStorUserId  '+store.state.userId);
         },
         showTextarea(){
             this.showText = true
@@ -87,7 +90,6 @@ export default {
             })
         },
         updateComment(){
-            alert(this.userId)
             Service.post('comment',{
                 user_id:store.state.id, //ストアに保存したid
                 postid:this.postId,

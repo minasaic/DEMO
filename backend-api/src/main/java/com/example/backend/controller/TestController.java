@@ -79,8 +79,11 @@ class TestController{
         }
     }
 
-    //　my page にプロフィール画像を表示する
-    
+    //投稿数を取得
+    @PostMapping(value="/postdata")
+    public Integer getpost(@RequestBody Integer id) {
+        return testService.getPostCount(id);
+    }
 
     // 新規投稿
     @PostMapping(path = "/post")
@@ -110,7 +113,6 @@ class TestController{
     // コメント投稿
     @PostMapping(path = "/comment")
     public boolean newComment(@RequestBody Comments com) {
-        System.out.println("eええええええええええ");
         System.out.println(com.getUser_id());
         System.out.println(com.getPostid());
         return testService.createComment(com.getUser_id(),com.getPostid(),com.getComment());

@@ -114,6 +114,11 @@ public class TestService {
         return true;
     }
 
+//投稿数を取得
+public Integer getPostCount(Integer id){
+    Integer postCount = prepo.countByUserid(id);
+    return postCount;
+}
     //フォロワー数とフォロー数の取得
     public  List<Integer> getFollowCount(Integer id){
         List<Integer> followCount= new ArrayList<>();

@@ -12,7 +12,6 @@
             :likesCount = data.likes
             @update-likes="updateLikes($event,data.id)"
           />
-          <b>{{data.likes}}</b>
         </div>
         <div v-show="showRandoms">
             <img src="../assets/homeimg3.jpeg" alt="写真" width="300" height="300">
