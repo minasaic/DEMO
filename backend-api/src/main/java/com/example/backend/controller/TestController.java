@@ -2,14 +2,12 @@ package com.example.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -89,9 +87,12 @@ class TestController{
     @PostMapping(path = "/post")
     public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" + file.getOriginalFilename();
+            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" 
+                + timestamp 
+                + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
+            String staticPath = timestamp + file.getOriginalFilename(); //データベースに保存するファイルネーム
             testService.createPost(id,staticPath,text);
             return staticPath;
         } catch (IOException e) {
@@ -158,7 +159,7 @@ class TestController{
     // 投稿削除
     @PostMapping(path = "/deletepost")
     public boolean deletePost(@RequestBody Integer id) {
-        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/" +testService.getPath(id);
+        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" +testService.getPath(id);
         File file = new File(imagePath);
         if (file.exists()) {
             file.delete();

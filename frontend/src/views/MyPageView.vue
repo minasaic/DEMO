@@ -1,6 +1,7 @@
 <template>
   <div id="main" class="photo-gallery">
-    <img :src="profilea()" class="round-image" alt="プロフィール画像" width="100" height="100">
+    <img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像" width="100" height="100">
+    <p v-else>画像をアップロードしてください。</p>
     <button @click="showModal = true">
       <img class="photo" src="../assets/set.png" alt="LOGO" width="20" height="20">
     </button>
@@ -15,15 +16,16 @@
     <br>
     投稿 &nbsp; {{ postCount }}件
     <hr>
-    <!-- postsテーブル     {{ postTables }}       -->
+    postsテーブル     {{ postTables.image}}      
     <div class="photo-grid">
       <div class="photo" v-for="(postTable, index) in postTables " :key="postTable.id"
         @click="showMyPages(index, postTable.id)">
         <img :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
       <MyPageComponent v-show="showMyPageComponent" :postTableObject="postTableObject"
-        :commentTableObject="commentTableObject" @close="showMyPageComponent = false" />
-      <!-- @update-likes="updateLikes($event, showMyPageComponent.id) -->
+        :commentTableObject="commentTableObject" @close="showMyPageComponent = false" 
+        @refresh-data="showMyPages(clickImgIndex,postTableObject.id)"
+        />
       <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
   </div>
@@ -41,7 +43,6 @@ export default {
     OptionModalView
   },
   created() {       //このページになったら自動で動くもの
-    // this.getProfile()
     this.myPage()
     this.getFollowerCount()
     this.getPostCount()
@@ -55,8 +56,8 @@ export default {
       showMyPageComponent: null,
       postTableObject: null,
       commentTableObject: null,
+      clickImgIndex: null,
       modalTitle: 'アカウント情報変更',
-      profile: null,
       postCount: null
     }
   },
@@ -65,7 +66,6 @@ export default {
       Service.post("mypage", store.state.id).then(response => {
         console.log(response);
         this.postTables = response.data;
-        // this.profile = require('../assets/'+ store.state.profile);
       }).catch(error => {
         alert(error)
       })
@@ -78,6 +78,7 @@ export default {
       ).then(response => {
         console.log(response)
         this.commentTableObject = response.data;
+        this.clickImgIndex = index;
       }).catch(error => {
         alert(error)
       })
@@ -111,7 +112,7 @@ export default {
       if (store.state.profile !== null) {
         return require('../assets/' + store.state.profile);
       } else {
-        return '';
+        return null;
       }
     },
     getVueCliUrl(imgUrl) {

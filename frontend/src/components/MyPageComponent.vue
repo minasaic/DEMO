@@ -72,7 +72,7 @@
               </div>
             </div>
             <div class="btn-section">
-              <button class="like-btn" @click="createLike">{{ likesCount }} いいね</button>
+              <button class="like-btn" @click="createLike">いいね</button>
               <button class="delete-btn" @click="deletePost">削除する</button>
             </div>
           </div>
@@ -92,7 +92,7 @@ export default {
             require: true
         },
         commentTableObject: {
-            type: Object,
+            type: Array,
             require: true
         }
     },
@@ -101,12 +101,7 @@ export default {
             showTextBox: false,
             vueCliUrl: '',
             commentText: '',
-            getComments: '',
-
         }
-    },
-    created(){
-        
     },
     methods: {
         updateComment(){
@@ -118,18 +113,9 @@ export default {
                 console.log(response);
                 this.commentText='';
                 //コメントがアップデート成功時に、コメント一覧を更新する
-                this.showComments(this.postTableObject.id);
+                this.$emit('refresh-data');
             }).catch(error => {
                 alert(error);
-            })
-        },
-        showComments(){
-            Service.post('getcom',this.postTableObject.id//commentテーブルのpost_id
-            ).then(response =>{
-                console.log(response)
-                this.getComments = response.data;
-            }).catch(error =>{
-                alert(error)
             })
         },
         getVueCliUrl(img){
@@ -139,7 +125,7 @@ export default {
         createLike(){
             Service.post('like',this.postTableObject.id).then(response => { //postidを渡す
                 console.log(response);
-                this.$emit('update-likes', response.data) // 最新のデータがreturnする
+                this.$emit('refresh-data'); // 最新のデータがreturnする
             }).catch(error => {
                 alert(error)
             })
