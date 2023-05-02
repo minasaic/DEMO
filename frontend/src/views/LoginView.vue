@@ -56,6 +56,7 @@ export default {
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
                     sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    sessionStorage.setItem('page_boolean', true);
                     alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
                     alert("パスワードが間違ってます。");

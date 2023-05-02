@@ -1,7 +1,7 @@
 <template>
     <div id="main">
         <img src="" alt="プロフィール画像" width="100" height="100"> &nbsp;&nbsp;
-        <b>アカウント：{{ userName }} {{ userId }}</b> 
+        <b>アカウント：{{ userName }} {{ $store.state.userId }}</b> 
         <br>
         <b>フォロワー：{{ followerCount }}</b>
         <br>
@@ -38,7 +38,12 @@ export default {
         UserPageComponent
     },
     created(){       //このページになったら自動で動くもの
-        this.userId = this.$route.params.userId
+        const user_Id = sessionStorage.getItem('user_id')
+        if(user_Id){
+            store.commit('SETUSERID', user_Id)
+            this.userId = user_Id
+        }
+
         this.followJudgement()
         this.myPage()
         this.getFollowerCount()

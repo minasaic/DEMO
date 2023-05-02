@@ -5,7 +5,7 @@
             <!-- commentテーブル    {{ getComments }} -->
             <img :src="vueCliUrl" alt="post">
             <br>
-            <router-link :to="{name: 'userpage' , params: {userId: userId}}">ユーザID : {{ userId }} </router-link>
+            <router-link :to="{name: 'userpage' , params: {userId: userId}}" @click="setStoreUserId">ユーザID : {{ userId }} </router-link>
             <br>
             ・{{ caption }}
             <br><br>
@@ -27,7 +27,6 @@
 <script>
 import { Service } from '@/service/service';
 import store from '@/store';
-// import store from '@/store';
 export default {
     name: 'HomeSearchComponent',
     props:{
@@ -74,6 +73,7 @@ export default {
     methods: {
         setStoreUserId(){
             store.commit('SETUSERID',this.userId);
+            sessionStorage.setItem('user_id',this.userId)
             // alert(store.state.userId);
         },
         showTextarea(){

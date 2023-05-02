@@ -79,7 +79,6 @@ export default {
             })
         },
         updateComment(){
-            alert(this.userId)
             Service.post('comment',{
                 user_id:store.state.id, //ストアに保存したid
                 postid:this.postId,

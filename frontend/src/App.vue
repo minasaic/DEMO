@@ -80,13 +80,13 @@ export default {
       const id = sessionStorage.getItem("id");
       const name = sessionStorage.getItem("name");
       const profilePicture = sessionStorage.getItem("profile_picture");
-      const login =sessionStorage.getItem("login");
+      const pageBoolean =sessionStorage.getItem("page_boolean");
       // 読み込んだ情報をストアに保存する
-      if (id && name && login) {
+      if (id && name && pageBoolean) {
           store.commit("SETID", id);
           store.commit("SETNAME", name);
           store.commit("SETPROFILE", profilePicture);
-          store.commit("SETPAGEBOOLEAN", login);
+          store.commit("SETPAGEBOOLEAN", pageBoolean);
       }
   },
   data() {
