@@ -1,60 +1,12 @@
-<!-- <template>
-    <div id="main" class="instagram-post">
-        <div>
-             commentテーブル    {{ getComments }} 
-            <hr>
-            <img class="postDetelImg" :src="vueCliUrl" alt="post">
-            <br>
-            <div class="caption">{{ caption }}</div>
-            <br>
-            <div v-for="(getComment) in getComments " :key="getComment.id" >
-                <span >{{ getComment.user_id}} : {{ getComment.comment }}</span>
-            </div>
-            <br><br>
-            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
-            <button @click="showTextBox = !showTextBox">comment</button>
-            <button @click="deletePost">delete</button>
-            <br>
-            <div v-show="showTextBox">
-                <textarea  v-model="commentText" cols="30" rows="4"></textarea>
-                <br>
-                <button @click="updateComment">確認</button>
-                <button @click="showTextBox = !showTextBox">キャンセル</button>
-            </div>
-        </div>
-    </div>
-</template> -->
-<!-- <template>
-    <div class="photo-details-dialog">
-        <div class="dialog-content">
-            <img class="mypage-img" :src="vueCliUrl" alt="post">
-            <p class="mypage-caption">{{ caption }}</p>
-            <p class="mypage-likes">いいね数: {{likesCount}}</p>
-            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
-            <ul v-for="(getComment) in postTableObject " :key="getComment.id" >
-                <li >{{ getComment.user_id}} : {{ getComment.comment }}</li>
-            </ul>
-            <button @click="showTextBox = !showTextBox">comment</button>
-            <button @click="deletePost">delete</button>
-            <br>
-            <div v-show="showTextBox">
-                <textarea  v-model="commentText" cols="30" rows="4"></textarea>
-                <br>
-                <button @click="updateComment">確認</button> 
-                <button @click="showTextBox = !showTextBox">キャンセル</button>
-            </div>
-        </div>
-        <button class="close-button" @click="$emit('close')">X</button>
-    </div>
-</template> -->
+
 <template>
     <div class="photo-details-wrapper">
       <div class="photo-details-dialog">
         <div class="dialog-content">
           <img class="mypage-img" :src="getVueCliUrl(postTableObject.image)" alt="post">
           <div class="post-info">
-            <h2 class="mypage-caption">caption: {{ postTableObject.caption }}</h2>
-            <p class="mypage-likes">いいね数: {{postTableObject.likes}}</p>
+            <h2 class="mypage-caption">caption : {{ postTableObject.caption }}</h2>
+            <p class="mypage-likes">いいね数 : {{postTableObject.likes}}</p>
             <!-- {{ commentTableObject }} -->
             <div class="comment-section">
               <ul class="comment-list" v-for="(comment) in commentTableObject" :key="comment.id">
@@ -113,7 +65,7 @@ export default {
                 console.log(response);
                 this.commentText='';
                 //コメントがアップデート成功時に、コメント一覧を更新する
-                this.$emit('refresh-data');
+                this.$emit('refresh-comment');
             }).catch(error => {
                 alert(error);
             })
@@ -125,7 +77,8 @@ export default {
         createLike(){
             Service.post('like',this.postTableObject.id).then(response => { //postidを渡す
                 console.log(response);
-                this.$emit('refresh-data'); // 最新のデータがreturnする
+                //いいねがアップデート成功時に、いいね数を更新する
+                this.$emit('refresh-likes'); 
             }).catch(error => {
                 alert(error)
             })

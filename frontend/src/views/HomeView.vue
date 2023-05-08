@@ -6,11 +6,13 @@
     <div v-show="showFollowings" class="photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id)">
-        <img :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
+        <img class="photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-show="showHomeSearchComponent" :homeTableObject="homeTableObject"
         :commentTableObject="commentTableObject" @close="showHomeSearchComponent = false"
-        @refresh-data="showHomePages(clickImgIndex, homeTableObject.id)" />
+        @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)" 
+        @refresh-likes="updateLikes(clickImgIndex)"
+        />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
     <div v-show="showRandoms">
@@ -70,6 +72,16 @@ export default {
       ).then(response => {
         console.log(response)
         this.commentTableObject = response.data;
+        this.clickImgIndex = index;
+      }).catch(error => {
+        alert(error)
+      })
+    },
+    updateLikes(index) {
+      Service.post("home", store.state.id).then(response => {
+        console.log(response);
+        this.homeTables = response.data;
+        this.homeTableObject = this.homeTables[index];
         this.clickImgIndex = index;
       }).catch(error => {
         alert(error)

@@ -8,7 +8,7 @@
         <b>フォロー：{{ followingCount }}</b>
         <br>
         <button v-show="aaa" @click="unfollow">unfollow</button>
-        <button v-show="!aaa" @click="follow">follow</button>
+        <button v-show="aaa === false" @click="follow">follow</button>
         <br><br>
         <div>
             過去の投稿一覧
@@ -57,7 +57,7 @@ export default {
             userDatas: null,
             userId: null,
             followsid: null,
-            aaa: null
+            aaa: false,
         }
     },
     mounted(){
@@ -115,11 +115,11 @@ export default {
                 followerid : this.userId ,   //フォロしたいユーザのId
                 followingid : store.state.id //自分のId
             }).then(response =>{
-                alert(response.data)
-                if(response.data !== null){
+                console.log(response.data);
+                if(response.data !== 10000){
                     this.aaa = true;
                     this.followsid = response.data;
-                }else{
+                } else if(response.data === 10000) {
                     this.aaa = false;
                 }
             }).catch(error =>{

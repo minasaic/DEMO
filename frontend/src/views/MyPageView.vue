@@ -16,15 +16,16 @@
     <br>
     投稿 &nbsp; {{ postCount }}件
     <hr>
-    postsテーブル     {{ postTables.image}}      
+    postsテーブル     {{ postTables}}      
     <div class="photo-grid">
-      <div class="photo" v-for="(postTable, index) in postTables " :key="postTable.id"
+      <div v-for="(postTable, index) in postTables " :key="postTable.id"
         @click="showMyPages(index, postTable.id)">
-        <img :src="getVueCliUrl(postTable.image)" alt="投稿画像">
+        <img class="photo-grid-img" :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
       <MyPageComponent v-show="showMyPageComponent" :postTableObject="postTableObject"
         :commentTableObject="commentTableObject" @close="showMyPageComponent = false" 
-        @refresh-data="showMyPages(clickImgIndex,postTableObject.id)"
+        @refresh-comment="showMyPages(clickImgIndex,postTableObject.id)"
+        @refresh-likes="updateLikes(clickImgIndex)"
         />
       <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
@@ -83,6 +84,16 @@ export default {
         alert(error)
       })
     },
+    updateLikes(index, ) {
+      Service.post("mypage", store.state.id).then(response => {
+        console.log(response);
+        this.postTables = response.data;
+        this.postTableObject = this.postTables[index];
+        this.clickImgIndex = index;
+      }).catch(error => {
+        alert(error)
+      })
+    },
     getFollowerCount() {
       Service.post("followdata", store.state.id).then(response => {
         console.log(response);
@@ -103,10 +114,6 @@ export default {
       }).catch(error => {
         alert(error)
       })
-    },
-    updateLikes(likes, postId) {
-      const postIndex = this.postTables.findIndex(post => post.id === postId);
-      this.postTables[postIndex].likes = likes;
     },
     profilea() {
       if (store.state.profile !== null) {
@@ -138,15 +145,17 @@ export default {
 
 .photo-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
   grid-gap: 20px;
 }
 
-.photo-grid img {
-  width: 100%;
-  height: auto;
+.photo-grid-img {
+  width: 300px;
+  height: 300px;
   object-fit: cover;
   cursor: pointer;
+  /* grid-row: auto; */
+  margin-bottom: 70px;
 }
 
 .overlay {
@@ -158,4 +167,20 @@ export default {
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
+/* #main {
+  box-sizing: border-box;
+  margin-left: 180px;
+  padding:20px 90px; 
+} */
+
+#item-box {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.item {
+   width: 25%;
+}
+
 </style>

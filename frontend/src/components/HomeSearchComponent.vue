@@ -1,31 +1,4 @@
 <template>
-    <!-- <div id="main">
-        <div>
-            <hr>
-            <img :src="vueCliUrl" alt="post">
-            <br>
-            <router-link :to="{name: 'userpage' , params: {userId: userId}}">
-                <button @click="setStoreUserId">
-                    ユーザID : {{ userId }} 
-                </button>
-            </router-link>
-            <br>
-            ・{{ caption }}
-            <br><br>
-            <div v-for="(getComment) in getComments " :key="getComment.id">
-                <span>{{ getComment.user_id }} : {{ getComment.comment }}</span>
-            </div>
-            <button @click="createLike">{{ likesCount }} &nbsp; like</button>
-            <button @click="showTextBox = !showTextBox">comment</button>
-            <br>
-            <div v-show="showTextBox">
-                <textarea  v-model="commentText" cols="30" rows="4"></textarea>
-                <br>
-                <button @click="updateComment">確認</button>
-                <button @click="showTextBox = !showTextBox">キャンセル</button>
-            </div>
-        </div>
-    </div> -->
     <div class="photo-details-wrapper">
       <div class="photo-details-dialog">
         <div class="dialog-content">
@@ -126,7 +99,7 @@ export default {
         createLike(){
             Service.post('like',this.homeTableObject.id).then(response => { //postidを渡す
                 console.log(response);
-                this.$emit('refresh-data'); // 最新のデータがreturnする
+                this.$emit('refresh-likes'); // 最新のデータがreturnする
             }).catch(error => {
                 alert(error)
             })
@@ -142,9 +115,3 @@ export default {
     }
 }
 </script>
-<style scoped>
-img{
-  width: 300px;
-  height: 300px;
-}
-</style>

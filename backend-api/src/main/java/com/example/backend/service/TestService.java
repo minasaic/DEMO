@@ -153,13 +153,13 @@ public Integer getPostCount(Integer id){
     }
     //フォロー判断
     public Integer judge(Integer followerid, Integer followingid){
-        Follows asa = frepo.findByFolloweridAndFollowingid(followerid,followingid).get();
         System.out.println("ああああああああああああああっっっっっっっっっk");
-
-        if( asa!= null){
-           return  asa.getId();
-        }else{
-            return null;
+        if(frepo.findByFolloweridAndFollowingid(followerid,followingid).isPresent()){
+            Follows asa = frepo.findByFolloweridAndFollowingid(followerid,followingid).get();
+            System.out.println("ああああああああああああああoooooooooooooo");
+            return asa.getId();
+        }else {
+            return 10000;
         }
     }
 

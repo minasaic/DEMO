@@ -267,8 +267,8 @@ nav {
 <style>
 #main {
   box-sizing: border-box;
-  margin-left: 70px;
-  /* padding: 20px 40px; */
+  margin-left: 180px;
+  padding:20px 90px; 
 }
 
 .postDetelImg {

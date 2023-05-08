@@ -146,7 +146,6 @@ class TestController{
     // いいね
     @PostMapping(path = "/like")
     public Integer like(@RequestBody Integer id) {
-        System.out.println("aaあああああああああああああああああ");
         return testService.like(id);
     }
 
