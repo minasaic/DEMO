@@ -32,7 +32,7 @@ export default {
             type: String,
             required: true
         },
-        caption:{
+        caption:{ 
             type: String,
             required: true
         },
@@ -44,15 +44,10 @@ export default {
             type: Number,
             required: true
         },
-        // userName:{
-        //     type: String,
-        //     required: true
-        // },
         likesCount:{
             type: Number,
             required: true
         }
-
     },
     data(){
         return {

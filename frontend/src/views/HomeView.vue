@@ -1,24 +1,22 @@
 <template>
   <div id="main">
-    <button @click="showFollowing">Following</button>
-    <button @click="showRandom">Random</button><br>
-    homeTables: {{ homeTables }}
-    <div v-show="showFollowings" class="photo-grid">
+    homeTableObject: {{ homeTableObject }}
+    qwerty: {{ qwerty }}
+    <div class="photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
-        @click="showHomePages(index, homeTable.id)">
+        @click="showHomePages(index, homeTable.id, homeTable.userid)">
         <img class="photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
-      <HomeSearchComponent v-show="showHomeSearchComponent" :homeTableObject="homeTableObject"
-        :commentTableObject="commentTableObject" @close="showHomeSearchComponent = false"
-        @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)" 
-        @refresh-likes="updateLikes(clickImgIndex)"
+      <HomeSearchComponent v-if="showHomeSearchComponent" 
+        :homeTableObject="homeTableObject"
+        :commentTableObject="commentTableObject" 
+        :qwerty="qwerty"
+        :showDeleteButton="showDeleteButton"
+        @close="showHomeSearchComponent = false"
+        @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)" 
+        @refresh-likes="updateLikes(clickImgIndex)" 
         />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
-    </div>
-    <div v-show="showRandoms">
-      <img src="../assets/homeimg3.jpeg" alt="写真" width="300" height="300">
-      <img src="../assets/homeimg4.jpeg" alt="写真" width="300" height="300">
-      <br>
     </div>
   </div>
 </template>
@@ -34,12 +32,13 @@ export default {
   data() {
     return {
       showFollowings: true,
-      showRandoms: false,
       homeTables: null,
-      homeTableObject: null,
+      homeTableObject:  { "id": 3, "userid": 4, "image": "homeimg1.jpeg", "caption": "post", "likes": 4 },
       showHomeSearchComponent: false,
       clickImgIndex: null,
-      commentTableObject:null
+      commentTableObject: null,
+      qwerty:  { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "homeimg4.jpeg" },
+      showDeleteButton: false
 
     }
   },
@@ -64,15 +63,29 @@ export default {
         alert(error)
       })
     },
-    showHomePages(index, postId) {
+    showHomePages(index, postId, userId) {
       this.showHomeSearchComponent = true;
       this.homeTableObject = this.homeTables[index];
+      //クリックした投稿のユーザが自分かどうか判断する
+      if(store.state.id == userId) {
+        this.showDeleteButton = true ;
+      } else {
+        this.showDeleteButton = false;
+      }
       //クリックした写真のコメントテーブルを取得する
       Service.post('getcom', postId//commentテーブルのpost_id
       ).then(response => {
         console.log(response)
         this.commentTableObject = response.data;
         this.clickImgIndex = index;
+      }).catch(error => {
+        alert(error)
+      })
+      //ユーザー情報取得
+      Service.post('getuser', this.homeTableObject.userid).then(response => {
+        console.log(response)
+        this.qwerty = response.data;
+        return true
       }).catch(error => {
         alert(error)
       })
@@ -87,14 +100,6 @@ export default {
         alert(error)
       })
     },
-    // like() {
-    //   Service.post("like", {
-    //   }).then(response => {
-    //     console.log(response);
-    //   }).catch(error => {
-    //     alert(error)
-    //   })
-    // },
     getVueCliUrl(imgUrl) {
       return require(`../assets/post/${imgUrl}`);
     },

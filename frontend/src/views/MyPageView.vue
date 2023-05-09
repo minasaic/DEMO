@@ -8,22 +8,24 @@
     <option-modal-view v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
     </option-modal-view>
     <br>
-    <b>アカウント：{{ $store.state.name }} </b>
+    <b>アカウント：{{ $store.state.name }} </b> 
     <br>
-    <b>フォロワー：<button @click="showFollower = true"> {{ followerCount }} </button> 人 </b>
-    <FollowerComponent v-show="showFollower" 
-      @close="showFollower = false"
-      @getFollowers="getFollowers"
-      :followers="followers"/>
+    <b>フォロワー：<button @click="getFollowers"> {{ followerCount }} </button> 人 </b>
+    <FollowingComponent v-show="showFollows" 
+      @close="showFollows = false"
+      :follows="ff"
+      :followComponentTitle="followComponentTitle"
+      />
     <br>
-    <b>フォロー：<button @click="showFollowing = true"> {{ followingCount }} </button> 人 </b>
-    <FollowingComponent v-show="showFollowing" 
-      @close="showFollowing = false"
-      @getFollowings="getFollowings"
-      :followings="followings"/>
+    <b>フォロー：<button @click="getFollowings"> {{ followingCount }} </button> 人 </b>
+    <FollowingComponent v-show="showFollows" 
+      @close="showFollows = false"
+      :follows="ff"
+      :followComponentTitle="followComponentTitle"
+      />
     <br>
     投稿 &nbsp; {{ postCount }}件
-    {{ followers }}
+
     <hr>
     <!-- postsテーブル     {{ postTables}}       -->
     <div class="photo-grid">
@@ -31,8 +33,12 @@
         @click="showMyPages(index, postTable.id)">
         <img class="photo-grid-img" :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
-      <MyPageComponent v-show="showMyPageComponent" :postTableObject="postTableObject"
-        :commentTableObject="commentTableObject" @close="showMyPageComponent = false" 
+      <HomeSearchComponent v-show="showMyPageComponent" 
+        :homeTableObject="postTableObject"
+        :commentTableObject="commentTableObject" 
+        :qwerty="qwerty"
+        :showDeleteButton="showDeleteButton"
+        @close="showMyPageComponent = false" 
         @refresh-comment="showMyPages(clickImgIndex,postTableObject.id)"
         @refresh-likes="updateLikes(clickImgIndex)"
         />
@@ -42,19 +48,18 @@
 </template>
 <script>
 import { Service } from "@/service/service"
-import MyPageComponent from "../components/MyPageComponent.vue"
+// import MyPageComponent from "../components/MyPageComponent.vue"
 import store from "@/store"
 import OptionModalView from "../components/OptionModalView.vue"
 import FollowingComponent from "@/components/followingComponent.vue"
-import FollowerComponent from "@/components/followerComponent.vue"
-
+import HomeSearchComponent from "@/components/HomeSearchComponent.vue"
 export default {
   name: 'MyPageView',
   components: {
-    MyPageComponent,
+    // MyPageComponent,
     OptionModalView,
     FollowingComponent,
-    FollowerComponent
+    HomeSearchComponent
   },
   created() {       //このページになったら自動で動くもの
     this.myPage()
@@ -65,18 +70,25 @@ export default {
     return {
       followerCount: null,
       followingCount: null,
-      showFollower: false,
-      showFollowing: false,
+      showFollows: false,
       followers: null,  //フォローワーのユーザ一覧
       followings: null, //フォローのユーザの一覧
       postTables: null,
       showModal: false,
       showMyPageComponent: null,
-      postTableObject: null,
+      postTableObject: { "id": 3, "userid": 4, "image": "homeimg1.jpeg", "caption": "post", "likes": 4 },
       commentTableObject: null,
       clickImgIndex: null,
       modalTitle: 'アカウント情報変更',
       postCount: null,
+      ff: null,
+      followComponentTitle: null,
+      showDeleteButton: true,
+      qwerty: {
+        "id": store.state.id,
+        "name": store.state.name,
+        "profile_picture": store.state.profile
+      }
 
     }
   },
@@ -124,7 +136,9 @@ export default {
     getFollowers(){
       Service.post("getFollowers",store.state.id).then(response => {
         console.log(response);
-        this.followers = response.data;
+        this.showFollows = true;
+        this.ff = response.data;
+        this.followComponentTitle = 'フォロワー一覧';
       }).catch(error => {
         alert(error) 
       })
@@ -132,7 +146,9 @@ export default {
     getFollowings(){
       Service.post("getFollowings",store.state.id).then(response => {
         console.log(response);
-        this.followings = response.data;
+        this.showFollows = true;
+        this.ff = response.data;
+        this.followComponentTitle = 'フォロー一覧';
       }).catch(error => {
         alert(error)
       })
@@ -151,7 +167,7 @@ export default {
     },
     profilea() {
       if (store.state.profile !== null) {
-        return require('../assets/' + store.state.profile);
+        return require('../assets/profile/' + store.state.profile);
       } else {
         return null;
       }

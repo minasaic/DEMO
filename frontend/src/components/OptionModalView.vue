@@ -12,7 +12,7 @@
             </label>
             <input id="file-upload" type="file" @change="saveUserImg">
             <br>
-            アカウント名：<input type="text" v-model="changeUserName">
+            アカウント名：<input type="text" v-model="changeUserName" >
             <br>
             パスワード：<input type="text" v-model="changeUserPassword">
           </span>

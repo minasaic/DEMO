@@ -1,21 +1,20 @@
 <template>
     <div>
         <div id="titles" style="text-align: center;">
-            <h1>Login</h1>
             <br><br><br><br>
-            <img src="../assets/system/main.png" alt="LOGO" width="200" height="200">
+            <img src="../assets/system/mainlogo.png" alt="LOGO" width="400" height="100">
             <br><br><br><br>
             <br><br>
-            <span>名前:</span>
-            <input type="id" name="username" v-model=valueName />
+            <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
-            <span>PASS:</span>
-            <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" />
+            <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
             <br><br>
             <br>
-            <button type="button" @click="logins">ログイン</button>
+            <span class="button001"><a  type="button" @click="logins">ログイン</a></span>         
             <br>
-            <button type="button" @click="goToSigup">アカウント新規作成へ</button>
+            <span>アカウントをお持ちではないですか？</span>
+            <span style="color:#0000FF;"><a  type="button" @click="goToSigup">登録する</a></span>
+            
         </div>
 
     </div>
@@ -69,3 +68,44 @@ export default {
     }
 }
 </script>
+
+<style>
+
+/* 001 */
+.button001 a {
+    background: #eee;
+    border-radius: 3px;
+    position: relative;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin: 0 auto;
+    max-width: 280px;
+    padding: 10px 25px;
+    color: #313131;
+    transition: 0.3s ease-in-out;
+    font-weight: 500;
+}
+.button001 a:hover {
+    background: #313131;
+    color: #FFF;
+}
+.button001 a:after {
+    content: '';
+    width: 5px;
+    height: 5px;
+    border-top: 3px solid #313131;
+    border-right: 3px solid #313131;
+    transform: rotate(45deg) translateY(-50%);
+    position: absolute;
+    top: 50%;
+    right: 20px;
+    border-radius: 1px;
+    transition: 0.3s ease-in-out;
+}
+.button001 a:hover:after {
+    border-color: #FFF;
+}
+
+
+</style>

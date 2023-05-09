@@ -2,10 +2,12 @@
     <div class="photo-details-wrapper">
         <div class="photo-details-dialog">
             <div class="dialog-content">
-                フォロー一覧
+                {{followComponentTitle}}
+
+                <br><br>
                 <!-- <img class="mypage-img" :src="getVueCliUrl(postTableObject.image)" alt="post"> -->
                 <div >
-                    <div v-for="(following) in followings" :key="following.id">
+                    <div v-for="(following) in follows" :key="following.id">
                         <button>
                             <img class="round-image" :src="getVueCliUrl(following.profile_picture)" alt="プロフィール画像">
                             {{ following.name }}
@@ -18,16 +20,23 @@
     </div>
 </template>
 <script>
+import store from '@/store'
 export default {
     name: 'followingComponent',
     created(){
-        this.$emit('getFollowings');
+        // this.$emit('getFollowings')
+        // this.$emit('getFollowers')
     },
     props: {
-        followings: {
+        follows: {
             type: Array,
             require: true
+        },
+        followComponentTitle: {
+            type: String,
+            require: true
         }
+
     },
     data() {
         return {
@@ -42,6 +51,12 @@ export default {
     methods: {
         getVueCliUrl(imgUrl) {
             return require(`../assets/post/${imgUrl}`);
+        },
+        setStoreUserId(index,){
+            this.clickUserData = this.followers[index];
+            store.commit('SETUSERID',this.clickUserData.id);
+            sessionStorage.setItem('user_id',this.clickUserData.id);
+            alert('setStorUserId  '+store.state.userId);
         },
     }
 }

@@ -3,10 +3,9 @@
     <div v-if="$store.state.pageBoolean">
       <div id="sub">
         <router-link to="/">
-          <h1><img src="./assets/system/main.png" alt="LOGO" width="150" height="150">1nstagram</h1>
+        <img src="./assets/system/mainlogo.png" alt="LOGO" width="200" height="50">
         </router-link>
         <nav>
-          <span>メニュー</span>
           <br>
           <br>
           <router-link to="/"><span class="btn_hover"><img class="photo" src="./assets/home.png" alt="LOGO" width="20"
@@ -29,7 +28,15 @@
               プロフィール
             </span></router-link>
           <br><br><br>
-          <button @click="logOut">ログアウト</button>
+          <div>
+    <a @click="toggleMenu">その他</a>
+    <ul v-if="isOpen" class="menu">
+      <!-- メニューアイテムのリストを表示 -->
+      <li>設定</li>
+      <li><button @click="logOut">ログアウト</button></li>
+      <!-- 必要な項目を追加 -->
+    </ul>
+  </div>
         </nav>
       </div>
       <div id="change">
@@ -44,7 +51,11 @@
       <div v-else>
         <CreateAccount/>
       </div>
+
+      
     </div>
+
+    
 
     <!-- <div v-else>
       ログインと新規登録ページ
@@ -95,9 +106,13 @@ export default {
       // valueName: "",
       // valuePass: "",
       // valueComment: "",
+      isOpen: false, // メニューバーが開いているかどうかの状態を管理
     };
   },
   methods: {
+    toggleMenu() {
+      this.isOpen = !this.isOpen; // メニューバーの状態を切り替え
+    },
     //ログイン
     // logins() {
     //     Service.post("login", {
@@ -274,5 +289,10 @@ nav {
 .postDetelImg {
   width: 400px;
   height: 400px;
+}
+
+.menu {
+  /* メニューバーのスタイルを指定 */
+  /* 例えば、背景色や文字色、ポジションなどを設定 */
 }
 </style>

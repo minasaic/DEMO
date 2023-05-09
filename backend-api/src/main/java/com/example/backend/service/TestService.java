@@ -166,7 +166,7 @@ public class TestService {
         List<Follows> sai = frepo.findByFollowingid(id);
         List<User> saisai = new ArrayList<>();
         for (int i = 0; i < sai.size(); i++) {
-            saisai.add(urepo.findById(sai.get(i).getFollowingid()).get());
+            saisai.add(urepo.findById(sai.get(i).getFollowerid()).get());
         }
         return saisai;
     }
