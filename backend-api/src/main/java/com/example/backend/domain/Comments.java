@@ -17,16 +17,18 @@ public class Comments extends GenericDomain{
     @Getter@Setter
     private Integer id;
     @Getter@Setter
-    private Integer user_id;
-    @Getter@Setter
     private Integer postid;
     @Getter@Setter
     private String comment;
+    @Getter@Setter
+    private Integer user_id;
+    @Getter@Setter
+    private String name;
+    @Getter@Setter
+    private String profile;
+
     @Override
     protected Object keyObject() {
         return getId();
     }
 }
-
-
-

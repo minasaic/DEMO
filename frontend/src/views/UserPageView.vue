@@ -1,7 +1,10 @@
 <template>
     <div id="main">
-        <img src="" alt="プロフィール画像" width="100" height="100"> &nbsp;&nbsp;
-        <b>アカウント：{{ userName }} {{ $store.state.userId }}</b> 
+        <img class="round-image" :src="getVueCliUrl(userName.profile_picture)" alt="プロフィール画像" width="100" height="100"> &nbsp;&nbsp;
+        <b>{{ userName.name}}</b> 
+        <br>
+        <b>ID: {{ $store.state.userId }}</b> 
+        
         <br>
         <b>フォロワー：{{ followerCount }}</b>
         <br>
@@ -48,6 +51,8 @@ export default {
         this.followJudgement()
         this.myPage()
         this.getFollowerCount()
+        this.getUserNameAndImage()
+
     },
     data(){
         return{
@@ -126,7 +131,18 @@ export default {
                 alert("followJudg     "+error)
             })
         },
-
+        getUserNameAndImage(){
+            Service.post("getusernameandimage", store.state.userId            
+            ).then(response =>{
+                this.userName = response.data;
+            }).catch(error =>{
+                alert(error)
+            })
+        },
+        getVueCliUrl(imgUrl){
+            this.vueCliUrl = require('../assets/profile/'+imgUrl);
+            return this.vueCliUrl;
+        },
     }
 }
 </script>

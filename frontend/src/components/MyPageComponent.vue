@@ -10,7 +10,7 @@
             <!-- {{ commentTableObject }} -->
             <div class="comment-section">
               <ul class="comment-list" v-for="(comment) in commentTableObject" :key="comment.id">
-                <li class="comment-item">{{ comment.user_id }} : {{ comment.comment }}</li>
+                <li class="comment-item">{{ comment.name }} : {{ comment.comment }}</li>
               </ul>
               <div class="comment-form">
                 <button class="comment-btn" @click="showTextBox = !showTextBox">コメントする</button>
@@ -107,12 +107,18 @@ export default {
 }
 
 .dialog-content {
+   display: flex; /*森上が追加したよーーーーーーーーーーーーーー */
   position: absolute;
   top: 50%;
   left: 50%;
+  /*森上がついか*/
+  width: 1000px;
+  height: 600px;
+  
+
   transform: translate(-50%, -50%);
   background-color: #fff;
-  padding: 20px;
+  padding: 30px; /*森上が２０を３０にしたよーーー*/ 
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
@@ -134,14 +140,16 @@ export default {
 }
 
 .mypage-likes {
-  margin-bottom: 10px;
+  /* margin-bottom: 10px; */
+   margin-right: 160px; /*森上が変更を加えた */
 }
 
 .comment-list {
   list-style: none;
   padding: 0;
-  margin: 0;
-  margin-top: 10px;
+  margin-right: 0%;
+  margin-top: 0px;
+  height: 50px;
 }
 
 .comment-item {
@@ -155,9 +163,9 @@ export default {
 }
 
 .comment-box {
-  margin-top: 10px;
+  margin-top: 0px;
   display: flex;
-  flex-direction: column;
+  /* flex-direction: column; */
 }
 
 .comment-input {
@@ -170,7 +178,7 @@ export default {
 }
 
 .comment-btn-group {
-  display: flex;
+  /* display: flex;森上がやりました*/
   justify-content: space-between;
 }
 
@@ -208,7 +216,7 @@ export default {
 }
 
 .like-btn {
-  background-color: #3f51b5;
+  background-color: #ecc9e0;
   color: #fff;
 }
 
@@ -224,7 +232,7 @@ export default {
   right: 10px;
   border: none;
   background-color: transparent;
-  font-size: 24px;
+  font-size: 24px; 
   cursor: pointer;
 }
 </style>

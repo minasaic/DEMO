@@ -125,6 +125,23 @@ class TestController{
         return testService.getFollowCount(id);
     }
 
+    //フォロワー一覧
+    @PostMapping(path = "/getFollowers")
+    public List<User> minamina(@RequestBody Integer id){
+        return testService.minamina(id);
+    }
+    //フォロー一覧
+    @PostMapping(path = "/getFollowings")
+    public List<User> saisai(@RequestBody Integer id){
+        return testService.saisai(id);
+    }
+
+    //ユーザー情報取得
+    @PostMapping(path = "/getuser")
+    public User aaa(@RequestBody Integer id){
+        return testService.aaa(id);
+    }
+    
     //投稿を検索
     @PostMapping(path = "/search")
     public List<Posts> search(@RequestBody String keyword){
@@ -167,5 +184,11 @@ class TestController{
         } else {
             return false;
         }
+    }
+
+    // ユーザーのプロフィール画像とアカウント名を取ってくる
+    @PostMapping(path = "getusernameandimage")
+    public User getUserNameAndImage(@RequestBody Integer id){
+        return testService.getUserNameAndImage(id);
     }
 }

@@ -11,7 +11,9 @@
                 <img class="photo-grid-img" :src="getVueCliUrl(searchTable.image)" alt="投稿画像">
             </div>
             <HomeSearchComponent v-show="showHomeSearchComponent" :homeTableObject="searchTableObject"
-                :commentTableObject="commentTableObject" @close="showHomeSearchComponent = false"
+                :commentTableObject="commentTableObject" 
+                :qwerty="qwerty"
+                @close="showHomeSearchComponent = false"
                 @refresh-data="showSearchPages(clickImgIndex, searchTableObject.id)" 
                 @refresh-likes="updateLikes(clickImgIndex)"
                 />
@@ -39,7 +41,8 @@ export default {
             showHomeSearchComponent: false,
             clickImgIndex: null,
             commentTableObject: null,
-            ppp: false
+            ppp: false,
+            qwerty: null
         }
     },
     methods: {
@@ -60,6 +63,15 @@ export default {
                 console.log(response)
                 this.commentTableObject = response.data;
                 this.clickImgIndex = index;
+            }).catch(error => {
+                alert(error)
+            }),
+            //ユーザー情報取得
+            Service.post('getuser',this.searchTableObject.userid).then(response =>{
+                console.log(response)
+                
+                this.qwerty = response.data;
+                return true
             }).catch(error => {
                 alert(error)
             })
@@ -85,5 +97,8 @@ export default {
 img {
     width: 300px;
     height: 300px;
+}
+#main{
+    overflow-y: hidden;
 }
 </style>

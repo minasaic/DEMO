@@ -36,5 +36,5 @@ INSERT INTO follows(id,followerid,followingid)VALUES
 (8,8,9),
 (9,6,9);
 
-INSERT INTO comments(id,user_id,postid,comment)VALUES
-(1,1,1,'post');
+INSERT INTO comments(id,user_id,postid,comment,name,profile)VALUES
+(1,1,1,'post','森上','homeimg4.jpeg');

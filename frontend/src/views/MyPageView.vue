@@ -1,6 +1,6 @@
 <template>
   <div id="main" class="photo-gallery">
-    <img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像" width="100" height="100">
+    <img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
     <p v-else>画像をアップロードしてください。</p>
     <button @click="showModal = true">
       <img class="photo" src="../assets/set.png" alt="LOGO" width="20" height="20">
@@ -8,15 +8,24 @@
     <option-modal-view v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
     </option-modal-view>
     <br>
-    <b>アカウント：{{ $store.state.name }}</b>
+    <b>アカウント：{{ $store.state.name }} </b>
     <br>
-    <b>フォロワー：{{ followerCount }}人</b>
+    <b>フォロワー：<button @click="showFollower = true"> {{ followerCount }} </button> 人 </b>
+    <FollowerComponent v-show="showFollower" 
+      @close="showFollower = false"
+      @getFollowers="getFollowers"
+      :followers="followers"/>
     <br>
-    <b>フォロー：{{ followingCount }}人</b>
+    <b>フォロー：<button @click="showFollowing = true"> {{ followingCount }} </button> 人 </b>
+    <FollowingComponent v-show="showFollowing" 
+      @close="showFollowing = false"
+      @getFollowings="getFollowings"
+      :followings="followings"/>
     <br>
     投稿 &nbsp; {{ postCount }}件
+    {{ followers }}
     <hr>
-    postsテーブル     {{ postTables}}      
+    <!-- postsテーブル     {{ postTables}}       -->
     <div class="photo-grid">
       <div v-for="(postTable, index) in postTables " :key="postTable.id"
         @click="showMyPages(index, postTable.id)">
@@ -36,12 +45,16 @@ import { Service } from "@/service/service"
 import MyPageComponent from "../components/MyPageComponent.vue"
 import store from "@/store"
 import OptionModalView from "../components/OptionModalView.vue"
+import FollowingComponent from "@/components/followingComponent.vue"
+import FollowerComponent from "@/components/followerComponent.vue"
 
 export default {
   name: 'MyPageView',
   components: {
     MyPageComponent,
-    OptionModalView
+    OptionModalView,
+    FollowingComponent,
+    FollowerComponent
   },
   created() {       //このページになったら自動で動くもの
     this.myPage()
@@ -52,6 +65,10 @@ export default {
     return {
       followerCount: null,
       followingCount: null,
+      showFollower: false,
+      showFollowing: false,
+      followers: null,  //フォローワーのユーザ一覧
+      followings: null, //フォローのユーザの一覧
       postTables: null,
       showModal: false,
       showMyPageComponent: null,
@@ -59,7 +76,8 @@ export default {
       commentTableObject: null,
       clickImgIndex: null,
       modalTitle: 'アカウント情報変更',
-      postCount: null
+      postCount: null,
+
     }
   },
   methods: {
@@ -103,6 +121,22 @@ export default {
         alert(error)
       })
     },
+    getFollowers(){
+      Service.post("getFollowers",store.state.id).then(response => {
+        console.log(response);
+        this.followers = response.data;
+      }).catch(error => {
+        alert(error) 
+      })
+    },
+    getFollowings(){
+      Service.post("getFollowings",store.state.id).then(response => {
+        console.log(response);
+        this.followings = response.data;
+      }).catch(error => {
+        alert(error)
+      })
+    },
     saveModal() {
       // モーダルの保存処理を実行する
       this.showModal = false
@@ -141,6 +175,8 @@ export default {
 <style>
 .round-image {
   border-radius: 50%;
+  width: 100px ;
+  height:100px;
 }
 
 .photo-grid {

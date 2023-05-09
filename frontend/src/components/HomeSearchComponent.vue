@@ -2,39 +2,48 @@
     <div class="photo-details-wrapper">
       <div class="photo-details-dialog">
         <div class="dialog-content">
-            {{ homeTableObject.image }}
-          <img class="mypage-img" :src="getVueCliUrl(homeTableObject.image)" alt="post">
+            <div class="sua">
+            <!-- {{ homeTableObject }} -->
+          <img class="suba" :src="getVueCliUrl(homeTableObject.image)" alt="post">
+            </div>
+            <nobr class="qaz">
           <div class="post-info">
             <router-link :to="{name: 'userpage' , params: {userId: userId}}">
-                <button @click="setStoreUserId">
-                    ユーザID : {{ homeTableObject.userid }} 
-                </button>
+                
+                <img  id="aaa" :src="getVueCliUrl(qwerty.profile_picture)" alt="asdf" @click="setStoreUserId">{{ qwerty.name }} 
+                
             </router-link>
-            <span class="mypage-caption">caption: {{ homeTableObject.caption }}</span>
-            <p class="mypage-likes">いいね数: {{ homeTableObject.likes}}</p>
+            <span class="mypage-caption">{{ homeTableObject.caption }}</span>
             <!-- {{ commentTableObject }} -->
+            <div class="morimori">
             <div class="comment-section">
               <ul class="comment-list" v-for="(comment) in commentTableObject" :key="comment.id">
-                <li class="comment-item">{{ comment.user_id }} : {{ comment.comment }}</li>
+                <li class="comment-item">
+                    <img id="aaa" :src="getVueCliUrl(comment.profile)" alt="no image" >
+                    {{ comment.name }}<nobr class="balloon1-left">{{ comment.comment }}</nobr>
+                </li>
               </ul>
-              <div class="comment-form">
-                <button class="comment-btn" @click="showTextBox = !showTextBox">コメントする</button>
-                <div v-show="showTextBox" class="comment-box">
-                  <textarea class="comment-input" v-model="commentText" cols="30" rows="4"></textarea>
-                  <div class="comment-btn-group">
-                    <button class="confirm-btn" @click="updateComment">確認</button> 
-                    <button class="cancel-btn" @click="showTextBox = !showTextBox">キャンセル</button>
-                  </div>
-                </div>
+              
               </div>
             </div>
+        </div>
             <div class="btn-section">
-              <button class="like-btn" @click="createLike">いいね</button>
-              <button class="delete-btn" @click="deletePost">削除する</button>
+                <div class="comment-form">
+                <nobr class="mypage-likes" >いいね!{{ homeTableObject.likes}}件</nobr>
+                <button class="like-btn" @click="createLike">いいね</button>
+                <div  class="comment-box">
+                  <textarea class="comment-input" v-model="commentText" cols="35" rows="1"></textarea>
+                  <nobr class="comment-btn-group">
+                    <button class="confirm-btn" @click="updateComment">送信</button> 
+                  </nobr>
+                </div>
+              
             </div>
           </div>
+        </nobr>
           <button class="close-button" @click="$emit('close')">X</button>
-        </div>
+        
+    </div>
       </div>
     </div>
 </template>
@@ -51,6 +60,10 @@ export default {
         commentTableObject:{
             type: Array,
             require: true
+        },
+        qwerty: {
+            type: Array,
+            require: true
         }
     },
     data(){
@@ -59,7 +72,7 @@ export default {
             vueCliUrl: '',
             commentText:'',
             getComments: '',
-            likeCount: 0
+            likeCount: 0,
         }
     },
     methods: {
@@ -115,3 +128,51 @@ export default {
     }
 }
 </script>
+
+<style scoped>
+ #aaa{
+    border-radius: 50%;  /* 角丸半径を50%にする(=円形にする) */
+    width:  20px;       /* ※縦横を同値に */
+    height: 20px;       /* ※縦横を同値に */
+}
+.balloon1-left {
+  position: relative;
+  display: inline-block;
+  margin: 1.5em 0 1.5em 15px;
+  padding: 7px 10px;
+  min-width: 120px;
+  max-width: 100%;
+  color: #0c0b0b;
+  font-size: 16px;
+  background: #bbf3a7;
+}
+
+.balloon1-left:before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  margin-top: -15px;
+  border: 15px solid transparent;
+  border-right: 15px solid #bbf3a7;
+}
+
+.balloon1-left p {
+  margin: 0;
+  padding: 0;
+}
+.suba {
+  margin-right: auto;
+  width: 100%;
+  height: 100%;
+  max-width: 600px;
+  display: block;
+  border-radius: 5px;
+}
+.morimori{
+    width: 350px;
+    height: 500px;
+    overflow-y: scroll;
+}
+
+</style>

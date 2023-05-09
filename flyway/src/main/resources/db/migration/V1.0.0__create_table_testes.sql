@@ -19,6 +19,8 @@ CREATE TABLE comments(
     user_id int NOT NULL,
     postid int NOT NULL,
     comment varchar(255) NOT NULL,
+    name VARCHAR(30) NOT NULL,
+    profile VARCHAR(255),
     created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
