@@ -7,22 +7,29 @@
                 </div>
                 <nobr class="qaz">
                     <div class="post-info">
-                        <button v-if="!showDeleteButton" @click="setStoreUserId">
-                            <img v-if="qwerty.profile_picture" id="aaa" :src="getVueCliUrlProfile(qwerty.profile_picture)"
-                                alt="asdf">{{ qwerty.name }}
-                        </button>
-                        <button v-else @click="goToMyPage">
-                            <img v-if="qwerty.profile_picture" id="aaa" :src="getVueCliUrlProfile(qwerty.profile_picture)"
-                                alt="asdf">{{ qwerty.name }}
-                        </button>
-                        <span class="mypage-caption">{{ homeTableObject.caption }}</span>
+                        <div class="post-top">
+                            <a v-if="!showDeleteButton" @click="setStoreUserId" class="qwe">
+                                <img v-if="qwerty.profile_picture" id="aaa" :src="getVueCliUrlProfile(qwerty.profile_picture)"
+                                    alt="asdf"><b>{{ qwerty.name }}</b>
+                            </a>
+                            <a v-else @click="goToMyPage" class="qwe">
+                                <img v-if="qwerty.profile_picture" id="aaa" :src="getVueCliUrlProfile(qwerty.profile_picture)"
+                                    alt="asdf"><b>{{ qwerty.name }}</b>
+                            </a>
+                            <span class="mypage-caption">&nbsp;{{ homeTableObject.caption }}</span>
+                        </div>
+                        <hr>
                         <!-- {{ commentTableObject }} -->
                         <div class="morimori">
                             <div class="comment-section">
                                 <ul class="comment-list" v-for="(comment) in commentTableObject" :key="comment.id">
                                     <li class="comment-item">
-                                        <img id="aaa" :src="getVueCliUrlProfile(comment.profile)" alt="no image">
-                                        {{ comment.name }}<nobr class="balloon1-left">{{ comment.comment }}</nobr>
+                                        <a @click="goToUserPage(comment.userid)" class="qwe">
+                                            <img id="aaa" :src="getVueCliUrlProfile(comment.profile)" alt="no image">
+                                            <b>{{ comment.name }} </b> 
+                                        </a>
+                                        &nbsp;<nobr class="balloon1-left"> {{ comment.comment }}</nobr>
+                                        <br>{{ comment }}
                                     </li>
                                 </ul>
 
@@ -33,21 +40,30 @@
                         <div class="comment-form">
                             <!-- <nobr class="mypage-likes">いいね!{{ homeTableObject.likes }}件</nobr> -->
                             <!-- <button class="like-btn" @click="createLike">いいね</button> -->
+                            <div class="heart-and-delete">
+                                <nobr class="mypage-likes">
+                                    <a v-if="!showLikeJudge" class="heart-button" @click="createLike">
+                                        <div class="heart">
+                                        </div>
+                                    </a>
+                                    <a v-else class="heart-button" @click="deleteLike">
+                                        deletelikes<div class="heart">
+                                        </div>
+                                    </a>
+                                    いいね {{homeTableObject.likes }} 件！
+                                </nobr>
+                                <a v-if="showDeleteButton" class="delete-btn" @click="deletePost">削除する</a>
+                            </div>
                             <div class="comment-box">
-                                <textarea class="comment-input" v-model="commentText" cols="39" rows="1"></textarea>
+                                <textarea class="comment-input" v-model="commentText" cols="45" rows="1"></textarea>
                                 <nobr class="comment-btn-group">
-                                    <button class="chikara" @click="updateComment">送信</button>
+                                    <a class="chikara" @click="updateComment">送信</a>
                                 </nobr>
                             </div>
-                            <div class="mypage-likes"><button class="heart-button" @click="createLike">いいね</button>{{
-                                homeTableObject.likes }}件
-                            </div>
-                            <button v-if="showDeleteButton" class="delete-btn" @click="deletePost">削除する</button>
-
                         </div>
                     </div>
                 </nobr>
-                <button class="close-button" @click="$emit('close')">X</button>
+                <a class="close-button" @click="$emit('close')">X</a>
 
             </div>
         </div>
@@ -81,7 +97,8 @@ export default {
             showTextBox: false,
             commentText: '',
             getComments: '',
-            likeCount: 0,
+            JudgementCommentUser: false,
+            showLikeJudge: false
         }
     },
     computed: {
@@ -95,13 +112,14 @@ export default {
                 return require('../assets/profile/' + imgUrl);
             }
         },
+        
     },
     methods: {
         setStoreUserId() {
-            store.commit('SETUSERID', this.homeTableObject.userid);
-            sessionStorage.setItem('user_id', this.homeTableObject.userid);
-            alert('setStorUserId  ' + store.state.userId);
-            this.$router.push('/userpage')
+                store.commit('SETUSERID', this.homeTableObject.userid);
+                sessionStorage.setItem('user_id', this.homeTableObject.userid);
+                alert('setStorUserId  ' + store.state.userId);
+                this.$router.push('/userpage')
         },
         showTextarea() {
             this.showText = true
@@ -115,7 +133,7 @@ export default {
         },
         updateComment() {
             Service.post('comment', {
-                user_id: store.state.id, //ストアに保存したid
+                userid: store.state.id, //ストアに保存したid
                 postid: this.homeTableObject.id,
                 comment: this.commentText
             }).then(response => {
@@ -123,13 +141,17 @@ export default {
                 this.commentText = '';
                 //コメントがアップデート成功時に、コメント一覧を更新する
                 this.$emit('refresh-comment');
-            }).catch(error => {
+            }).catch(error => { 
                 alert(error);
             })
         },
         createLike() {
-            Service.post('like', this.homeTableObject.id).then(response => { //postidを渡す
+            Service.post('like', {
+                postid:this.homeTableObject.id,
+                userid:store.state.id
+            }).then(response => { //postidを渡す
                 console.log(response);
+                this.showLikeJudge = true;
                 this.$emit('refresh-likes'); // 最新のデータがreturnする
             }).catch(error => {
                 alert(error)
@@ -143,8 +165,44 @@ export default {
                 alert(error)
             })
         },
+
         goToMyPage() {
             this.$router.push('/mypage');
+        },
+        goToUserPage(userId) {
+            alert(userId)
+            if(userId == store.state.id) {
+                alert("自分のidだ");
+                this.goToMyPage();
+            } else {
+                store.commit('SETUSERID', userId);
+                sessionStorage.setItem('user_id', userId);
+                alert('setStorUserId  ' + store.state.userId);
+                this.$router.push('/userpage')
+            }
+        },
+        likeJudge(){
+            Service.post('/likejudge',{
+                postid: this.homeTableObject.id,
+                userid: store.state.id
+            }).then(response => {
+                alert(response);
+                this.showLikeJudge = response.data;
+            }).catch(error => {
+                alert(error);
+            })
+        },
+        deleteLike() {
+            Service.post('/deletelikes',{
+                postid: this.homeTableObject.id,
+                userid: store.state.id
+            }).then(response => {
+                alert(response);
+                this.showLikeJudge = false;
+                this.$emit('refresh-likes');
+            }).catch(error => {
+                alert(error);
+            })
         }
     }
 }
@@ -152,6 +210,8 @@ export default {
 
 <style>
 #aaa {
+    margin-right: 5px; /* 画像と名前の間に余白を設ける */
+    margin-bottom: -4px; /* 画像を少し下げる */
     border-radius: 50%;
     /* 角丸半径を50%にする(=円形にする) */
     width: 20px;
@@ -159,8 +219,17 @@ export default {
     height: 20px;
     /* ※縦横を同値に */
 }
+.post-top {
+    text-align: left;
+}
+/* .post-top button {
+    cursor: pointer;
+} */
+hr {
+    border-color: rgba(255, 255, 255, 0.5); /* 線の色を半透明の白色にする */
+    border-width: 1px; /* 線の太さを1pxにする */}
 
-.balloon1-left {
+/* .balloon1-left {
     position: relative;
     display: inline-block;
     margin: 1.5em 0 1.5em 15px;
@@ -185,7 +254,7 @@ export default {
 .balloon1-left p {
     margin: 0;
     padding: 0;
-}
+} */
 
 .suba {
     margin-right: auto;
@@ -197,9 +266,16 @@ export default {
 }
 
 .morimori {
-    width: 350px;
-    height: 500px;
+    width: 400px;
+    height: 480px;
     overflow-y: scroll;
+}
+
+/* ハートと削除ボタンの位置 */
+.heart-and-delete {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
 }
 
 /* ボタン本体のスタイル */
@@ -207,7 +283,7 @@ export default {
     /* ボタン要素の大きさや色 */
     position: relative;
     display: inline-block;
-    background-color: #ed7878;
+    background-color: #f2eaea;
     padding: 0.5em 1em;
     border-radius: 10px;
     border: 0px solid transparent;
@@ -216,7 +292,7 @@ export default {
     font-family: 'Quicksand', sans-serif;
     font-weight: bold;
     font-size: 10px;
-    color: #f4efef;
+    color: #ed7878;
     letter-spacing: 0.3em;
 
     /* その他必要なスタイル */
@@ -255,9 +331,9 @@ export default {
 
 /* ボタンホバー時のスタイル */
 .heart-button:hover {
-    background-color: #f6f0f0;
-    border-color: #ef4b53;
-    color: #ef4b53;
+    background-color: #ed7878;
+    border-color: #ffffff;
+    color: #e3d7d7;
 }
 
 /* ボタンホバー時の左上のハートのスタイル */
@@ -299,6 +375,8 @@ export default {
         background-color: #fff;
         border-color: #ef4b53;
         color: #ef4b53;
+        align-items: center;
+    justify-content: flex-start;
     }
 
     /* 左上のハートのスタイル */
@@ -324,7 +402,7 @@ export default {
     /* カーソル   */
     padding: 6px 8px;
     /* 余白       */
-    background: #48d448;
+    background: #48c4d4;
     /* 背景色     */
     color: #ffffff;
     /* 文字色     */
@@ -332,22 +410,28 @@ export default {
     /* 1行の高さ  */
     transition: .3s;
     /* なめらか変化 */
-    border: 2px solid #66ff66;
+    border: 2px solid #ffffff;
     /* 枠の指定 */
 }
 
 .chikara:hover {
     box-shadow: none;
     /* カーソル時の影消去 */
-    color: #66ff66;
+    color: #33a1d4;
     /* 背景色     */
     background: #ffffff;
     /* 文字色     */
 }
-
-.qwe {
-    text-decoration: none;
+a:hover {
+    cursor: pointer;
 }
+
+/* .qwe {
+    text-decoration: none;
+    border: 0;
+    background-color: #ffffff;
+    cursor: pointer;
+} */
 
 /* ポップアップ */
 .photo-details-dialog {
@@ -373,7 +457,7 @@ export default {
 
   transform: translate(-50%, -50%);
   background-color: #fff;
-  padding: 30px; /*森上が２０を３０にしたよーーー*/ 
+  padding: 0px; /*森上が２０を３０にしたよーーー*/ 
   border-radius: 5px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
 }
@@ -411,6 +495,7 @@ export default {
   font-size: 14px;
   line-height: 1.5;
   margin-bottom: 5px;
+  text-align: left;
 }
 
 .comment-form {
@@ -457,7 +542,6 @@ export default {
 }
 
 .btn-section {
-  margin-top: 10px;
   display: flex;
   justify-content: space-between;
 }
@@ -490,4 +574,43 @@ export default {
   font-size: 24px; 
   cursor: pointer;
 }
+
+/* ハートアイコン */
+.heart {
+  position: relative;
+  display: inline-block;
+  width: 18px;
+  height: 18px;
+  margin-right: 0.3em;
+  margin-left: -0.3em;
+  margin-top: 3px;
+}
+
+.heart:before,
+.heart:after {
+  position: absolute;
+  content: "";
+  left: 12.5px;
+  top: 0;
+  width: 12.5px;
+  height: 20px;
+  background: rgb(255, 47, 47);
+  border-radius: 12.5px 12.5px 0 0;
+  transform: rotate(-45deg);
+  transform-origin: 0 100%;
+}
+
+.heart:after {
+  left: 0;
+  transform: rotate(45deg);
+  transform-origin: 100% 100%;
+}
+
+.heart-button:hover .heart:before,
+.heart-button:hover .heart:after {
+  background-color: rgb(239, 229, 230);
+}
+
+
+
 </style>

@@ -1,7 +1,7 @@
 <template>
   <div id="main">
-    homeTableObject: {{ homeTableObject }}
-    qwerty: {{ qwerty }}
+    <!-- homeTableObject: {{ homeTableObject }}
+    qwerty: {{ qwerty }} -->
     <div class="photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
@@ -33,11 +33,11 @@ export default {
     return {
       showFollowings: true,
       homeTables: null,
-      homeTableObject:  { "id": 3, "userid": 4, "image": "homeimg1.jpeg", "caption": "post", "likes": 4 },
+      homeTableObject:  { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
       showHomeSearchComponent: false,
       clickImgIndex: null,
       commentTableObject: null,
-      qwerty:  { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "homeimg4.jpeg" },
+      qwerty:  { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
       showDeleteButton: false
 
     }

@@ -7,7 +7,9 @@
             <br><br>
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
-            <input type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
+            <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
+            <input v-else type="text" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
+            <button @click="showPassword = !showPassword">👀</button>
             <br><br>
             <br>
             <span class="button001"><a  type="button" @click="create">登録する</a></span> 
@@ -29,7 +31,8 @@ export default {
     data() {
         return {
             valueName: null,
-            valuePass: null
+            valuePass: null,
+            showPassword: false
         }
     },
     methods: {

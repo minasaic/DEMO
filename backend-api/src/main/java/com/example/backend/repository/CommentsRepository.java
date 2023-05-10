@@ -8,4 +8,6 @@ import com.example.backend.domain.Comments;
 
 public interface CommentsRepository extends JpaRepository<Comments, Integer>{
     List<Comments> findByPostid(Integer id);
+
+    List<Comments> findByUserid(Integer id);
 }

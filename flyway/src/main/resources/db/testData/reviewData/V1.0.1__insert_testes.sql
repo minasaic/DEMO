@@ -1,28 +1,28 @@
 INSERT INTO user(id,name,password,profile_picture)VALUES
-(1,'森上','pass','homeimg4.jpeg'),
-(2,'qqq','qqq','homeimg4.jpeg'),
-(3,'崔','pass','homeimg4.jpeg'),
-(4,'矢口','pass','homeimg4.jpeg'),
-(5,'稲垣','pass','homeimg4.jpeg'),
-(6,'三間','pass','homeimg4.jpeg'),
-(7,'中村','pass','homeimg4.jpeg'),
-(8,'長澤','pass','homeimg4.jpeg'),
-(9,'加藤','pass','homeimg4.jpeg'),
-(10,'宮澤','pass','homeimg4.jpeg'),
-(11,'古郡','pass','homeimg4.jpeg');
+(1,'森上','pass','que-14237809059.jpeg'),
+(2,'qqq','qqq','imagesooo.png'),
+(3,'崔','pass','11b274c6-fa3a-4947-9612-333ebcccb750.jpg'),
+(4,'矢口','pass','yaguchyan.png'),
+(5,'稲垣','pass','images2.jpeg'),
+(6,'三間','pass','toris-1024x1024.png'),
+(7,'中村','pass','pkjhjkl.jpeg'),
+(8,'長澤','pass','pp.jpeg'),
+(9,'加藤','pass','images.jpeg'),
+(10,'宮澤','pass','aa.png'),
+(11,'古郡','pass','images.png');
 
 
 INSERT INTO posts(id,userid,image,caption,likes)VALUES
-(1,1,'homeimg1.jpeg','post',1),
-(2,3,'homeimg1.jpeg','post',2),
-(3,4,'homeimg1.jpeg','post',3),
-(4,5,'homeimg1.jpeg','post',4),
-(5,6,'homeimg1.jpeg','post',5),
-(6,7,'homeimg1.jpeg','post',6),
-(7,8,'homeimg1.jpeg','post',7),
-(8,9,'homeimg1.jpeg','post',8),
-(9,10,'homeimg1.jpeg','post',9),
-(10,11,'homeimg1.jpeg','post',10);
+(1,1,'images1.jpeg','プロのエンジニアだぞ！',1),
+(2,3,'KJ_20201215_02_01.jpg','瀬戸内海楽しい！！！〜〜',2),
+(3,4,'atami2.jpeg','熱海行ってきた！',3),
+(4,5,'jkl.jpeg','私めちゃくちゃ可愛い！',4),
+(5,6,'DSC06150.jpg','世界最強の！',5),
+(6,7,'lkjhgfd.jpeg','美人！！',6),
+(7,8,'1100x770_ea1e9d427fb5664c32c517a73e421e58_6caa40561048704c2c3dd9eafcd154384ef8fca6.jpg','旅行いいな！',7),
+(8,9,'kafe2.jpeg','仕事頑張ろう！',8),
+(9,10,'9d09f489ee0edc4845f30ab5ccf1283c.png','焼肉食べたい！！',9),
+(10,11,'article_img_19121701_25.jpg','刺身食べたい！！',10);
 
 
 INSERT INTO follows(id,followerid,followingid)VALUES
@@ -36,5 +36,5 @@ INSERT INTO follows(id,followerid,followingid)VALUES
 (8,8,9),
 (9,6,9);
 
-INSERT INTO comments(id,user_id,postid,comment,name,profile)VALUES
-(1,1,1,'post','森上','homeimg4.jpeg');
+INSERT INTO comments(id,userid,postid,comment,name,profile)VALUES
+(1,1,1,'はじめてのコメントだよ','森上','que-14237809059.jpeg');

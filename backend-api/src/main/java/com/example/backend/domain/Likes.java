@@ -10,25 +10,22 @@ import lombok.Getter;
 import lombok.Setter;
 
 @Entity
-@Table(name = "comments")
-public class Comments extends GenericDomain{
+@Table(name = "likes")
+public class Likes extends GenericDomain{
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Getter@Setter
     private Integer id;
     @Getter@Setter
-    private Integer postid;
-    @Getter@Setter
-    private String comment;
+    private  Integer postid;
     @Getter@Setter
     private Integer userid;
-    @Getter@Setter
-    private String name;
-    @Getter@Setter
-    private String profile;
 
     @Override
     protected Object keyObject() {
         return getId();
     }
 }
+
+
+

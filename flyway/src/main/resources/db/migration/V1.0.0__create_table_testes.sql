@@ -16,7 +16,7 @@ CREATE TABLE posts(
 );
 CREATE TABLE comments(
     id int NOT NULL AUTO_INCREMENT,
-    user_id int NOT NULL,
+    userid int NOT NULL,
     postid int NOT NULL,
     comment varchar(255) NOT NULL,
     name VARCHAR(30) NOT NULL,
@@ -29,4 +29,10 @@ CREATE TABLE follows(
     followerid int NOT NULL,
     followingid int NOT NULL,
     PRIMARY KEY (id)
+);
+CREATE TABLE likes(
+	id int NOT NULL AUTO_INCREMENT,
+    postid int NOT NULL,
+    userid int NOT NULL,
+	PRIMARY KEY (id)
 );

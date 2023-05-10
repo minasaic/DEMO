@@ -8,22 +8,27 @@
         <nav>
           <br>
           <br>
-          <router-link to="/"><span class="btn_hover"><img class="photo" src="./assets/home.png" alt="LOGO" width="20"
+          <router-link to="/"><span class="btn_hover"><img class="photo" src="./assets/system/home.png" alt="LOGO" width="20"
                 height="20">
               ホーム</span></router-link>
           <br>
           <br>
-          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/search.png" alt="LOGO"
+          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png" alt="LOGO"
                 width="20" height="20">
               検索</span></router-link>
           <br>
           <br>
-          <router-link to="/create"><span class="btn_hover"><img class="photo" src="./assets/plus.png" alt="LOGO"
+          <router-link to="/create"><span class="btn_hover"><img class="photo" src="./assets/system/plus.png" alt="LOGO"
                 width="20" height="20">
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/profile.png" alt="LOGO"
+          <router-link to="/likespage">
+            ❤️
+          </router-link>
+          <br>
+          <br>
+          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png" alt="LOGO"
                 width="20" height="20">
               プロフィール
             </span></router-link>

@@ -2,18 +2,21 @@ package com.example.backend.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.example.backend.domain.Comments;
 import com.example.backend.domain.Follows;
+import com.example.backend.domain.Likes;
 import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.repository.UserRepository;
 
 import com.example.backend.repository.PostsRepository;
 import com.example.backend.repository.FollowsRepository;
+import com.example.backend.repository.LikesRepository;
 import com.example.backend.repository.CommentsRepository;
 
 @Service
@@ -26,6 +29,8 @@ public class TestService {
     FollowsRepository frepo;
     @Autowired
     CommentsRepository crepo;
+    @Autowired
+    LikesRepository lrepo;
 
     public User getUser(Integer id) {
         User testesOptional = urepo.findById(id).get();
@@ -81,7 +86,18 @@ public class TestService {
         user.setName(name);
         user.setPassword(password);
         urepo.save(user);
+        List<Comments> com = crepo.findByUserid(id);
+        for (int i = 0; i < com.size(); i++) {
+            com.get(i).setName(name);
+            com.get(i).setProfile(staticPath);
+            crepo.save(com.get(i));
+        }
         return true;
+    }
+
+    // プロフィール画像を削除するためのパスをゲットする
+    public String getprofilepath(Integer id) {
+        return urepo.findById(id).get().getProfile_picture();
     }
 
     // 新規投稿
@@ -105,7 +121,7 @@ public class TestService {
         Comments com = new Comments();
         User user = urepo.findById(user_id).get();
         com.setPostid(post_id);
-        com.setUser_id(user_id);
+        com.setUserid(user_id);
         com.setComment(comment);
         com.setName(user.getName());
         com.setProfile(user.getProfile_picture());
@@ -190,11 +206,15 @@ public class TestService {
     }
 
     // いいね機能 修正後
-    public Integer like(Integer id) {
-        Posts post = prepo.findById(id).get();
+    public Integer like(Integer postId, Integer userId) {
+        Posts post = prepo.findById(postId).get();
         post.setLikes(post.getLikes() + 1);
         prepo.save(post);
-        Posts a = prepo.findById(id).get();
+        Likes like = new Likes();
+        like.setPostid(postId);
+        like.setUserid(userId);
+        lrepo.save(like);
+        Posts a = prepo.findById(postId).get();
         return a.getLikes();
     }
 
@@ -214,6 +234,31 @@ public class TestService {
 
         return urepo.findById(id).get();
 
+    }
+
+    public List<Posts> getLikes(Integer id) {
+        List<Likes> like = lrepo.findByUserid(id);
+        List<Posts> sai = new ArrayList<>();
+        for (int i = 0; i < like.size(); i++) {
+            sai.add(prepo.findById(like.get(i).getPostid()).get());
+        }
+        return sai;
+    }
+
+    public boolean likejudge(Integer postId,Integer userId) {
+        Optional<Likes> like = lrepo.findByPostidAndUserid(postId,userId);
+        if(like.isPresent()){
+            return true;
+        }
+        return false;
+    }
+
+    public Integer dislike(Integer postid, Integer userid) {
+        Posts post = prepo.findById(postid).get();
+        post.setLikes(post.getLikes() - 1);
+        prepo.save(post);
+        lrepo.deleteById(lrepo.findByPostidAndUserid(postid,userid).get().getId());
+        return post.getLikes();
     }
 
 }

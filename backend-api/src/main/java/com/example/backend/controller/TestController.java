@@ -16,6 +16,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.example.backend.domain.Comments;
 import com.example.backend.domain.Follows;
+import com.example.backend.domain.Likes;
 import com.example.backend.domain.Posts;
 import com.example.backend.domain.User;
 import com.example.backend.service.TestService;
@@ -60,18 +61,29 @@ class TestController{
         return testService.mypage(id);
     }
 
-    //アカウント編集・変更
+    // アカウント編集・変更
     @PostMapping(path = "/update")
     public boolean update(
-        @RequestParam ("file") MultipartFile file,
-        @RequestParam ("id") Integer id,
-        @RequestParam ("name") String name, 
-        @RequestParam ("password") String password) {
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name,
+            @RequestParam("password") String password) {
+        //元のプロファイル画像削除
+        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
+                + testService.getprofilepath(id);
+        File f = new File(imagePath);
+        if (f.exists()) {
+            f.delete();
+        }
+        //ファイル保存、データベース更新
+        String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         try {
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/" + file.getOriginalFilename();
+            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
+                    + timestamp
+                    + file.getOriginalFilename();
             file.transferTo(new File(filePath));
-            String staticPath = file.getOriginalFilename(); //データベースに保存するファイルネーム
-            return testService.update(staticPath,id,name,password);
+            String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
+            return testService.update(staticPath, id, name, password);
         } catch (IOException e) {
             return false;
         }
@@ -114,9 +126,9 @@ class TestController{
     // コメント投稿
     @PostMapping(path = "/comment")
     public boolean newComment(@RequestBody Comments com) {
-        System.out.println(com.getUser_id());
+        System.out.println(com.getUserid());
         System.out.println(com.getPostid());
-        return testService.createComment(com.getUser_id(),com.getPostid(),com.getComment());
+        return testService.createComment(com.getUserid(),com.getPostid(),com.getComment());
     }
 
     //フォロワーとフォロー数を取得
@@ -162,8 +174,23 @@ class TestController{
 
     // いいね
     @PostMapping(path = "/like")
-    public Integer like(@RequestBody Integer id) {
-        return testService.like(id);
+    public Integer like(@RequestBody Likes like) {
+        return testService.like(like.getPostid(),like.getUserid());
+    }
+    //いいね一覧
+    @PostMapping(path = "/getlikes")
+    public List<Posts> minaminaminamin(@RequestBody Integer id){
+        return testService.getLikes(id);
+    }
+    //いいね判断
+    @PostMapping(path = "/likejudge")
+    public boolean asdfdsd(@RequestBody Likes like){
+        return testService.likejudge(like.getPostid(),like.getUserid());
+    }
+    //いいね解除
+    @PostMapping(path = "/deletelikes")
+    public Integer fyjdhseafscvhmfdsafSZdcgmvhgchdf(@RequestBody Likes like){
+        return testService.dislike(like.getPostid(),like.getUserid());
     }
 
     //フォローしてるかどうかの判断

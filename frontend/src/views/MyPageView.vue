@@ -2,29 +2,34 @@
   <div id="main" class="photo-gallery">
     <img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
     <p v-else>画像をアップロードしてください。</p>
-    <button @click="showModal = true">
-      <img class="photo" src="../assets/set.png" alt="LOGO" width="20" height="20">
-    </button>
-    <option-modal-view v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
+    <a @click="showModal = true">
+      <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
+    </a>
+    <option-modal-view v-if="showModal" 
+      :title="modalTitle"
+      :name="$store.state.name"
+     @close="showModal = false" @save="showModal = false">
     </option-modal-view>
+    <br>
+    <b>ID：{{ $store.state.id }}</b>
     <br>
     <b>アカウント：{{ $store.state.name }} </b> 
     <br>
-    <b>フォロワー：<button @click="getFollowers"> {{ followerCount }} </button> 人 </b>
+    <b><a @click="getFollowers">フォロワー： {{ followerCount }}  人 </a></b>
     <FollowingComponent v-show="showFollows" 
       @close="showFollows = false"
       :follows="ff"
       :followComponentTitle="followComponentTitle"
       />
     <br>
-    <b>フォロー：<button @click="getFollowings"> {{ followingCount }} </button> 人 </b>
+    <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人 </a> </b>
     <FollowingComponent v-show="showFollows" 
       @close="showFollows = false"
       :follows="ff"
       :followComponentTitle="followComponentTitle"
       />
     <br>
-    投稿 &nbsp; {{ postCount }}件
+    <b> 投稿 &nbsp; {{ postCount }} 件 </b>
 
     <hr>
     <!-- postsテーブル     {{ postTables}}       -->
@@ -76,7 +81,7 @@ export default {
       postTables: null,
       showModal: false,
       showMyPageComponent: null,
-      postTableObject: { "id": 3, "userid": 4, "image": "homeimg1.jpeg", "caption": "post", "likes": 4 },
+      postTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
       commentTableObject: null,
       clickImgIndex: null,
       modalTitle: 'アカウント情報変更',

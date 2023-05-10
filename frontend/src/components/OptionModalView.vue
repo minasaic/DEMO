@@ -5,18 +5,25 @@
         <div class="modal-header">
           <h5 class="modal-title">{{ title }}</h5>
           <span>
-            <img :src="path" alt="選択した画像" width="250px" height="250px">
-            <br>
-            <label for="file-upload" class="custom-file-upload">
-              <i class="fa fa-cloud-upload"></i> プロフィール写真
-            </label>
-            <input id="file-upload" type="file" @change="saveUserImg">
-            <br>
-            アカウント名：<input type="text" v-model="changeUserName" >
-            <br>
-            パスワード：<input type="text" v-model="changeUserPassword">
+            <nobr>
+              <img :src="path" alt="選択した画像" width="250px" height="250px">
+              <br>
+              <label for="file-upload" class="custom-file-upload">
+                <i class="fa fa-cloud-upload"></i> プロフィール写真
+              </label>
+              <input id="file-upload" type="file" @change="saveUserImg">
+            </nobr>
+            <nobr>
+              アカウント名：
+              <input type="text" v-model="changeUserName" :placeholder="name">
+              <br>
+              パスワード：
+              <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード" >
+              <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード" >
+              <a @click="showPassword = !showPassword">👀</a>
+            </nobr>
           </span>
-          <button type="button" class="close" @click="$emit('close')">
+          <button type="button" class="close-button" @click="$emit('close')">
             <span>&times;</span>
           </button>
         </div>
@@ -24,7 +31,6 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
-          <!-- <button type="button" class="btn btn-primary" @click="$emit('save')">保存</button> -->
           <button type="button" class="btn btn-primary" @click="saveUserChange">保存</button>
           <button type="button" class="btn btn-secondary" @click="$emit('close')">キャンセル</button>
         </div>
@@ -42,6 +48,10 @@ export default {
     title: {
       type: String,
       required: true
+    },
+    name: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -50,7 +60,8 @@ export default {
       path: null,
       changeUserName: '',
       changeUserPassword: '',
-      profile: null
+      profile: null,
+      showPassword: false
     }
   }, 
   methods: {
@@ -108,7 +119,7 @@ export default {
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
 }
 
-.modal-header,
+.modal-header {}
 .modal-footer {
   padding: 10px;
   background-color: #f5f5f5;

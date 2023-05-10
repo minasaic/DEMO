@@ -1,30 +1,32 @@
 <template>
-    <div id="main">
-        <img class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像" width="100" height="100">
-        &nbsp;&nbsp;
-        <b>{{ userName.name }}</b>
+    <div id="main" class="photo-gallery">
+        <img class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像" >
         <br>
+        &nbsp;&nbsp;
         <b>ID: {{ $store.state.userId }}</b>
         <br>
-        <b>フォロワー：<button @click="getFollowers"> {{ followerCount }} </button> 人 </b>
+        <b>アカウント：{{ userName.name }}</b>
+        <br>
+        <b><a @click="getFollowers"> フォロワー：{{ followerCount }} 人</a>  </b>
         <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
         <br>
-        <b>フォロー：<button @click="getFollowings"> {{ followingCount }} </button> 人 </b>
+        <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人</a>  </b>
         <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
         <br>
         <button v-show="aaa" @click="unfollow">unfollow</button>
         <button v-show="aaa === false" @click="follow">follow</button>
         <br><br>
         <div>
-            過去の投稿一覧
+            投稿一覧
         </div>
         <hr>
-        poststable {{ userDatas }} <br>
+        <!-- poststable {{ userDatas }} <br>
         h{{ homeTableObject }} <br>
-        c{{ commentTableObject }} <br>
-
-        <div v-for="(userData,index) in userDatas" :key="userData.id" @click="showHomePages(index, userData.id)">
-            <img class="photo-grid-img" :src="getVueCliUrl(userData.image)" alt="投稿画像">
+        c{{ commentTableObject }} <br> -->
+        <div class="photo-grid">
+            <div v-for="(userData,index) in userDatas" :key="userData.id" @click="showHomePages(index, userData.id)">
+                <img class="photo-grid-img" :src="getVueCliUrl(userData.image)" alt="投稿画像">
+            </div>
         </div>
         <HomeSearchComponent v-if="showHomeSearchComponent" 
             :homeTableObject="homeTableObject"
@@ -33,7 +35,7 @@
             :showDeleteButton="showDeleteButton" 
             @close="showHomeSearchComponent = false"
             @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)"
-            @update-likes="updateLikes(clickImgIndex)" />
+            @refresh-likes="updateLikes(clickImgIndex)" />
     </div>
 </template>
 <script>
@@ -64,7 +66,12 @@ export default {
     },
     data() {
         return {
-            userName: null,
+            userName: {
+                "id": 3, 
+                "name": "崔", 
+                "password": "pass", 
+                "profile_picture": "pp.jpeg"
+            },
             followerCount: null,
             followingCount: null,
             userDatas: null,
@@ -140,6 +147,7 @@ export default {
                 console.log(response);
                 this.followsid = response.data;
                 this.aaa = true;
+                this.followerCount += 1;
             }).catch(error => {
                 alert(error)
             })
@@ -149,6 +157,7 @@ export default {
             ).then(response => {
                 alert(response)
                 this.aaa = false;
+                this.followerCount -= 1;
             }).catch(error => {
                 alert(error)
             })
@@ -177,9 +186,9 @@ export default {
                 alert(error)
             })
         },
-        profilea() {
-            if (store.state.profile !== null) {
-                return require('../assets/profile/' + store.state.profile);
+        profilea(userProfile) {
+            if (userProfile !== null) {
+                return require('../assets/profile/' + userProfile);
             } else {
                 return null;
             }

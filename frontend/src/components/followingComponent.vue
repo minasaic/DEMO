@@ -7,11 +7,11 @@
                 <br><br>
                 <!-- <img class="mypage-img" :src="getVueCliUrl(postTableObject.image)" alt="post"> -->
                 <div >
-                    <div v-for="(following) in follows" :key="following.id">
-                        <button>
-                            <img class="round-image" :src="getVueCliUrl(following.profile_picture)" alt="プロフィール画像">
+                    <div v-for="(following, index) in follows" :key="following.id">
+                        <a @click="setStoreUserId(index)">
+                            <img class="round-image" :src="getVueCliUrlProfile(following.profile_picture)" alt="プロフィール画像">
                             {{ following.name }}
-                        </button>
+                        </a>
                     </div>
                 </div>
                 <button class="close-button" @click="$emit('close')">X</button>
@@ -49,14 +49,15 @@ export default {
         }
     },
     methods: {
-        getVueCliUrl(imgUrl) {
-            return require(`../assets/post/${imgUrl}`);
+        getVueCliUrlProfile(imgUrl) {
+            return require(`../assets/profile/${imgUrl}`);
         },
-        setStoreUserId(index,){
-            this.clickUserData = this.followers[index];
+        setStoreUserId(index){
+            this.clickUserData = this.follows[index];
             store.commit('SETUSERID',this.clickUserData.id);
             sessionStorage.setItem('user_id',this.clickUserData.id);
-            alert('setStorUserId  '+store.state.userId);
+            alert('setStorUserId  ' + store.state.userId);
+            this.$router.push('/userpage');
         },
     }
 }

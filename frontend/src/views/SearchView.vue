@@ -41,12 +41,12 @@ export default {
         return {
             searchInput: null,
             searchTables: null,
-            searchTableObject: { "id": 3, "userid": 4, "image": "homeimg1.jpeg", "caption": "post", "likes": 4 },
+            searchTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
             showHomeSearchComponent: false,
             clickImgIndex: null,
             commentTableObject: null,
             ppp: false,
-            qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "homeimg4.jpeg" },
+            qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.jpeg" },
             showDeleteButton: false
         }
     },
@@ -55,7 +55,8 @@ export default {
             Service.post('search', this.searchInput).then(response => {
                 console.log(response);
                 this.searchTables = response.data;
-                if (response.data[0] === undefined) {
+                this.ppp = false;
+                if (response.data[0] == undefined) {
                     this.ppp = true;
                 }
             }).catch(error => {

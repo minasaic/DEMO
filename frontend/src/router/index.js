@@ -7,6 +7,7 @@ import CreateView from '../views/CreateView.vue'
 import UserPage from '../views/UserPageView.vue'
 import CreateAcount from '../views/CreateAccount.vue'
 import LoginView from '../views/LoginView.vue'
+import LikesPageView from '../views/LikesPageView.vue'
 
 Vue.use(VueRouter)
 
@@ -45,6 +46,11 @@ const routes = [
    path: '/userpage',
    name: 'userpage',
    component:UserPage
+ },
+ {
+   path: '/likespage',
+   name: 'likespage',
+   component:LikesPageView
  }
 ]
 
