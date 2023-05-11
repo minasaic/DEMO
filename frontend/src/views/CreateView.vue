@@ -1,16 +1,21 @@
 <template>
   <div id="main">
     <!-- {{ $store.state.id }} -->
-    <img :src="path" alt="選択した画像">
+    
+    <h1>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;新規投稿を作成
+      <span class="yagu"><a @click="post"  style="color:#0000FF;">&nbsp;&nbsp;&nbsp;&nbsp;シェア</a></span></h1>
+    <img :src="path" class="yaguchi">
     <br><br><br>
     <label for="file-upload" class="custom-file-upload">
-      <i class="fa fa-cloud-upload"></i> Choose File
+      <i class="fa fa-cloud-upload"></i> コンピューターから選択
     </label>
     <input id="file-upload" type="file" @change="uploadFile">
     <br><br><br>
-    <textarea v-model="text" cols="30" rows="10"></textarea>
+    <textarea v-model="text" cols="30" rows="10" placeholder="コメントを入力.." style="display: inline-block;"></textarea>
     <br><br>
-    <button @click="post">作成</button>
+    
+    
+    
   </div>
 </template>
 
@@ -48,8 +53,9 @@ export default {
         // this.filePath=require('../assets/' + response.data);
         this.text = '';
       }).catch(error => {
-        alert(error)
-        alert('axios通信失敗しました。')
+        // alert(error)
+        console.log(error);
+        alert('画像を選択してください。')
       })
     },
   }
@@ -67,13 +73,27 @@ input[type="file"] {
 }
 
 .custom-file-upload {
-  border: 1px solid #ccc;
+  background-color: #639aed;
+  color: #FFF;
+  border: 1px solid #a4bbe9;
   display: inline-block;
   padding: 6px 12px;
   cursor: pointer;
 }
 
-.custom-file-upload:hover {
-  background-color: #f5f5f5;
+.yagu{
+  font-size: 23px;
+  margin-left: auto;
+
+}
+
+a:hover {
+    cursor: pointer;
+}
+
+.yaguchi{
+  background-image: url("../assets/system/drag.png" );
+
+
 }
 </style>

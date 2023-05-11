@@ -12,14 +12,12 @@
                 @click="showSearchPages(index, searchTable.id, searchTable.userid)">
                 <img class="photo-grid-img" :src="getVueCliUrl(searchTable.image)" alt="投稿画像">
             </div>
-            <HomeSearchComponent v-show="showHomeSearchComponent" 
-                :homeTableObject="searchTableObject"
-                :commentTableObject="commentTableObject" 
-                :qwerty="qwerty" 
-                :showDeleteButton="showDeleteButton"
+            <HomeSearchComponent v-show="showHomeSearchComponent" :homeTableObject="searchTableObject"
+                :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
+                :show="showLikeJudge"
                 @close="showHomeSearchComponent = false"
                 @refresh-comment="showSearchPages(clickImgIndex, searchTableObject.id, searchTableObject.userid)"
-                @refresh-likes="updateLikes(clickImgIndex)" />
+                @refresh-likes="updateLikes(clickImgIndex,searchTableObject.id)" />
             <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
         </div>
         <div v-show="ppp">
@@ -47,7 +45,8 @@ export default {
             commentTableObject: null,
             ppp: false,
             qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.jpeg" },
-            showDeleteButton: false
+            showDeleteButton: false,
+            showLikeJudge:false
         }
     },
     methods: {
@@ -67,6 +66,8 @@ export default {
             this.showHomeSearchComponent = true;
             this.clickImgIndex = index;
             this.searchTableObject = this.searchTables[index];
+
+            this.likeJudge(postId);
             //クリックした投稿のユーザが自分かどうか判断する
             if (store.state.id == userId) {
                 this.showDeleteButton = true;
@@ -93,14 +94,26 @@ export default {
         getVueCliUrl(imgUrl) {
             return require(`../assets/post/${imgUrl}`);
         },
-        updateLikes(index) {
+        updateLikes(index,postId) {
             Service.post("search", this.searchInput).then(response => {
                 console.log(response);
                 this.searchTables = response.data;
                 this.searchTableObject = this.searchTables[index];
                 this.clickImgIndex = index;
+                this.likeJudge(postId);
             }).catch(error => {
                 alert(error)
+            })
+        },
+        likeJudge(postId) {
+            Service.post('/likejudge', {
+                postid: postId,
+                userid: store.state.id
+            }).then(response => {
+                console.log(response);
+                this.showLikeJudge = response.data;
+            }).catch(error => {
+                alert(error);
             })
         },
     }

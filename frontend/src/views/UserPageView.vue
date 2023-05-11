@@ -1,16 +1,16 @@
 <template>
     <div id="main" class="photo-gallery">
-        <img class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像" >
+        <img class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像">
         <br>
         &nbsp;&nbsp;
         <b>ID: {{ $store.state.userId }}</b>
         <br>
         <b>アカウント：{{ userName.name }}</b>
         <br>
-        <b><a @click="getFollowers"> フォロワー：{{ followerCount }} 人</a>  </b>
+        <b><a @click="getFollowers"> フォロワー：{{ followerCount }} 人</a> </b>
         <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
         <br>
-        <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人</a>  </b>
+        <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人</a> </b>
         <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
         <br>
         <button v-show="aaa" @click="unfollow">unfollow</button>
@@ -24,18 +24,14 @@
         h{{ homeTableObject }} <br>
         c{{ commentTableObject }} <br> -->
         <div class="photo-grid">
-            <div v-for="(userData,index) in userDatas" :key="userData.id" @click="showHomePages(index, userData.id)">
+            <div v-for="(userData, index) in userDatas" :key="userData.id" @click="showHomePages(index, userData.id)">
                 <img class="photo-grid-img" :src="getVueCliUrl(userData.image)" alt="投稿画像">
             </div>
         </div>
-        <HomeSearchComponent v-if="showHomeSearchComponent" 
-            :homeTableObject="homeTableObject"
-            :commentTableObject="commentTableObject"
-            :qwerty="qwerty"
-            :showDeleteButton="showDeleteButton" 
-            @close="showHomeSearchComponent = false"
-            @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)"
-            @refresh-likes="updateLikes(clickImgIndex)" />
+        <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
+            :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton" :show="showLikeJudge"
+            @close="showHomeSearchComponent = false" @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)"
+            @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
     </div>
 </template>
 <script>
@@ -67,9 +63,9 @@ export default {
     data() {
         return {
             userName: {
-                "id": 3, 
-                "name": "崔", 
-                "password": "pass", 
+                "id": 3,
+                "name": "崔",
+                "password": "pass",
                 "profile_picture": "pp.jpeg"
             },
             followerCount: null,
@@ -83,9 +79,10 @@ export default {
             clickImgIndex: null,
             showHomeSearchComponent: false,
             showDeleteButton: false,
-            qwerty: null,
+            qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
             homeTableObject: null,
-            commentTableObject: null
+            commentTableObject: null,
+            showLikeJudge: false
         }
     },
 
@@ -102,6 +99,7 @@ export default {
         showHomePages(index, postId) {
             this.showHomeSearchComponent = true;
             this.homeTableObject = this.userDatas[index];
+            this.likeJudge(postId);
             //クリックした写真のコメントテーブルを取得する
             Service.post('getcom', postId//commentテーブルのpost_id
             ).then(response => {
@@ -120,12 +118,13 @@ export default {
                 alert(error)
             })
         },
-        updateLikes(index) {
-            Service.post("home", store.state.id).then(response => {
-            console.log(response);
-            this.userDatas = response.data;
-            this.homeTableObject = this.userDatas[index];
-            this.clickImgIndex = index;
+        updateLikes(index,postId) {
+            Service.post("mypage", this.userId).then(response => {
+                console.log(response);
+                this.userDatas = response.data;
+                this.homeTableObject = this.userDatas[index];
+                this.clickImgIndex = index;
+                this.likeJudge(postId);
             }).catch(error => {
                 alert(error)
             })
@@ -192,7 +191,7 @@ export default {
             } else {
                 return null;
             }
-            },
+        },
         getVueCliUrl(imgUrl) {
             this.vueCliUrl = require('../assets/post/' + imgUrl);
             return this.vueCliUrl;
@@ -215,6 +214,17 @@ export default {
                 this.ff = response.data;
             }).catch(error => {
                 alert(error)
+            })
+        },
+        likeJudge(postId) {
+            Service.post('/likejudge', {
+                postid: postId,
+                userid: store.state.id
+            }).then(response => {
+                console.log(response);
+                this.showLikeJudge = response.data;
+            }).catch(error => {
+                alert(error);
             })
         },
     }

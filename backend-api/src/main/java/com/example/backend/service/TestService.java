@@ -195,10 +195,8 @@ public class TestService {
 
     // フォロー判断
     public Integer judge(Integer followerid, Integer followingid) {
-        System.out.println("ああああああああああああああっっっっっっっっっk");
         if (frepo.findByFolloweridAndFollowingid(followerid, followingid).isPresent()) {
             Follows asa = frepo.findByFolloweridAndFollowingid(followerid, followingid).get();
-            System.out.println("ああああああああああああああoooooooooooooo");
             return asa.getId();
         } else {
             return 10000;
@@ -221,6 +219,7 @@ public class TestService {
     // 投稿削除
     public boolean deletePost(Integer id) {
         prepo.deleteById(id);
+        lrepo.deleteAllByPostid(id);
         return true;
     }
 

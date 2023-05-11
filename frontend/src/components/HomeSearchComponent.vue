@@ -29,7 +29,6 @@
                                             <b>{{ comment.name }} </b> 
                                         </a>
                                         &nbsp;<nobr class="balloon1-left"> {{ comment.comment }}</nobr>
-                                        <br>{{ comment }}
                                     </li>
                                 </ul>
 
@@ -38,16 +37,14 @@
                     </div>
                     <div class="btn-section">
                         <div class="comment-form">
-                            <!-- <nobr class="mypage-likes">いいね!{{ homeTableObject.likes }}件</nobr> -->
-                            <!-- <button class="like-btn" @click="createLike">いいね</button> -->
                             <div class="heart-and-delete">
                                 <nobr class="mypage-likes">
-                                    <a v-if="!showLikeJudge" class="heart-button" @click="createLike">
+                                    <a v-show="!show" class="heart-button" @click="createLike">
                                         <div class="heart">
                                         </div>
                                     </a>
-                                    <a v-else class="heart-button" @click="deleteLike">
-                                        deletelikes<div class="heart">
+                                    <a v-show="show" class="heart-button" v-bind:class="{ active: show }" @click="deleteLike">
+                                        <div class="heart" >
                                         </div>
                                     </a>
                                     いいね {{homeTableObject.likes }} 件！
@@ -90,6 +87,10 @@ export default {
         showDeleteButton: {
             type: Boolean,
             require: true
+        },
+        show: {
+            type: Boolean,
+            require: true
         }
     },
     data() {
@@ -98,7 +99,6 @@ export default {
             commentText: '',
             getComments: '',
             JudgementCommentUser: false,
-            showLikeJudge: false
         }
     },
     computed: {
@@ -151,7 +151,6 @@ export default {
                 userid:store.state.id
             }).then(response => { //postidを渡す
                 console.log(response);
-                this.showLikeJudge = true;
                 this.$emit('refresh-likes'); // 最新のデータがreturnする
             }).catch(error => {
                 alert(error)
@@ -181,24 +180,12 @@ export default {
                 this.$router.push('/userpage')
             }
         },
-        likeJudge(){
-            Service.post('/likejudge',{
-                postid: this.homeTableObject.id,
-                userid: store.state.id
-            }).then(response => {
-                alert(response);
-                this.showLikeJudge = response.data;
-            }).catch(error => {
-                alert(error);
-            })
-        },
         deleteLike() {
             Service.post('/deletelikes',{
                 postid: this.homeTableObject.id,
                 userid: store.state.id
             }).then(response => {
-                alert(response);
-                this.showLikeJudge = false;
+                console.log(response);
                 this.$emit('refresh-likes');
             }).catch(error => {
                 alert(error);
@@ -228,33 +215,6 @@ export default {
 hr {
     border-color: rgba(255, 255, 255, 0.5); /* 線の色を半透明の白色にする */
     border-width: 1px; /* 線の太さを1pxにする */}
-
-/* .balloon1-left {
-    position: relative;
-    display: inline-block;
-    margin: 1.5em 0 1.5em 15px;
-    padding: 7px 10px;
-    min-width: 120px;
-    max-width: 100%;
-    color: #0c0b0b;
-    font-size: 16px;
-    background: #bbf3a7;
-}
-
-.balloon1-left:before {
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: -30px;
-    margin-top: -15px;
-    border: 15px solid transparent;
-    border-right: 15px solid #bbf3a7;
-}
-
-.balloon1-left p {
-    margin: 0;
-    padding: 0;
-} */
 
 .suba {
     margin-right: auto;
@@ -611,6 +571,18 @@ a:hover {
   background-color: rgb(239, 229, 230);
 }
 
+/* いいねした時のスタイル */
+
+.heart-button.active {
+  background-color: #ed7878;
+  border-color: #ffffff;
+  color: #e3d7d7;
+}
+
+.heart-button.active .heart:before,
+.heart-button.active .heart:after {
+  background-color: #fff;
+}
 
 
 </style>

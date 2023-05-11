@@ -37,8 +37,11 @@
     <a @click="toggleMenu">その他</a>
     <ul v-if="isOpen" class="menu">
       <!-- メニューアイテムのリストを表示 -->
-      <li>設定</li>
-      <li><button @click="logOut">ログアウト</button></li>
+      <li><a @click="showModal = true">
+      設定
+      </a>
+    <OptionModalView v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
+    </OptionModalView></li>      <li><a @click="logOut">ログアウト</a></li>
       <!-- 必要な項目を追加 -->
     </ul>
   </div>
@@ -59,28 +62,6 @@
 
       
     </div>
-
-    
-
-    <!-- <div v-else>
-      ログインと新規登録ページ
-        <div id="titles" style="text-align: center;">
-        <h1>1nstagram</h1>
-        <br><br><br><br>
-        <img src="./assets/system/main.png" alt="LOGO" width="200" height="200">
-        <br><br><br><br>
-        <br><br>
-        <span>名前:</span>
-        <input type="id" name="username" v-model=valueName />
-        <br><br>
-        <span>PASS:</span>
-        <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" />
-        <br><br>
-        <br>
-        <button type="button" @click="logins">ログイン</button>
-        <button type="button" @click="create">新規登録</button>
-      </div>
-    </div> -->
   </div>
 </template>
 
@@ -89,6 +70,7 @@
 import store from "./store"
 import CreateAccount from "./views/CreateAccount.vue"
 import LoginView from "./views/LoginView.vue"
+import OptionModalView from "./components/OptionModalView.vue"
 export default {
   name: "App",
   created() {
@@ -108,74 +90,15 @@ export default {
   data() {
     return {
       login: false,
-      // valueName: "",
-      // valuePass: "",
-      // valueComment: "",
       isOpen: false, // メニューバーが開いているかどうかの状態を管理
+      showModal: false,
+      modalTitle: 'アカウント情報変更'
     };
   },
   methods: {
     toggleMenu() {
       this.isOpen = !this.isOpen; // メニューバーの状態を切り替え
     },
-    //ログイン
-    // logins() {
-    //     Service.post("login", {
-    //         name: this.valueName,
-    //         password: this.valuePass
-    //     }).then(response => {
-    //         //ログイン成功時の処理(axios通信成功時)
-    //         console.log(response);
-    //         if (response.data.id !== null) {
-    //             this.login = true;
-    //             store.commit("SETID", response.data.id); //responseされたIdをストア内stateのidにセット
-    //             store.commit("SETNAME", response.data.name);
-    //             store.commit("SETPROFILE", response.data.profile_picture);
-    //             // セッションストレージに保存
-    //             sessionStorage.setItem("id", response.data.id);
-    //             sessionStorage.setItem("name", response.data.name);
-    //             sessionStorage.setItem("profile_picture", response.data.profile_picture);
-    //             alert("ID : " + store.state.id + "\nName : " + response.data.name + "\n" + "PASSWORD : " + this.valuePass + "\n" + store.state.profile);
-    //         }
-    //         else {
-    //             alert("パスワードが間違ってます。");
-    //         }
-    //     }).catch(error => {
-    //         console.log(error);
-    //         alert("名前が間違っているか、アカウントが存在しません。");
-    //     });
-    // },
-    //アカウント新規作成
-    // create() {
-    //     Service.post("create", {
-    //         name: this.valueName,
-    //         password: this.valuePass
-    //     }).then(response => {
-    //         console.log(response);
-    //         if (response.data.id !== null) {
-    //             this.login = true;
-    //             store.commit("SETID", response.data.id); //responseされたIdをストア内stateのidにセット
-    //             store.commit("SETNAME", response.data.name);
-    //             store.commit("SETPROFILE", response.data.profile_picture);
-    //             alert("アカウントが新規作成しました。" + "\nID : " + store.state.id + "\n" + "PASSWORD : " + this.valuePass + "\n" + store.state.profile);
-    //         }
-    //         else {
-    //             alert("アカウント作成できません。");
-    //         }
-    //     }).catch(error => {
-    //         console.log(error);
-    //         alert("エラー起きました。");
-    //     });
-    // },
-    // aa(){
-    //   const currentUrl = this.$route.path;
-    //   if(currentUrl === '/login'){
-    //     this.sign = true;
-    //   } else if(currentUrl === '/createaccount') {
-    //     this.sign = false;
-    //   }
-
-    // },
     logOut() {
       // ログアウト時にセッションストレージから情報を削除する
       sessionStorage.removeItem("id");
@@ -186,7 +109,8 @@ export default {
   },
   components: { 
     LoginView,
-    CreateAccount
+    CreateAccount,
+    OptionModalView
   }
 }
 </script>

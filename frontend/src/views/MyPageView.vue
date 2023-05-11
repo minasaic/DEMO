@@ -43,9 +43,10 @@
         :commentTableObject="commentTableObject" 
         :qwerty="qwerty"
         :showDeleteButton="showDeleteButton"
+        :show="showLikeJudge"
         @close="showMyPageComponent = false" 
         @refresh-comment="showMyPages(clickImgIndex,postTableObject.id)"
-        @refresh-likes="updateLikes(clickImgIndex)"
+        @refresh-likes="updateLikes(clickImgIndex,postTableObject.id)"
         />
       <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
@@ -70,6 +71,7 @@ export default {
     this.myPage()
     this.getFollowerCount()
     this.getPostCount()
+
   },
   data() {
     return {
@@ -89,12 +91,12 @@ export default {
       ff: null,
       followComponentTitle: null,
       showDeleteButton: true,
+      showLikeJudge: false,
       qwerty: {
         "id": store.state.id,
         "name": store.state.name,
         "profile_picture": store.state.profile
-      }
-
+      },
     }
   },
   methods: {
@@ -118,13 +120,15 @@ export default {
       }).catch(error => {
         alert(error)
       })
+      this.likeJudge(postId);
     },
-    updateLikes(index, ) {
+    updateLikes(index, postId) {
       Service.post("mypage", store.state.id).then(response => {
         console.log(response);
         this.postTables = response.data;
         this.postTableObject = this.postTables[index];
         this.clickImgIndex = index;
+        this.likeJudge(postId);
       }).catch(error => {
         alert(error)
       })
@@ -187,6 +191,17 @@ export default {
         this.postCount = response.data;
       }).catch(error => {
         alert(error)
+      })
+    },
+    likeJudge(postId){
+      Service.post('/likejudge',{
+          postid: postId,
+          userid: store.state.id
+      }).then(response => {
+          console.log(response);
+          this.showLikeJudge = response.data;
+      }).catch(error => {
+          alert(error);
       })
     },
   }
