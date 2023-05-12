@@ -3,48 +3,49 @@
     <div v-if="$store.state.pageBoolean">
       <div id="sub">
         <router-link to="/">
-        <img src="./assets/system/mainlogo.png" alt="LOGO" width="200" height="50">
+          <img src="./assets/system/mainlogo.png" alt="LOGO" width="200" height="50">
         </router-link>
         <nav>
           <br>
           <br>
-          <router-link to="/"><span class="btn_hover"><img class="photo" src="./assets/system/home.png" alt="LOGO" width="20"
-                height="20">
+          <router-link to="/"><span class="btn_hover"><img class="photo" src="./assets/system/home.png" alt="LOGO">
               ホーム</span></router-link>
           <br>
           <br>
-          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png" alt="LOGO"
-                width="20" height="20">
+          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png" alt="LOGO">
               検索</span></router-link>
           <br>
           <br>
-          <router-link to="/create"><span class="btn_hover"><img class="photo" src="./assets/system/plus.png" alt="LOGO"
-                width="20" height="20">
+          <router-link to="/create"><span class="btn_hover"><img class="photo" src="./assets/system/plus.png" alt="LOGO">
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/likespage">
-            ❤️
+          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png" alt="LOGO">
+              いいね一覧
+            </span>
           </router-link>
           <br>
           <br>
-          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png" alt="LOGO"
-                width="20" height="20">
+          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png"
+                alt="LOGO" width="20" height="20">
               プロフィール
             </span></router-link>
           <br><br><br>
           <div>
-    <a @click="toggleMenu">その他</a>
-    <ul v-if="isOpen" class="menu">
-      <!-- メニューアイテムのリストを表示 -->
-      <li><a @click="showModal = true">
-      設定
-      </a>
-    <OptionModalView v-if="showModal" :title="modalTitle" @close="showModal = false" @save="showModal = false">
-    </OptionModalView></li>      <li><a @click="logOut">ログアウト</a></li>
-      <!-- 必要な項目を追加 -->
-    </ul>
-  </div>
+            <a @click="toggleMenu" class="btn_hover"><img class="photo" src="./assets/system/menu.png" alt="LOGO"> その他</a>
+            <ul v-if="isOpen" class="menu">
+              <!-- メニューアイテムのリストを表示 -->
+              <li><a class="btn_hover" @click="showModal = true">
+                  設定
+                </a>
+                <OptionModalView v-if="showModal" :title="modalTitle" @close="showModal = false"
+                  @save="showModal = false">
+                </OptionModalView>
+              </li>
+              <li><a class="btn_hover" @click="logOut">ログアウト</a></li>
+              <!-- 必要な項目を追加 -->
+            </ul>
+          </div>
         </nav>
       </div>
       <div id="change">
@@ -54,13 +55,13 @@
 
     <div v-else>
       <div v-if="$store.state.signSigu">
-        <LoginView/>
+        <LoginView />
       </div>
       <div v-else>
-        <CreateAccount/>
+        <CreateAccount />
       </div>
 
-      
+
     </div>
   </div>
 </template>
@@ -74,18 +75,18 @@ import OptionModalView from "./components/OptionModalView.vue"
 export default {
   name: "App",
   created() {
-      //セッションストレージから情報を読み込む
-      const id = sessionStorage.getItem("id");
-      const name = sessionStorage.getItem("name");
-      const profilePicture = sessionStorage.getItem("profile_picture");
-      const pageBoolean =sessionStorage.getItem("page_boolean");
-      // 読み込んだ情報をストアに保存する
-      if (id && name && pageBoolean) {
-          store.commit("SETID", id);
-          store.commit("SETNAME", name);
-          store.commit("SETPROFILE", profilePicture);
-          store.commit("SETPAGEBOOLEAN", pageBoolean);
-      }
+    //セッションストレージから情報を読み込む
+    const id = sessionStorage.getItem("id");
+    const name = sessionStorage.getItem("name");
+    const profilePicture = sessionStorage.getItem("profile_picture");
+    const pageBoolean = sessionStorage.getItem("page_boolean");
+    // 読み込んだ情報をストアに保存する
+    if (id && name && pageBoolean) {
+      store.commit("SETID", id);
+      store.commit("SETNAME", name);
+      store.commit("SETPROFILE", profilePicture);
+      store.commit("SETPAGEBOOLEAN", pageBoolean);
+    }
   },
   data() {
     return {
@@ -107,7 +108,7 @@ export default {
       store.commit('SETPAGEBOOLEAN', false);
     }
   },
-  components: { 
+  components: {
     LoginView,
     CreateAccount,
     OptionModalView
@@ -148,6 +149,10 @@ nav {
 }
 
 .btn_hover {
+  display: inline-block;
+  justify-content: center;
+  align-items: center;
+
   background-color: #ffffff;
   /*背景色*/
   -webkit-transition: all 0.3s ease;
@@ -162,7 +167,7 @@ nav {
   /*ふわっとさせる間隔*/
   padding: 10px 0;
   /*文字と背景の余白*/
-  width: 500px;
+  /* width: 130px; */
   /*ボタン幅*/
   color: #0c0c0c;
   /*文字の色*/
@@ -179,6 +184,8 @@ nav {
 /* マウスオーバーした際の背景 */
 .btn_hover:hover {
   background-color: #ebeaea;
+  transform: scale(1.2);
+  z-index: 1;
   /*背景色*/
 }
 
@@ -198,21 +205,17 @@ nav {
 }
 
 .photo {
-  width: 13%;
-  height: auto;
-  transition: transform 0.1s ease-in-out;
-}
-
-.photo:hover {
-  transform: scale(1.2);
-  z-index: 1;
+  width: 25px;
+  height: 25%;
+  margin-top: -10px;
+  /* transition: transform 0.1s ease-in-out; */
 }
 </style>
 <style>
 #main {
   box-sizing: border-box;
   margin-left: 180px;
-  padding:20px 90px; 
+  padding: 20px 90px;
 }
 
 .postDetelImg {

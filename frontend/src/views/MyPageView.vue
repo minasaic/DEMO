@@ -1,35 +1,48 @@
 <template>
   <div id="main" class="photo-gallery">
-    <img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
-    <p v-else>画像をアップロードしてください。</p>
-    <a @click="showModal = true">
-      <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
-    </a>
+    <div class="moriii">
+    <nobr id="sub"  ><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
+      <p v-else>プロフィール写真をアップロードしてください。</p>
+    </nobr>
     <option-modal-view v-if="showModal" 
       :title="modalTitle"
       :name="$store.state.name"
      @close="showModal = false" @save="showModal = false">
     </option-modal-view>
     <br>
-    <b>ID：{{ $store.state.id }}</b>
     <br>
-    <b>アカウント：{{ $store.state.name }} </b> 
+    <br> 
     <br>
-    <b><a @click="getFollowers">フォロワー： {{ followerCount }}  人 </a></b>
+    <!--<b>ID：{{ $store.state.id }}</b>-->
+    <nobr class="saimina">
+    <b>{{ $store.state.name }} </b> 
+
+    <a @click="showModal = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+      <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
+    </a>
+    
+    
+    <br>
+    <br>
+    <br>
+    <br>
+    <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
+    <b><a @click="getFollowers">&nbsp;&nbsp;&nbsp;&nbsp;フォロワー&nbsp;{{ followerCount }}  人 </a></b>
+    <FollowingComponent v-show="showFollows" 
+      @close="showFollows = false"
+      :follows="ff"
+      :followComponentTitle="followComponentTitle"
+      />
+    <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中&nbsp;{{ followingCount }} 人 </a> </b>
     <FollowingComponent v-show="showFollows" 
       @close="showFollows = false"
       :follows="ff"
       :followComponentTitle="followComponentTitle"
       />
     <br>
-    <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人 </a> </b>
-    <FollowingComponent v-show="showFollows" 
-      @close="showFollows = false"
-      :follows="ff"
-      :followComponentTitle="followComponentTitle"
-      />
     <br>
-    <b> 投稿 &nbsp; {{ postCount }} 件 </b>
+  </nobr>
+</div>
 
     <hr>
     <!-- postsテーブル     {{ postTables}}       -->
@@ -211,8 +224,8 @@ export default {
 <style>
 .round-image {
   border-radius: 50%;
-  width: 100px ;
-  height:100px;
+  width: 170px ;
+  height:170px;
 }
 
 .photo-grid {
@@ -255,4 +268,20 @@ export default {
    width: 25%;
 }
 
+#sub {
+  box-sizing: border-box;
+  top: 100px;
+  height: 500%;
+  width: 420px;
+  overflow: auto;
+  padding: 0px;
+  /* display: block; */
+}
+
+.moriii{
+  display: flex;
+}
+.saimina{
+  padding: 30px;
+}
 </style>

@@ -1,5 +1,7 @@
 package com.example.backend.domain;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -22,6 +24,8 @@ public class Posts extends GenericDomain{
     private String image;
     @Getter@Setter
     private String caption;
+    @Getter@Setter
+    private Timestamp createdat;
     @Getter@Setter
     private Integer likes;
 

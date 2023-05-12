@@ -40,12 +40,7 @@ export default {
     },
     data() {
         return {
-            // followings: [
-            //     { id:'1',userName: 'yaguchi', profil: 'homeimg4.jpeg' },
-            //     { id:'2',userName: 'morigami', profil: 'homeimg4.jpeg' },
-            //     { id:'3',userName: 'sai', profil: 'homeimg4.jpeg' },
-            //     { id:'4',userName: 'inagaki', profil: 'homeimg4.jpeg' },
-            // ]
+
         }
     },
     methods: {
@@ -62,4 +57,8 @@ export default {
     }
 }
 </script>
-<style></style>
+<style scoped>
+.dialog-content{
+    overflow-y: scroll;
+}
+</style>

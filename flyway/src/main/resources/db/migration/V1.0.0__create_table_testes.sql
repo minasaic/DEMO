@@ -3,6 +3,9 @@ CREATE TABLE user(
 	name VARCHAR(30) NOT NULL,
     password VARCHAR(30) NOT NULL,
 	profile_picture VARCHAR(255),
+    introduction VARCHAR(255),
+    sex VARCHAR(255),
+    birthday DATE,
 	PRIMARY KEY (id)
 );
 CREATE TABLE posts(
@@ -10,7 +13,7 @@ CREATE TABLE posts(
     userid int NOT NULL,
     image varchar(255) NOT NULL,
     caption varchar(255) NOT NULL,
-    created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    createdat datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     likes int NOT NULL default 0,
     PRIMARY KEY (id)
 );
@@ -21,7 +24,7 @@ CREATE TABLE comments(
     comment varchar(255) NOT NULL,
     name VARCHAR(30) NOT NULL,
     profile VARCHAR(255),
-    created_at datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    createdat datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)
 );
 CREATE TABLE follows(

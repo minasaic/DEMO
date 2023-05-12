@@ -9,7 +9,7 @@
             <br><br>
             <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
             <input v-else type="text" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
-            <button @click="showPassword = !showPassword">👀</button>
+            <a @click="showPassword = !showPassword">👀</a>
             <br><br>
             <br>
             <span class="button001"><a  type="button" @click="create">登録する</a></span> 

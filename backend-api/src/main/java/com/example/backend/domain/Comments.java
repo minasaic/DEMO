@@ -1,5 +1,7 @@
 package com.example.backend.domain;
 
+import java.sql.Timestamp;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +28,8 @@ public class Comments extends GenericDomain{
     private String name;
     @Getter@Setter
     private String profile;
+    @Getter@Setter
+    private Timestamp createdat;
 
     @Override
     protected Object keyObject() {

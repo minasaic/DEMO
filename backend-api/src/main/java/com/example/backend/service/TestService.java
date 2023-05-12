@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -68,6 +69,7 @@ public class TestService {
     public List<Posts> getPosts(Integer id) { // ログインしたアカウントのidをコントローラーから受け取った
         List<Posts> post = new ArrayList<>(); // インスタンス化
         List<Follows> follow = frepo.findByFollowingid(id); // Followsテーブルからカラム(Following)※idがフォローしているアカウントのレコードを取ってくる
+        post.addAll(prepo.findByUserid(id));
         for (int i = 0; i < follow.size(); i++) { // for文でlistの要素全てのFollowerをxに入れる
             post.addAll(prepo.findByUserid(follow.get(i).getFollowerid()));
         }
@@ -101,12 +103,13 @@ public class TestService {
     }
 
     // 新規投稿
-    public boolean createPost(Integer id, String image, String caption) {
+    public boolean createPost(Integer id, String image, String caption,Timestamp timestamp) {
         Posts post = new Posts();
         post.setUserid(id);
         post.setImage(image);
         post.setCaption(caption);
         post.setLikes(0);
+        post.setCreatedat(timestamp);
         prepo.save(post);
         return true;
     }
@@ -117,7 +120,7 @@ public class TestService {
     }
 
     // コメント投稿
-    public boolean createComment(Integer user_id, Integer post_id, String comment) {
+    public boolean createComment(Integer user_id, Integer post_id, String comment,Timestamp timestamp) {
         Comments com = new Comments();
         User user = urepo.findById(user_id).get();
         com.setPostid(post_id);
@@ -125,6 +128,7 @@ public class TestService {
         com.setComment(comment);
         com.setName(user.getName());
         com.setProfile(user.getProfile_picture());
+        com.setCreatedat(timestamp);
         crepo.save(com);
         return true;
     }
@@ -155,7 +159,14 @@ public class TestService {
             return a;
         }
         return null;
-
+    }
+    //ユーザーを検索する
+    public List<User> searchUser(String keyword){
+        List<User> a = urepo.findByNameLike("%" + keyword.replaceAll("\"", "") + "%");
+        if (a != null) {
+            return a;
+        }
+        return null;
     }
 
     // フォロー

@@ -50,10 +50,9 @@ export default {
       }
       ).then(response => {
         console.log(response);
-        // this.filePath=require('../assets/' + response.data);
         this.text = '';
+        this.$router.push('/');
       }).catch(error => {
-        // alert(error)
         console.log(error);
         alert('画像を選択してください。')
       })

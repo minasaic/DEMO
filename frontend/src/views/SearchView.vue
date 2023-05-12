@@ -7,6 +7,17 @@
         s...{{ searchTableObject }} <br>
         ss...{{ searchTables }} -->
         <br><br><br>
+        <div class="user-table-container">
+            <div v-for="(searchUserTable,index) in searchUserTables" :key="searchUserTable.id" class="user-table">
+                <a @click="setStoreUserId(index)" class="user-link">
+                    <div class="image-container">
+                        <img v-if="searchUserTable.profile_picture !== null" class="round-image" :src="getVueCliUrlProfile(searchUserTable.profile_picture)" alt="ユーザプロフィール">
+                        <img v-else src="" alt="プロフィール写真なし">
+                    </div>
+                    <span>{{ searchUserTable.name }}</span>
+                </a>
+            </div>
+        </div>
         <div class="photo-grid">
             <div class="photo" v-for="(searchTable, index) in searchTables " :key="searchTable.id"
                 @click="showSearchPages(index, searchTable.id, searchTable.userid)">
@@ -20,7 +31,7 @@
                 @refresh-likes="updateLikes(clickImgIndex,searchTableObject.id)" />
             <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
         </div>
-        <div v-show="ppp">
+        <div v-show="ppp ==true && mori ==true">
             当てはまる投稿がないです。
         </div>
     </div>
@@ -46,7 +57,10 @@ export default {
             ppp: false,
             qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.jpeg" },
             showDeleteButton: false,
-            showLikeJudge:false
+            showLikeJudge:false,
+            searchUserTables: null,
+            mori: false,
+            searchUserTableObject: null
         }
     },
     methods: {
@@ -61,7 +75,18 @@ export default {
             }).catch(error => {
                 alert(error)
             })
+            Service.post('searchUser',this.searchInput).then(response => {
+                console.log(response);
+                this.searchUserTables = response.data;
+                this.mori = false;
+                if (response.data[0] == undefined) {
+                    this.mori = true;
+                }
+            }).catch(error => {
+                alert(error)
+            })
         },
+
         showSearchPages(index, postId, userId) {
             this.showHomeSearchComponent = true;
             this.clickImgIndex = index;
@@ -94,6 +119,9 @@ export default {
         getVueCliUrl(imgUrl) {
             return require(`../assets/post/${imgUrl}`);
         },
+        getVueCliUrlProfile(imgUrl) {
+            return require(`../assets/profile/${imgUrl}`);
+        },
         updateLikes(index,postId) {
             Service.post("search", this.searchInput).then(response => {
                 console.log(response);
@@ -116,17 +144,64 @@ export default {
                 alert(error);
             })
         },
+        setStoreUserId(index) {
+            this.searchUserTableObject = this.searchUserTables[index];
+            alert(this.searchUserTableObject)
+            if(this.searchUserTableObject.id !== store.state.id){
+            store.commit('SETUSERID', this.searchUserTableObject.id);
+            sessionStorage.setItem('user_id', this.searchUserTableObject.id);
+            alert('setStorUserId  ' + store.state.userId);
+
+            this.$router.push('/userpage')
+            }else{
+                this.$router.push('/mypage')
+            }
+        },
     }
 }
 </script>
 
 <style scoped>
-img {
-    width: 300px;
-    height: 300px;
-}
-
 #main {
     overflow-y: hidden;
 }
+.user-table-container {
+  display: flex;
+
+  overflow-x: scroll;
+  overflow-x: hidden;
+  white-space: nowrap;
+}
+
+.user-table {
+  margin: 10px;
+  width: 100px;
+  height: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+}
+
+.user-link {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.image-container {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-bottom: 5px;
+}
+
+.round-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 </style>

@@ -2,6 +2,7 @@ package com.example.backend.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.sql.Timestamp;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
@@ -105,7 +106,8 @@ class TestController{
                 + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = timestamp + file.getOriginalFilename(); //データベースに保存するファイルネーム
-            testService.createPost(id,staticPath,text);
+            Timestamp timestamps = new Timestamp(System.currentTimeMillis());
+            testService.createPost(id,staticPath,text,timestamps);
             return staticPath;
         } catch (IOException e) {
             return "sdfgh";
@@ -128,7 +130,8 @@ class TestController{
     public boolean newComment(@RequestBody Comments com) {
         System.out.println(com.getUserid());
         System.out.println(com.getPostid());
-        return testService.createComment(com.getUserid(),com.getPostid(),com.getComment());
+        Timestamp timestamps = new Timestamp(System.currentTimeMillis());
+        return testService.createComment(com.getUserid(),com.getPostid(),com.getComment(),timestamps);
     }
 
     //フォロワーとフォロー数を取得
@@ -158,6 +161,11 @@ class TestController{
     @PostMapping(path = "/search")
     public List<Posts> search(@RequestBody String keyword){
         return testService.search(keyword);
+    }
+    //ユーザーを検索
+    @PostMapping(path = "/searchUser")
+    public List<User> qwertyui(@RequestBody String keyword){
+        return testService.searchUser(keyword);
     }
 
     // フォロー
@@ -218,4 +226,6 @@ class TestController{
     public User getUserNameAndImage(@RequestBody Integer id){
         return testService.getUserNameAndImage(id);
     }
+
+    
 }

@@ -1,5 +1,7 @@
 package com.example.backend.domain;
 
+import java.sql.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,6 +25,12 @@ public class User extends GenericDomain{
     private String password;
     @Getter@Setter
     private String profile_picture;
+    // @Getter@Setter
+    // private String introduction;
+    // @Getter@Setter
+    // private String sex;
+    // @Getter@Setter
+    // private Date birthday;
 
     @Override
     protected Object keyObject() {

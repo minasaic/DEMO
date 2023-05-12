@@ -1,23 +1,22 @@
 <template>
     <div id="main" class="photo-gallery">
-        <img class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像">
-        <br>
-        &nbsp;&nbsp;
-        <b>ID: {{ $store.state.userId }}</b>
-        <br>
-        <b>アカウント：{{ userName.name }}</b>
-        <br>
-        <b><a @click="getFollowers"> フォロワー：{{ followerCount }} 人</a> </b>
-        <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
-        <br>
-        <b><a @click="getFollowings"> フォロー：{{ followingCount }} 人</a> </b>
-        <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
-        <br>
-        <button v-show="aaa" @click="unfollow">unfollow</button>
-        <button v-show="aaa === false" @click="follow">follow</button>
-        <br><br>
-        <div>
-            投稿一覧
+        <div class="moriii">
+            <nobr id="sub">
+                <img v-if="userName.profile_picture !== null" class="round-image" :src="profilea(userName.profile_picture)" alt="プロフィール画像">
+                <span v-else>プロフィール写真なし</span>
+            </nobr>
+            <nobr class="saimina">
+                <b>{{ userName.name }}</b>
+                <br><br><br><br>
+                <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
+                <b><a @click="getFollowers"> &nbsp;&nbsp;&nbsp;&nbsp;フォロワー{{ followerCount }} 人</a> </b>
+                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
+                <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中{{ followingCount }} 人</a> </b>
+                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
+                <br>
+                <button v-show="aaa" @click="unfollow">unfollow</button>
+                <button v-show="aaa === false" @click="follow">follow</button>
+            </nobr>
         </div>
         <hr>
         <!-- poststable {{ userDatas }} <br>
@@ -29,8 +28,9 @@
             </div>
         </div>
         <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
-            :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton" :show="showLikeJudge"
-            @close="showHomeSearchComponent = false" @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)"
+            :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
+            :show="showLikeJudge" @close="showHomeSearchComponent = false"
+            @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id)"
             @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
     </div>
 </template>
@@ -58,6 +58,7 @@ export default {
         this.myPage()
         this.getFollowerCount()
         this.getUserNameAndImage()
+        this.getPostCount()
 
     },
     data() {
@@ -82,7 +83,8 @@ export default {
             qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
             homeTableObject: null,
             commentTableObject: null,
-            showLikeJudge: false
+            showLikeJudge: false,
+            postCount: null
         }
     },
 
@@ -118,7 +120,8 @@ export default {
                 alert(error)
             })
         },
-        updateLikes(index,postId) {
+
+        updateLikes(index, postId) {
             Service.post("mypage", this.userId).then(response => {
                 console.log(response);
                 this.userDatas = response.data;
@@ -225,6 +228,15 @@ export default {
                 this.showLikeJudge = response.data;
             }).catch(error => {
                 alert(error);
+            })
+        },
+        //投稿数を取得
+        getPostCount() {
+            Service.post("postdata", store.state.userId).then(response => {
+                console.log(response);
+                this.postCount = response.data;
+            }).catch(error => {
+                alert(error)
             })
         },
     }
