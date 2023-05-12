@@ -167,9 +167,7 @@ export default {
 }
 .user-table-container {
   display: flex;
-
   overflow-x: scroll;
-  overflow-x: hidden;
   white-space: nowrap;
 }
 
