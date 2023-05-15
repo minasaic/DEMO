@@ -13,6 +13,7 @@
               </label>
               <input id="file-upload" type="file" @change="saveUserImg">
             </nobr>
+            <br>
             <nobr>
               アカウント名：
               <input type="text" v-model="changeUserName" :placeholder="name">
@@ -21,6 +22,47 @@
               <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード" >
               <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード" >
               <a @click="showPassword = !showPassword">👀</a>
+              <br>
+              自己紹介:
+              <br>
+              <textarea v-model="changeUserIntroduction" cols="30" rows="10" placeholder="例:はじめまして！〇〇といいます.." style="display: inline-block;"></textarea>
+              <br>
+              性別:
+              <select v-model="changeUserSex" :placeholder="sex">
+              <option disabled selected value="">選択してください</option>
+              <option value="男性">男性</option>
+              <option value="女性" >女性</option>
+              <option value="答えたくない" selected>答えたくない</option>
+              </select>
+              <br>
+              生年月日:
+              <input type="text" v-model="changeUserBirthday" :placeholder="birthday">
+
+              <div>
+                
+                <select v-model="selectedYear">
+                <option value="">年</option>
+                <option value="2023">2023年</option>
+                <!-- 他の年を追加することもできます -->
+              </select>
+
+              <select v-model="selectedMonth">
+                <option value="">月</option>
+                <option value="1">1月</option>
+                <!-- 他の月を追加することもできます -->
+              </select>
+
+              <select v-model="selectedDay">
+                <option value="">日</option>
+                <option value="1">1日</option>
+                <!-- 他の日を追加することもできます -->
+              </select>
+
+              </div>
+              
+              
+              
+              <br>
             </nobr>
           </span>
           <button type="button" class="close-button" @click="$emit('close')">
@@ -60,6 +102,12 @@ export default {
       path: null,
       changeUserName: '',
       changeUserPassword: '',
+      changeUserIntroduction: '',
+      changeUserSex: '',
+      changeUserBirthday: this.selectedYear + this.selectedMonth + this.selectedDay,
+      selectedYear: "",
+      selectedMonth: "",
+      selectedDay: "",
       profile: null,
       showPassword: false
     }
@@ -75,6 +123,9 @@ export default {
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)
       formData.append('password', this.changeUserPassword)
+      formData.append('introduction', this.changeUserIntroduction)
+      formData.append('sex', this.changeUserSex)
+      formData.append('birthday', this.changeUserBirthday)
       formData.append('id', store.state.id)
       Service.post('update', formData, {
         headers: {
@@ -89,6 +140,9 @@ export default {
       }).catch(error => {
         alert(error)
       })
+      for (let month = 1; month <= 12; month++) {
+      document.write(`<option value="${month}">${month}月</option>`);
+    }
     },
   }
 }

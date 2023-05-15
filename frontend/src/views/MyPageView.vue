@@ -28,16 +28,16 @@
     <br>
     <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
     <b><a @click="getFollowers">&nbsp;&nbsp;&nbsp;&nbsp;フォロワー&nbsp;{{ followerCount }}  人 </a></b>
-    <FollowingComponent v-show="showFollows" 
-      @close="showFollows = false"
+    <FollowingComponent v-if="showFollows" 
       :follows="ff"
       :followComponentTitle="followComponentTitle"
+      @close="showFollows = false"
       />
     <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中&nbsp;{{ followingCount }} 人 </a> </b>
-    <FollowingComponent v-show="showFollows" 
-      @close="showFollows = false"
+    <FollowingComponent v-if="showFollows" 
       :follows="ff"
       :followComponentTitle="followComponentTitle"
+      @close="showFollows = false"
       />
     <br>
     <br>

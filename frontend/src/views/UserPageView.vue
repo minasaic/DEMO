@@ -7,15 +7,21 @@
             </nobr>
             <nobr class="saimina">
                 <b>{{ userName.name }}</b>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button v-show="aaa" @click="unfollow">unfollow</button>
+                <button v-show="aaa === false" @click="follow">follow</button>
                 <br><br><br><br>
                 <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
                 <b><a @click="getFollowers"> &nbsp;&nbsp;&nbsp;&nbsp;フォロワー{{ followerCount }} 人</a> </b>
-                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
+                <FollowingComponent v-if="showFollows" 
+                :follows="ff" 
+                @close="showFollows = false" 
+                />
                 <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中{{ followingCount }} 人</a> </b>
-                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
-                <br>
-                <button v-show="aaa" @click="unfollow">unfollow</button>
-                <button v-show="aaa === false" @click="follow">follow</button>
+                <FollowingComponent v-if="showFollows" 
+                @close="showFollows = false" 
+                :follows="ff" />
+                <br><br>
             </nobr>
         </div>
         <hr>

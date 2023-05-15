@@ -1,5 +1,6 @@
 package com.example.backend.service;
 
+import java.sql.Date;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -81,12 +82,30 @@ public class TestService {
         return prepo.findByUserid(id);
     }
 
+    // // アカウント編集 変更
+    // public boolean update(String staticPath, Integer id, String name, String password) {
+    //     User user = urepo.findById(id).get();
+    //     user.setProfile_picture(staticPath);
+    //     user.setName(name);
+    //     user.setPassword(password);
+    //     urepo.save(user);
+    //     List<Comments> com = crepo.findByUserid(id);
+    //     for (int i = 0; i < com.size(); i++) {
+    //         com.get(i).setName(name);
+    //         com.get(i).setProfile(staticPath);
+    //         crepo.save(com.get(i));
+    //     }
+    //     return true;
+    // }
     // アカウント編集 変更
-    public boolean update(String staticPath, Integer id, String name, String password) {
+    public boolean update(String staticPath, Integer id, String name, String password, String introduction, String sex, Date birthday) {
         User user = urepo.findById(id).get();
         user.setProfile_picture(staticPath);
         user.setName(name);
         user.setPassword(password);
+        user.setIntroduction(introduction);
+        user.setSex(sex);
+        user.setBirthday(birthday);
         urepo.save(user);
         List<Comments> com = crepo.findByUserid(id);
         for (int i = 0; i < com.size(); i++) {
