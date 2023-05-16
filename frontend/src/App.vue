@@ -20,16 +20,20 @@
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png" alt="LOGO">
+          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png" alt="LOGO">
               いいね一覧
             </span>
           </router-link>
           <br>
           <br>
-          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png"
-                alt="LOGO" width="20" height="20">
+          <router-link to="/mypage">
+            <span class="btn_hover">
+              <img v-if="getVueCliUrl() !== undefined" class="photo" :src="getVueCliUrl()"
+                alt="LOGO">
+                <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
               プロフィール
-            </span></router-link>
+            </span>
+          </router-link>
           <br><br><br>
           <div>
             <a @click="toggleMenu" class="btn_hover"><img class="photo" src="./assets/system/menu.png" alt="LOGO"> その他</a>
@@ -106,7 +110,12 @@ export default {
       sessionStorage.removeItem("name");
       sessionStorage.removeItem("profile_picture");
       store.commit('SETPAGEBOOLEAN', false);
-    }
+    },
+    getVueCliUrl() {
+      if (store.state.profile !== null) {
+        return require('./assets/profile/' + store.state.profile);
+      } 
+    },
   },
   components: {
     LoginView,

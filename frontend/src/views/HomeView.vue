@@ -2,10 +2,14 @@
   <div id="main">
     <!-- homeTableObject: {{ homeTableObject }}
     qwerty: {{ qwerty }} -->
-    <div class="photo-grid">
+    <div class="home-photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
-        <img class="photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
+        <div>
+          <!-- <img :src="getVueCliUrlProfile(homeTable.userid).profile_picture" alt="user icon">
+          <span>{{  }}</span> -->
+        </div>
+        <img class="home-photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
         :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
@@ -36,12 +40,15 @@ export default {
       commentTableObject: null,
       qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
       showDeleteButton: false,
-      showLikeJudge: false
+      showLikeJudge: false,
+      userDate:{}
 
     }
   },
   created() {
     this.home()
+  },
+  computed:{
   },
   methods: {
     showFollowing() {
@@ -102,7 +109,22 @@ export default {
       })
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
+    },
+    getVueCliUrlProfile(userId) {
+      Service.post('getuser',userId).then(response => {
+        console.log(response);
+        // this.userDate.push(response.data);
+        const userDates = {
+          'profile_picture':require(`../assets/profile/${response.data.profile_picture}`),
+          'name':response.data.name
+        };
+        return userDates;
+
+      }).catch(error => {
+        alert(error);
+      })
     },
     likeJudge(postId) {
       Service.post('/likejudge', {
@@ -118,3 +140,20 @@ export default {
   }
 }
 </script>
+<style>
+
+.home-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  grid-gap: 20px;
+}
+
+.home-photo-grid-img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  /* grid-row: auto; */
+  margin-bottom: 70px;
+}
+</style>

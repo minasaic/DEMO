@@ -1,8 +1,7 @@
 <template>
     <div id="main">
         <h1>検索</h1>
-        <input @keyup.enter="getSearch" type="search" v-model=searchInput>
-        <button @click="getSearch">search</button>
+        <input @input="getSearch" type="search" v-model=searchInput>
         <!-- q...{{ qwerty }} <br>
         s...{{ searchTableObject }} <br>
         ss...{{ searchTables }} -->
@@ -31,7 +30,7 @@
                 @refresh-likes="updateLikes(clickImgIndex,searchTableObject.id)" />
             <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
         </div>
-        <div v-show="ppp ==true && mori ==true">
+        <div v-show="ppp == true && mori == true">
             当てはまる投稿がないです。
         </div>
     </div>
@@ -46,9 +45,12 @@ export default {
     components: {
         HomeSearchComponent
     },
+    created(){
+        this.getSearch()
+    },
     data() {
         return {
-            searchInput: null,
+            searchInput: '',
             searchTables: null,
             searchTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
             showHomeSearchComponent: false,
@@ -146,8 +148,8 @@ export default {
         },
         setStoreUserId(index) {
             this.searchUserTableObject = this.searchUserTables[index];
-            alert(this.searchUserTableObject)
-            if(this.searchUserTableObject.id !== store.state.id){
+            alert(this.searchUserTableObject.id)
+            if(this.searchUserTableObject.id != store.state.id){
             store.commit('SETUSERID', this.searchUserTableObject.id);
             sessionStorage.setItem('user_id', this.searchUserTableObject.id);
             alert('setStorUserId  ' + store.state.userId);
@@ -167,7 +169,7 @@ export default {
 }
 .user-table-container {
   display: flex;
-  overflow-x: scroll;
+  overflow-x: auto;
   white-space: nowrap;
 }
 

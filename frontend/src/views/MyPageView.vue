@@ -1,7 +1,7 @@
 <template>
   <div id="main" class="photo-gallery">
     <div class="moriii">
-    <nobr id="sub"  ><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
+    <nobr id="sub" ><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
       <p v-else>プロフィール写真をアップロードしてください。</p>
     </nobr>
     <option-modal-view v-if="showModal" 
@@ -15,7 +15,7 @@
     <br>
     <!--<b>ID：{{ $store.state.id }}</b>-->
     <nobr class="saimina">
-    <b>{{ $store.state.name }} </b> 
+    <b class="userName">{{ $store.state.name }} </b> 
 
     <a @click="showModal = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
       <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
@@ -30,13 +30,13 @@
     <b><a @click="getFollowers">&nbsp;&nbsp;&nbsp;&nbsp;フォロワー&nbsp;{{ followerCount }}  人 </a></b>
     <FollowingComponent v-if="showFollows" 
       :follows="ff"
-      :followComponentTitle="followComponentTitle"
+      :followComponentTittle="followComponentTittle"
       @close="showFollows = false"
       />
     <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中&nbsp;{{ followingCount }} 人 </a> </b>
     <FollowingComponent v-if="showFollows" 
       :follows="ff"
-      :followComponentTitle="followComponentTitle"
+      :followComponentTittle="followComponentTittle"
       @close="showFollows = false"
       />
     <br>
@@ -102,7 +102,7 @@ export default {
       modalTitle: 'アカウント情報変更',
       postCount: null,
       ff: null,
-      followComponentTitle: null,
+      followComponentTittle: null,
       showDeleteButton: true,
       showLikeJudge: false,
       qwerty: {
@@ -160,7 +160,7 @@ export default {
         console.log(response);
         this.showFollows = true;
         this.ff = response.data;
-        this.followComponentTitle = 'フォロワー一覧';
+        this.followComponentTittle = 'フォロワー';
       }).catch(error => {
         alert(error) 
       })
@@ -170,7 +170,7 @@ export default {
         console.log(response);
         this.showFollows = true;
         this.ff = response.data;
-        this.followComponentTitle = 'フォロー一覧';
+        this.followComponentTittle = 'フォロー中';
       }).catch(error => {
         alert(error)
       })
@@ -283,5 +283,8 @@ export default {
 }
 .saimina{
   padding: 30px;
+}
+.userName {
+  font-size: 25px;
 }
 </style>

@@ -131,14 +131,18 @@ class TestController{
 
     // 新規投稿
     @PostMapping(path = "/post")
-    public String newPost(@RequestParam ("file") MultipartFile file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
+    public String newPost(@RequestParam ("file") List<MultipartFile> file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
         try {
-            String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-            String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" 
+            String staticPath = "";
+            for(int i = 0; i < file.size(); i++ ){
+                String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
+                String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" 
                 + timestamp 
-                + file.getOriginalFilename();
-            file.transferTo(new File(filePath));
-            String staticPath = timestamp + file.getOriginalFilename(); //データベースに保存するファイルネーム
+                + file.get(i).getOriginalFilename();
+                file.get(i).transferTo(new File(filePath));
+                staticPath += timestamp + file.get(i).getOriginalFilename() + ","; //データベースに保存するファイルネーム
+            }
+            System.out.println(staticPath);
             Timestamp timestamps = new Timestamp(System.currentTimeMillis());
             testService.createPost(id,staticPath,text,timestamps);
             return staticPath;

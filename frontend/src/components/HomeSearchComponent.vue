@@ -3,7 +3,11 @@
         <div class="photo-details-dialog">
             <div class="dialog-content">
                 <div class="sua">
-                    <img class="suba" :src="getVueCliUrlPost(homeTableObject.image)" alt="post">
+                    <a class="prev-button" @click="prevImage">&lt;</a>
+                    <img class="suba" :src="getVueCliUrlPost" alt="post">
+                    <!-- <div v-for="(imageName) in imageNames" :key="imageName">
+                    </div> -->
+                    <a class="next-button" @click="nextImage">&gt;</a>
                 </div>
                 <nobr class="qaz">
                     <div class="post-info">
@@ -18,7 +22,7 @@
                             </a>
                             <span class="mypage-caption">&nbsp;{{ homeTableObject.caption }}</span><br>
                             <span>
-                                {{ homeTableObject.createdat | formatDate }}
+                                &nbsp;&nbsp;{{ homeTableObject.createdat | formatDate }}
                             </span>
                         </div>
                         <hr>
@@ -33,8 +37,8 @@
                                         </a>
                                         &nbsp;<nobr class="balloon1-left"> {{ comment.comment }}</nobr><br>
                                         <span>
-                                            {{ comment.createdat | formatDate }}
-                                        </span> 
+                                            &nbsp;&nbsp;{{ comment.createdat | formatDate }}
+                                        </span>
                                     </li>
                                 </ul>
 
@@ -108,13 +112,19 @@ export default {
             commentText: '',
             getComments: '',
             JudgementCommentUser: false,
+            imageNames: [],
+            currentImageIndex: 0,
         }
     },
+
     computed: {
         getVueCliUrlPost() {
-            return (imgUrl) => {
-                return require('../assets/post/' + imgUrl);
-            }
+            const imgs = this.homeTableObject.image.split(',')
+            const imgss = imgs.filter(img => img.trim() !== '');
+            imgss.forEach(img => {
+                this.imageNames.push(img)
+            });
+            return require('../assets/post/' + this.imageNames[this.currentImageIndex]);
         },
         getVueCliUrlProfile() {
             return (imgUrl) => {
@@ -124,6 +134,7 @@ export default {
 
     },
     methods: {
+        
         setStoreUserId() {
             store.commit('SETUSERID', this.homeTableObject.userid);
             sessionStorage.setItem('user_id', this.homeTableObject.userid);
@@ -199,7 +210,19 @@ export default {
             }).catch(error => {
                 alert(error);
             })
-        }
+        },
+        prevImage() {
+            if (this.currentImageIndex > 0) {
+                this.currentImageIndex--;
+            }
+        },
+        nextImage() {
+            if (this.currentImageIndex < this.imageNames.length - 1) {
+                this.currentImageIndex++;
+            }
+        },
+        
+
     },
     filters: {
         formatDate(dateString) {
@@ -211,7 +234,7 @@ export default {
 
             // 日付の差をミリ秒単位で計算する
             const diff = now - date;
-            
+
             // 日付の差を日数に変換する
             const dayDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hourDiff = Math.floor(diff / (1000 * 60 * 60));
@@ -258,11 +281,10 @@ export default {
 
 .post-top {
     text-align: left;
+    margin-left: 5px;
+    margin-top: 10px;
 }
 
-/* .post-top button {
-    cursor: pointer;
-} */
 hr {
     border-color: rgba(255, 255, 255, 0.5);
     /* 線の色を半透明の白色にする */
@@ -281,7 +303,7 @@ hr {
 
 .morimori {
     width: 400px;
-    height: 455px;
+    height: 447px;
     overflow-y: scroll;
 }
 
@@ -416,7 +438,7 @@ hr {
     /* カーソル   */
     padding: 6px 8px;
     /* 余白       */
-    background: #48c4d4;
+    background: #37a3ea;
     /* 背景色     */
     color: #ffffff;
     /* 文字色     */
@@ -469,8 +491,6 @@ a:hover {
     /*森上がついか*/
     width: 1000px;
     height: 600px;
-
-
     transform: translate(-50%, -50%);
     background-color: #fff;
     padding: 0px;
@@ -489,9 +509,10 @@ a:hover {
 }
 
 .mypage-caption {
-    font-size: 18px;
-    font-weight: bold;
+    font-size: 15px;
+    /* font-weight: bold; */
     margin-top: 10px;
+    margin-left: 10px;
     margin-bottom: 5px;
 }
 
@@ -513,6 +534,7 @@ a:hover {
     font-size: 14px;
     line-height: 1.5;
     margin-bottom: 5px;
+    margin-left: 10px;
     text-align: left;
 }
 
@@ -634,4 +656,5 @@ a:hover {
 .heart-button.active .heart:before,
 .heart-button.active .heart:after {
     background-color: #fff;
-}</style>
+}
+</style>
