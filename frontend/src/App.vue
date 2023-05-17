@@ -42,7 +42,7 @@
               <li><a class="btn_hover" @click="showModal = true">
                   設定
                 </a>
-                <OptionModalView v-if="showModal" :title="modalTitle" @close="showModal = false"
+                <OptionModalView v-if="showModal" @close="showModal = false"
                   @save="showModal = false">
                 </OptionModalView>
               </li>
@@ -97,7 +97,6 @@ export default {
       login: false,
       isOpen: false, // メニューバーが開いているかどうかの状態を管理
       showModal: false,
-      modalTitle: 'アカウント情報変更'
     };
   },
   methods: {

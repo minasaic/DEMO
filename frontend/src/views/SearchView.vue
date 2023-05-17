@@ -119,7 +119,8 @@ export default {
             })
         },
         getVueCliUrl(imgUrl) {
-            return require(`../assets/post/${imgUrl}`);
+            const imgUrls = imgUrl.split(',')
+            return require(`../assets/post/${imgUrls[0]}`);
         },
         getVueCliUrlProfile(imgUrl) {
             return require(`../assets/profile/${imgUrl}`);

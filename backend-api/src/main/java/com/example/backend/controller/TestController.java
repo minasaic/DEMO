@@ -93,14 +93,14 @@ class TestController{
 
 // アカウント編集・変更
     @PostMapping(path = "/update")
-    public boolean update(
-            @RequestParam("file") MultipartFile file,
-            @RequestParam("id") Integer id,
-            @RequestParam("name") String name,
-            @RequestParam("password") String password,
-            @RequestParam("introduction") String introduction,
-            @RequestParam("sex") String sex,
-            @RequestParam("birthday") Date birthday
+    public String update(
+        @RequestParam("file") MultipartFile file,
+        @RequestParam("id") Integer id,
+        @RequestParam("name") String name,
+        @RequestParam("password") String password,
+        @RequestParam("introduction") String introduction,
+        @RequestParam("sex") String sex,
+        @RequestParam("birthday") Date birthday
             ) {
         //元のプロファイル画像削除
         String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
@@ -117,9 +117,10 @@ class TestController{
                     + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
-            return testService.update(staticPath, id, name, password,introduction,sex,birthday);
+            testService.update(staticPath, id, name, password,introduction,sex,birthday);
+            return staticPath;
         } catch (IOException e) {
-            return false;
+            return "失敗した";
         }
     }
 

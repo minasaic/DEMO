@@ -206,8 +206,8 @@ export default {
             }
         },
         getVueCliUrl(imgUrl) {
-            this.vueCliUrl = require('../assets/post/' + imgUrl);
-            return this.vueCliUrl;
+            const imgUrls = imgUrl.split(',')
+            return require(`../assets/post/${imgUrls[0]}`);
         },
         getFollowers() {
             Service.post("getFollowers", store.state.userId).then(response => {

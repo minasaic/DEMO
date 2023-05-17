@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ title }}</h5>
+          <h5 class="modal-title">アカウント情報編集</h5>
           <span>
             <nobr>
               <img :src="path" alt="選択した画像" width="250px" height="250px">
@@ -16,52 +16,49 @@
             <br>
             <nobr>
               アカウント名：
-              <input type="text" v-model="changeUserName" :placeholder="name">
+              <input type="text" v-model="changeUserName" :placeholder="$store.state.name">
               <br>
               パスワード：
-              <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード" >
-              <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード" >
+              <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
+              <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
               <a @click="showPassword = !showPassword">👀</a>
               <br>
               自己紹介:
               <br>
-              <textarea v-model="changeUserIntroduction" cols="30" rows="10" placeholder="例:はじめまして！〇〇といいます.." style="display: inline-block;"></textarea>
+              <textarea v-model="changeUserIntroduction" cols="30" rows="10" placeholder="例:はじめまして！〇〇といいます.."
+                style="display: inline-block;"></textarea>
               <br>
               性別:
-              <select v-model="changeUserSex" :placeholder="sex">
-              <option disabled selected value="">選択してください</option>
-              <option value="男性">男性</option>
-              <option value="女性" >女性</option>
-              <option value="答えたくない" selected>答えたくない</option>
+              <select v-model="changeUserSex">
+                <option disabled selected value="">選択してください</option>
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+                <option value="答えたくない" selected>答えたくない</option>
               </select>
               <br>
               生年月日:
-              <input type="text" v-model="changeUserBirthday" :placeholder="birthday">
-
               <div>
-                
-                <select v-model="selectedYear">
-                <option value="">年</option>
-                <option value="2023">2023年</option>
-                <!-- 他の年を追加することもできます -->
-              </select>
 
-              <select v-model="selectedMonth">
-                <option value="">月</option>
-                <option value="1">1月</option>
-                <!-- 他の月を追加することもできます -->
-              </select>
+                <select @click.once="year" v-model="selectedYear" ref="yearSelect">
+                  <option value="">年</option>
 
-              <select v-model="selectedDay">
-                <option value="">日</option>
-                <option value="1">1日</option>
-                <!-- 他の日を追加することもできます -->
-              </select>
+                  <!-- 他の年を追加することもできます -->
+                </select>
+
+                <select @click.once="month" v-model="selectedMonth" ref="monthSelect">
+                  <option value="">月</option>
+                  <!-- 他の月を追加することもできます -->
+                </select>
+
+                <select @click.once="date" v-model="selectedDay" ref="dateSelect">
+                  <option value="">日</option>
+                  <!-- 他の日を追加することもできます -->
+                </select>
 
               </div>
-              
-              
-              
+
+
+
               <br>
             </nobr>
           </span>
@@ -86,16 +83,6 @@ import { Service } from '@/service/service'
 import store from '@/store';
 export default {
   name: 'OptionModalView',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
-    }
-  },
   data() {
     return {
       changeUserImg: null,
@@ -104,14 +91,14 @@ export default {
       changeUserPassword: '',
       changeUserIntroduction: '',
       changeUserSex: '',
-      changeUserBirthday: this.selectedYear + this.selectedMonth + this.selectedDay,
+      changeUserBirthday: '',
       selectedYear: "",
       selectedMonth: "",
       selectedDay: "",
       profile: null,
       showPassword: false
     }
-  }, 
+  },
   methods: {
     saveUserImg(event) {
       this.changeUserImg = event.target.files[0];
@@ -119,6 +106,9 @@ export default {
       this.path = URL.createObjectURL(this.changeUserImg);
     },
     saveUserChange() {
+      this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
+      alert(this.changeUserBirthday);
+
       const formData = new FormData()
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)
@@ -130,20 +120,45 @@ export default {
       Service.post('update', formData, {
         headers: {
           'Content-Type': 'multipart/form-data'
-        }}
+        }
+      }
       ).then(response => {
         console.log(response)
         store.commit('SETNAME', this.changeUserName);
-        store.commit('SETPROFILE', this.profile);
+        store.commit('SETPROFILE', response.data);
 
         this.$emit('close')
       }).catch(error => {
         alert(error)
       })
-      for (let month = 1; month <= 12; month++) {
-      document.write(`<option value="${month}">${month}月</option>`);
-    }
+      //   for (let month = 1; month <= 12; month++) {
+      //   document.write(`<option value="${month}">${month}月</option>`);
+      // }
     },
+    month() {
+      for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.value = month;
+        option.text = `${month}月`;
+        this.$refs.monthSelect.appendChild(option);
+      }
+    },
+    year() {
+      for (let year = 1950; year <= 2023; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.text = `${year}年`;
+        this.$refs.yearSelect.appendChild(option);
+      }
+    },
+    date() {
+      for (let date = 1; date <= 31; date++) {
+        const option = document.createElement('option');
+        option.value = date;
+        option.text = `${date}日`;
+        this.$refs.dateSelect.appendChild(option);
+      }
+    }
   }
 }
 </script>
@@ -174,6 +189,7 @@ export default {
 }
 
 .modal-header {}
+
 .modal-footer {
   padding: 10px;
   background-color: #f5f5f5;

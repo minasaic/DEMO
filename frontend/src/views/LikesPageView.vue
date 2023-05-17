@@ -92,7 +92,8 @@ export default {
       })
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
     },
     likeJudge(postId) {
       Service.post('/likejudge', {

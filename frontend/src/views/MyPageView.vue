@@ -5,8 +5,6 @@
       <p v-else>プロフィール写真をアップロードしてください。</p>
     </nobr>
     <option-modal-view v-if="showModal" 
-      :title="modalTitle"
-      :name="$store.state.name"
      @close="showModal = false" @save="showModal = false">
     </option-modal-view>
     <br>
@@ -195,7 +193,8 @@ export default {
       }
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
     },
     //投稿数を取得
     getPostCount() {
