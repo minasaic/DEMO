@@ -6,8 +6,9 @@
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
         <div>
-          <!-- <img :src="getVueCliUrlProfile(homeTable.userid).profile_picture" alt="user icon">
-          <span>{{  }}</span> -->
+          <img v-if="userProfile[index]" :src="userProfile[index]" alt="user icon">
+          <span v-if="userOnamae[index]" >{{ userOnamae[index] }}</span>
+          {{   getVueCliUrlProfile(homeTable.userid,index) }}
         </div>
         <img class="home-photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
@@ -41,12 +42,18 @@ export default {
       qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
       showDeleteButton: false,
       showLikeJudge: false,
-      userDate:{}
+      userDate:{},
+      userOnamae: [],
+      userProfile: []
 
     }
   },
   created() {
     this.home()
+    this.homeTables.userid.forEach((userId,index) => {
+      this.getVueCliUrlProfile(userId,index);
+    })
+    
   },
   computed:{
   },
@@ -112,20 +119,17 @@ export default {
       const imgUrls = imgUrl.split(',')
       return require(`../assets/post/${imgUrls[0]}`);
     },
-    getVueCliUrlProfile(userId) {
+    getVueCliUrlProfile(userId, index) {
+      alert('aaaaaa');
       Service.post('getuser',userId).then(response => {
-        console.log(response);
-        // this.userDate.push(response.data);
-        const userDates = {
-          'profile_picture':require(`../assets/profile/${response.data.profile_picture}`),
-          'name':response.data.name
-        };
-        return userDates;
-
-      }).catch(error => {
-        alert(error);
-      })
-    },
+      console.log(response);
+      this.userOnamae[index] = response.data.name;
+      this.userProfile[index] = require(`../assets/profile/${response.data.profile_picture}`);
+      alert(this.userOnamae);
+    }).catch(error => {
+      alert(error);
+    })
+  },
     likeJudge(postId) {
       Service.post('/likejudge', {
         postid: postId,
