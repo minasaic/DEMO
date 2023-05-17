@@ -124,16 +124,13 @@ export default {
       }
       ).then(response => {
         console.log(response)
+        sessionStorage.setItem("profile_picture",response.data);
         store.commit('SETNAME', this.changeUserName);
         store.commit('SETPROFILE', response.data);
-
         this.$emit('close')
       }).catch(error => {
         alert(error)
       })
-      //   for (let month = 1; month <= 12; month++) {
-      //   document.write(`<option value="${month}">${month}月</option>`);
-      // }
     },
     month() {
       for (let month = 1; month <= 12; month++) {
