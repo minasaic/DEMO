@@ -7,10 +7,11 @@
         ss...{{ searchTables }} -->
         <br><br><br>
         <div class="user-table-container">
-            <div v-for="(searchUserTable,index) in searchUserTables" :key="searchUserTable.id" class="user-table">
+            <div v-for="(searchUserTable, index) in searchUserTables" :key="searchUserTable.id" class="user-table">
                 <a @click="setStoreUserId(index)" class="user-link">
                     <div class="image-container">
-                        <img v-if="searchUserTable.profile_picture !== null" class="round-image" :src="getVueCliUrlProfile(searchUserTable.profile_picture)" alt="ユーザプロフィール">
+                        <img v-if="searchUserTable.profile_picture !== null" class="round-image"
+                            :src="getVueCliUrlProfile(searchUserTable.profile_picture)" alt="ユーザプロフィール">
                         <img v-else src="" alt="プロフィール写真なし">
                     </div>
                     <span>{{ searchUserTable.name }}</span>
@@ -20,14 +21,17 @@
         <div class="photo-grid">
             <div class="photo" v-for="(searchTable, index) in searchTables " :key="searchTable.id"
                 @click="showSearchPages(index, searchTable.id, searchTable.userid)">
+                <div>
+                    <img class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+                    <span> {{ userOnamae[index] }}</span>
+                </div>
                 <img class="photo-grid-img" :src="getVueCliUrl(searchTable.image)" alt="投稿画像">
             </div>
-            <HomeSearchComponent v-show="showHomeSearchComponent" :homeTableObject="searchTableObject"
+            <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="searchTableObject"
                 :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
-                :show="showLikeJudge"
-                @close="showHomeSearchComponent = false"
+                :show="showLikeJudge" @close="showHomeSearchComponent = false"
                 @refresh-comment="showSearchPages(clickImgIndex, searchTableObject.id, searchTableObject.userid)"
-                @refresh-likes="updateLikes(clickImgIndex,searchTableObject.id)" />
+                @refresh-likes="updateLikes(clickImgIndex, searchTableObject.id)" />
             <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
         </div>
         <div v-show="ppp == true && mori == true">
@@ -45,7 +49,7 @@ export default {
     components: {
         HomeSearchComponent
     },
-    created(){
+    created() {
         this.getSearch()
     },
     data() {
@@ -59,10 +63,12 @@ export default {
             ppp: false,
             qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.jpeg" },
             showDeleteButton: false,
-            showLikeJudge:false,
+            showLikeJudge: false,
             searchUserTables: null,
             mori: false,
-            searchUserTableObject: null
+            searchUserTableObject: null,
+            userOnamae: [],
+            userProfile: []
         }
     },
     methods: {
@@ -74,10 +80,20 @@ export default {
                 if (response.data[0] == undefined) {
                     this.ppp = true;
                 }
+                //拡張for文でユーザ情報を取ってきてる
+                this.searchTables.forEach((searchTable) => {
+                    Service.post('getuser', searchTable.userid).then(response => {
+                        console.log(response);
+                        this.userOnamae.push(response.data.name);
+                        this.userProfile.push(response.data.profile_picture);
+                    }).catch(error => {
+                        alert(error);
+                    })
+                })
             }).catch(error => {
                 alert(error)
             })
-            Service.post('searchUser',this.searchInput).then(response => {
+            Service.post('searchUser', this.searchInput).then(response => {
                 console.log(response);
                 this.searchUserTables = response.data;
                 this.mori = false;
@@ -125,7 +141,7 @@ export default {
         getVueCliUrlProfile(imgUrl) {
             return require(`../assets/profile/${imgUrl}`);
         },
-        updateLikes(index,postId) {
+        updateLikes(index, postId) {
             Service.post("search", this.searchInput).then(response => {
                 console.log(response);
                 this.searchTables = response.data;
@@ -149,14 +165,11 @@ export default {
         },
         setStoreUserId(index) {
             this.searchUserTableObject = this.searchUserTables[index];
-            alert(this.searchUserTableObject.id)
-            if(this.searchUserTableObject.id != store.state.id){
-            store.commit('SETUSERID', this.searchUserTableObject.id);
-            sessionStorage.setItem('user_id', this.searchUserTableObject.id);
-            alert('setStorUserId  ' + store.state.userId);
-
-            this.$router.push('/userpage')
-            }else{
+            if (this.searchUserTableObject.id != store.state.id) {
+                store.commit('SETUSERID', this.searchUserTableObject.id);
+                sessionStorage.setItem('user_id', this.searchUserTableObject.id);
+                this.$router.push('/userpage')
+            } else {
                 this.$router.push('/mypage')
             }
         },
@@ -168,41 +181,41 @@ export default {
 #main {
     overflow-y: hidden;
 }
+
 .user-table-container {
-  display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
+    display: flex;
+    overflow-x: auto;
+    white-space: nowrap;
 }
 
 .user-table {
-  margin: 10px;
-  width: 100px;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: center;
+    margin: 10px;
+    width: 100px;
+    height: 100%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .user-link {
-  text-align: center;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .image-container {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  overflow: hidden;
-  margin-bottom: 5px;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    overflow: hidden;
+    margin-bottom: 5px;
 }
 
 .round-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
 }
-
 </style>

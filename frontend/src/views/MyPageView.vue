@@ -7,7 +7,7 @@
     <option-modal-view v-if="showModal" 
      @close="showModal = false" @save="showModal = false">
     </option-modal-view>
-    <br>
+    <br> 
     <br>
     <br> 
     <br>
@@ -49,7 +49,7 @@
         @click="showMyPages(index, postTable.id)">
         <img class="photo-grid-img" :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
-      <HomeSearchComponent v-show="showMyPageComponent" 
+      <HomeSearchComponent v-if="showMyPageComponent" 
         :homeTableObject="postTableObject"
         :commentTableObject="commentTableObject" 
         :qwerty="qwerty"
@@ -230,7 +230,7 @@ export default {
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  grid-gap: 20px;
+  /* grid-gap: 20px; */
 }
 
 .photo-grid-img {
@@ -239,7 +239,7 @@ export default {
   object-fit: cover;
   cursor: pointer;
   /* grid-row: auto; */
-  margin-bottom: 70px;
+  margin-bottom: 10px;
 }
 
 .overlay {

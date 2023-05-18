@@ -45,7 +45,6 @@ export default {
             this.clickUserData = this.follows[index];
             store.commit('SETUSERID',this.clickUserData.id);
             sessionStorage.setItem('user_id',this.clickUserData.id);
-            alert('setStorUserId  ' + store.state.userId);
             this.$router.push('/userpage');
         },
     }

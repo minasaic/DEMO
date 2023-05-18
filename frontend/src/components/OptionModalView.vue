@@ -107,8 +107,6 @@ export default {
     },
     saveUserChange() {
       this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
-      alert(this.changeUserBirthday);
-
       const formData = new FormData()
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)

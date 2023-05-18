@@ -60,7 +60,6 @@ export default {
         if (userId) {
             store.commit('SETUSERID', userId)
             this.userId = userId
-            alert('getItem' + this.userId)
         }
 
         this.followJudgement()
@@ -167,7 +166,7 @@ export default {
         unfollow() {
             Service.post("unfollow", this.followsid
             ).then(response => {
-                alert(response)
+                console.log(response)
                 this.aaa = false;
                 this.followerCount -= 1;
             }).catch(error => {

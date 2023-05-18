@@ -21,7 +21,7 @@
                                     :src="getVueCliUrlProfile(qwerty.profile_picture)" alt="asdf"><b>{{ qwerty.name }}</b>
                             </a>
                             <span class="mypage-caption">&nbsp;{{ homeTableObject.caption }}</span><br>
-                            <span>
+                            <span class="mypage-time">
                                 &nbsp;&nbsp;{{ homeTableObject.createdat | formatDate }}
                             </span>
                         </div>
@@ -36,7 +36,7 @@
                                             <b>{{ comment.name }} </b>
                                         </a>
                                         &nbsp;<nobr class="balloon1-left"> {{ comment.comment }}</nobr><br>
-                                        <span>
+                                        <span class="mypage-time">
                                             &nbsp;&nbsp;{{ comment.createdat | formatDate }}
                                         </span>
                                     </li>
@@ -119,11 +119,13 @@ export default {
 
     computed: {
         getVueCliUrlPost() {
-            const imgs = this.homeTableObject.image.split(',')
-            const imgss = imgs.filter(img => img.trim() !== '');
-            imgss.forEach(img => {
-                this.imageNames.push(img)
-            });
+            if(this.imageNames[0] == undefined) {
+                const imgs = this.homeTableObject.image.split(',')
+                const imgss = imgs.filter(img => img.trim() !== '');
+                imgss.forEach(img => {
+                    this.imageNames.push(img)
+                });
+            }
             return require('../assets/post/' + this.imageNames[this.currentImageIndex]);
         },
         getVueCliUrlProfile() {
@@ -138,7 +140,6 @@ export default {
         setStoreUserId() {
             store.commit('SETUSERID', this.homeTableObject.userid);
             sessionStorage.setItem('user_id', this.homeTableObject.userid);
-            alert('setStorUserId  ' + store.state.userId);
             this.$router.push('/userpage')
         },
         showTextarea() {
@@ -189,14 +190,11 @@ export default {
             this.$router.push('/mypage');
         },
         goToUserPage(userId) {
-            alert(userId)
             if (userId == store.state.id) {
-                alert("自分のidだ");
                 this.goToMyPage();
             } else {
                 store.commit('SETUSERID', userId);
                 sessionStorage.setItem('user_id', userId);
-                alert('setStorUserId  ' + store.state.userId);
                 this.$router.push('/userpage')
             }
         },
@@ -510,10 +508,15 @@ a:hover {
 
 .mypage-caption {
     font-size: 15px;
-    /* font-weight: bold; */
+    font-weight: bold;
     margin-top: 10px;
     margin-left: 10px;
     margin-bottom: 5px;
+}
+
+.mypage-time {
+    font-size: 13px;
+    color: #4f5557ea;
 }
 
 .mypage-likes {
@@ -656,5 +659,26 @@ a:hover {
 .heart-button.active .heart:before,
 .heart-button.active .heart:after {
     background-color: #fff;
+}
+
+.prev-button,
+.next-button {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  padding: 10px;
+  color: #1616165e;
+  font-weight: bold;
+  /* border: none; */
+  font-size: 40px;
+  
+}
+
+.prev-button {
+  left: -1%;
+}
+
+.next-button {
+  right: 40.5%;
 }
 </style>

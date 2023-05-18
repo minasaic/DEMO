@@ -13,7 +13,7 @@ INSERT INTO user(id,name,password,profile_picture)VALUES
 
 
 INSERT INTO posts(id,userid,image,caption,likes)VALUES
-(1,1,'images1.jpeg','プロのエンジニアだぞ！',1),
+(1,1,'images1.jpeg','ああああああああ',1),
 (2,3,'KJ_20201215_02_01.jpg','瀬戸内海楽しい！！！〜〜',2),
 (3,4,'atami2.jpeg','熱海行ってきた！',3),
 (4,5,'jkl.jpeg','私めちゃくちゃ可愛い！',4),

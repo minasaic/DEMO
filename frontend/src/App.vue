@@ -20,7 +20,7 @@
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png" alt="LOGO">
+          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png" alt="LOGO">
               いいね一覧
             </span>
           </router-link>
