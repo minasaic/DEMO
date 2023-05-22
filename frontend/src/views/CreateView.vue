@@ -1,27 +1,22 @@
 <template>
   <div id="main">
-      <span class="create-view-tittle">新規投稿を作成</span>
-      <a class="post-button" @click="post">シェア</a>
+    <span class="create-view-tittle">新規投稿を作成</span>
+    <a class="post-button" @click="post">シェア</a>
     <div class="image-container">
       <a class="prev-button" @click="prevImage">&lt;</a>
       <img :src="currentImagePath" class="selected-image">
       <a class="next-button" @click="nextImage">&gt;</a>
     </div>
     <div class="image-list">
-      <div
-        v-for="(path, index) in paths"
-        :key="index"
-        class="image-item"
-        :class="{ 'active': index === currentImageIndex }"
-        @click="setCurrentImage(index)"
-      >
+      <div v-for="(path, index) in paths" :key="index" class="image-item"
+        :class="{ 'active': index === currentImageIndex }" @click="setCurrentImage(index)">
         <img :src="path" :alt="'Image ' + (index + 1)">
         <a @click="deletefiles(index)">X</a>
       </div>
-      <label  v-if="files[0] != null" for="file-upload" class="custom-file-upload">
-      <i class="fa fa-cloud-upload"></i> コンピューターから選択
-    </label>
-    <input id="file-upload" type="file" multiple @change="uploadFile">
+      <label v-if="files[0] != null" for="file-upload" class="custom-file-upload">
+        <i class="fa fa-cloud-upload"></i> コンピューターから選択
+      </label>
+      <input id="file-upload" type="file" multiple @change="uploadFile">
     </div>
     <label v-if="files[0] == null" for="file-upload" class="custom-file-upload">
       <i class="fa fa-cloud-upload"></i> コンピューターから選択
@@ -44,7 +39,8 @@ export default {
       files: [],
       text: null,
       paths: [],
-      currentImageIndex: 0
+      currentImageIndex: 0,
+      formData: new FormData(),
     };
   },
   computed: {
@@ -56,6 +52,9 @@ export default {
     uploadFile(e) {
       this.files = e.target.files;
       for (let i = 0; i < this.files.length; i++) {
+        this.formData.append("file", this.files[i]);
+      }
+      for (let i = 0; i < this.files.length; i++) {
         this.paths.push(URL.createObjectURL(this.files[i]));
       }
     },
@@ -64,15 +63,10 @@ export default {
         alert("画像を選択してください。");
         return;
       }
+      this.formData.append("id", store.state.id);
+      this.formData.append("text", this.text);
 
-      const formData = new FormData();
-      formData.append("id", store.state.id);
-      formData.append("text", this.text);
-      for (let i = 0; i < this.files.length; i++) {
-        formData.append("file", this.files[i]);
-      }
-
-      Service.post("post", formData, {
+      Service.post("post", this.formData, {
         headers: {
           "Content-Type": "multipart/form-data"
         }
@@ -101,10 +95,18 @@ export default {
       this.currentImageIndex = index;
     },
     deletefiles(index) {
-      const fileArray = Array.from(this.files);
-      fileArray.splice(index, 1);
-      this.files = fileArray;
       this.paths.splice(index, 1);
+      const filess = this.formData.getAll('file');
+      this.formData.delete('file');
+      for(let i = 0; i < filess.length ;i++) {
+        if (i !== index) {
+          this.formData.append('file',filess[i]);
+        }
+      }
+      //削除の時に削除後のformData('file')がコンソルされる
+      for (var pair of this.formData.entries()) {
+        console.log(pair[0], pair[1]);
+      }
     }
   }
 };
@@ -119,7 +121,7 @@ export default {
 .selected-image {
   width: 400px;
   height: 400px;
-  background-image: url("../assets/system/drag.png" );
+  background-image: url("../assets/system/drag.png");
 }
 
 .prev-button,
@@ -132,7 +134,7 @@ export default {
   font-weight: bold;
   /* border: none; */
   font-size: 40px;
-  
+
 }
 
 .prev-button {
@@ -176,6 +178,7 @@ export default {
 input[type="file"] {
   display: none;
 }
+
 .custom-file-upload {
   background-color: #639aed;
   color: #fff;

@@ -15,7 +15,8 @@
         :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
         :show="showLikeJudge" @close="showHomeSearchComponent = false"
         @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)"
-        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
+        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" 
+        @refresh-page="showHomeSearchComponent = false" />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
   </div>

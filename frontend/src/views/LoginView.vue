@@ -7,9 +7,11 @@
             <br><br>
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
-            <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-            <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-            <a @click="showPassword = !showPassword">👀</a>
+            <div style="position: relative;">
+                <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
+                <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
+                <a style="position: absolute; right: 40%; top: 50%; transform: translateY(-50%);" @click="showPassword = !showPassword">👀</a>
+            </div>
             <br><br>
             <br>
             <span class="button001"><a  type="button" @click="logins">ログイン</a></span>         

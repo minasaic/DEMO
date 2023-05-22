@@ -81,22 +81,7 @@ public class TestService {
     public List<Posts> mypage(Integer id) {
         return prepo.findByUserid(id);
     }
-
-    // // アカウント編集 変更
-    // public boolean update(String staticPath, Integer id, String name, String password) {
-    //     User user = urepo.findById(id).get();
-    //     user.setProfile_picture(staticPath);
-    //     user.setName(name);
-    //     user.setPassword(password);
-    //     urepo.save(user);
-    //     List<Comments> com = crepo.findByUserid(id);
-    //     for (int i = 0; i < com.size(); i++) {
-    //         com.get(i).setName(name);
-    //         com.get(i).setProfile(staticPath);
-    //         crepo.save(com.get(i));
-    //     }
-    //     return true;
-    // }
+    
     // アカウント編集 変更
     public boolean update(String staticPath, Integer id, String name, String password, String introduction, String sex, Date birthday) {
         User user = urepo.findById(id).get();
@@ -288,6 +273,12 @@ public class TestService {
         prepo.save(post);
         lrepo.deleteById(lrepo.findByPostidAndUserid(postid,userid).get().getId());
         return post.getLikes();
+    }
+
+    //ユーザーの自己紹介と生年月日、性別を取得する
+    public User getUserIntroductionAndSexAndBirthday(Integer id){
+        return urepo.findById(id).get();
+
     }
 
 }

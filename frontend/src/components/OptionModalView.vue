@@ -19,9 +19,11 @@
               <input type="text" v-model="changeUserName" :placeholder="$store.state.name">
               <br>
               パスワード：
-              <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
-              <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
-              <a @click="showPassword = !showPassword">👀</a>
+              <div style="position: relative;">
+                <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
+                <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
+                <a style="position: absolute; right: 580px; top: 5px;" @click="showPassword = !showPassword">👀</a>
+              </div>
               <br>
               自己紹介:
               <br>

@@ -63,34 +63,6 @@ class TestController{
         return testService.mypage(id);
     }
 
-    // // アカウント編集・変更
-    // @PostMapping(path = "/update")
-    // public boolean update(
-    //         @RequestParam("file") MultipartFile file,
-    //         @RequestParam("id") Integer id,
-    //         @RequestParam("name") String name,
-    //         @RequestParam("password") String password) {
-    //     //元のプロファイル画像削除
-    //     String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
-    //             + testService.getprofilepath(id);
-    //     File f = new File(imagePath);
-    //     if (f.exists()) {
-    //         f.delete();
-    //     }
-    //     //ファイル保存、データベース更新
-    //     String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-    //     try {
-    //         String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
-    //                 + timestamp
-    //                 + file.getOriginalFilename();
-    //         file.transferTo(new File(filePath));
-    //         String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
-    //         return testService.update(staticPath, id, name, password);
-    //     } catch (IOException e) {
-    //         return false;
-    //     }
-    // }
-
 // アカウント編集・変更
     @PostMapping(path = "/update")
     public String update(
@@ -263,6 +235,13 @@ class TestController{
     @PostMapping(path = "getusernameandimage")
     public User getUserNameAndImage(@RequestBody Integer id){
         return testService.getUserNameAndImage(id);
+    }
+
+    //ユーザーの自己紹介と生年月日、性別を取得する
+    @PostMapping(path = "getUserIntroductionAndSexAndBirthday")
+    public User getUserIntroductionAndSexAndBirthday(@RequestBody Integer id) {  
+        return testService.getUserIntroductionAndSexAndBirthday(id);
+        
     }
 
     

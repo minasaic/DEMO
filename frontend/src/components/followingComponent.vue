@@ -6,13 +6,18 @@
                 <div class="popup-header">
                     {{followComponentTittle}}
                 </div>
-                <div v-for="(following, index) in follows" :key="following.id" >
-                    <a @click="setStoreUserId(index)" class="user-link">
-                        <img class="profile-image" :src="getVueCliUrlProfile(following.profile_picture)" alt="プロフィール画像">
-                        <span class="username">
-                            {{ following.name }}
-                        </span>
-                    </a>
+                <div  v-if="follows[0] !== undefined">
+                    <div v-for="(following, index) in follows" :key="following.id" >
+                        <a @click="setStoreUserId(index)" class="user-link">
+                            <img class="profile-image" :src="getVueCliUrlProfile(following.profile_picture)" alt="プロフィール画像">
+                            <span class="username">
+                                {{ following.name }}
+                            </span>
+                        </a>
+                    </div>
+                </div>
+                <div v-else>
+                    {{ followComponentTittle }} がいないです。
                 </div>
             </div>
         </div>

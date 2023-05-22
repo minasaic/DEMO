@@ -12,7 +12,8 @@
               ホーム</span></router-link>
           <br>
           <br>
-          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png" alt="LOGO">
+          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png"
+                alt="LOGO">
               検索</span></router-link>
           <br>
           <br>
@@ -20,7 +21,8 @@
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png" alt="LOGO">
+          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png"
+                alt="LOGO">
               いいね一覧
             </span>
           </router-link>
@@ -28,9 +30,8 @@
           <br>
           <router-link to="/mypage">
             <span class="btn_hover">
-              <img v-if="getVueCliUrl() !== undefined" class="photo" :src="getVueCliUrl()"
-                alt="LOGO">
-                <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
+              <img v-if="getVueCliUrl() !== 100" class="photo" :src="getVueCliUrl()" alt="LOGO">
+              <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
               プロフィール
             </span>
           </router-link>
@@ -42,8 +43,7 @@
               <li><a class="btn_hover" @click="showModal = true">
                   設定
                 </a>
-                <OptionModalView v-if="showModal" @close="showModal = false"
-                  @save="showModal = false">
+                <OptionModalView v-if="showModal" @close="showModal = false" @save="showModal = false">
                 </OptionModalView>
               </li>
               <li><a class="btn_hover" @click="logOut">ログアウト</a></li>
@@ -79,17 +79,26 @@ import OptionModalView from "./components/OptionModalView.vue"
 export default {
   name: "App",
   created() {
-    //セッションストレージから情報を読み込む
+    //セッションストレージから情報を読み込む   
     const id = sessionStorage.getItem("id");
     const name = sessionStorage.getItem("name");
-    const profilePicture = sessionStorage.getItem("profile_picture");
+    var profilePicture =null;
+    if(sessionStorage.getItem("profile_picture") !== null) {
+      
+     profilePicture = sessionStorage.getItem("profile_picture");
+alert('aaa')
+    }
     const pageBoolean = sessionStorage.getItem("page_boolean");
     // 読み込んだ情報をストアに保存する
     if (id && name && pageBoolean) {
       store.commit("SETID", id);
       store.commit("SETNAME", name);
-      store.commit("SETPROFILE", profilePicture);
       store.commit("SETPAGEBOOLEAN", pageBoolean);
+      store.commit("SETPROFILE", profilePicture);
+      if(profilePicture == null) {
+        // alert("AAAA")
+        store.commit("SETPROFILE", 100);
+      }
     }
   },
   data() {
@@ -111,9 +120,13 @@ export default {
       store.commit('SETPAGEBOOLEAN', false);
     },
     getVueCliUrl() {
-      if (store.state.profile !== null) {
-        return require('./assets/profile/' + store.state.profile);
-      } 
+      alert(store.state.profile)
+      console.log(store.state.profile)
+      if (store.state.profile == null) {
+        alert('kdkdkdk');
+        return 100;
+      }
+      return require('./assets/profile/' + store.state.profile);
     },
   },
   components: {

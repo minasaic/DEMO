@@ -205,6 +205,7 @@ export default {
             }).then(response => {
                 console.log(response);
                 this.$emit('refresh-likes');
+                this.$emit('refresh-page');
             }).catch(error => {
                 alert(error);
             })
