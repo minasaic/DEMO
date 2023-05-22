@@ -18,10 +18,10 @@
           <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
         </a>
         <br>
-        <b> {{ user.birthday }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-        <b> {{ user.sex }} </b>
+        <!-- <b> {{ user.birthday }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+        <!-- <b> {{ user.sex }} </b> -->
         <br>
-        <b class="introduction" style="text-align: left"> {{ user.introduction }} </b>
+        <!-- <b class="introduction" style="text-align: left"> {{ user.introduction }} </b> -->
         <br>
         <br>
         <br>

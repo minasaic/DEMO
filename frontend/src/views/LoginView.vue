@@ -55,11 +55,15 @@ export default {
                     store.commit('SETPAGEBOOLEAN', true);
                     store.commit('SETID', response.data.id);        //responseされたIdをストア内stateのidにセット
                     store.commit('SETNAME', response.data.name);
+                    if(response.data.profile_picture != null){  //森上ああああああああああああああああああああああああああああああああああ
                     store.commit('SETPROFILE', response.data.profile_picture);
+                    }
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
+                    if(response.data.profile_picture != null){   //森上あああああああああああああああああああああああああああああああ
                     sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    }
                     sessionStorage.setItem('page_boolean', true);
                     alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {

@@ -82,22 +82,15 @@ export default {
     //セッションストレージから情報を読み込む   
     const id = sessionStorage.getItem("id");
     const name = sessionStorage.getItem("name");
-    var profilePicture =null;
-    if(sessionStorage.getItem("profile_picture") !== null) {
-      
-     profilePicture = sessionStorage.getItem("profile_picture");
-alert('aaa')
-    }
+    const profilePicture = sessionStorage.getItem("profile_picture");
     const pageBoolean = sessionStorage.getItem("page_boolean");
     // 読み込んだ情報をストアに保存する
     if (id && name && pageBoolean) {
       store.commit("SETID", id);
       store.commit("SETNAME", name);
       store.commit("SETPAGEBOOLEAN", pageBoolean);
+      if(profilePicture != null){
       store.commit("SETPROFILE", profilePicture);
-      if(profilePicture == null) {
-        // alert("AAAA")
-        store.commit("SETPROFILE", 100);
       }
     }
   },
@@ -120,13 +113,10 @@ alert('aaa')
       store.commit('SETPAGEBOOLEAN', false);
     },
     getVueCliUrl() {
-      alert(store.state.profile)
-      console.log(store.state.profile)
-      if (store.state.profile == null) {
-        alert('kdkdkdk');
-        return 100;
+      if (store.state.profile != null) {
+        return require('./assets/profile/' + store.state.profile);
       }
-      return require('./assets/profile/' + store.state.profile);
+      return 100;
     },
   },
   components: {
