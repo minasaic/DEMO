@@ -52,11 +52,13 @@ export default {
                     store.commit('SETPAGEBOOLEAN',true)
                     store.commit('SETID', response.data.id);  //responseされたIdをストア内stateのidにセット
                     store.commit('SETNAME', response.data.name);
-                    store.commit('SETPROFILE', response.data.profile_picture);
+                    if(response.data.profile_picture){
+                        store.commit('SETPROFILE', response.data.profile_picture);
+                        sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    }
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
-                    sessionStorage.setItem('profile_picture', response.data.profile_picture);
                     alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
                     alert('アカウント作成できません。');
