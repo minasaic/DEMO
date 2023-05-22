@@ -5,12 +5,11 @@
     <div class="home-photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
-        <div >
-          <img class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+        <div v-if="userProfile[index] != null">   <!--- 値が入るまで実行されない森上あああああああああああああああああああああああああ -->
+          <img  class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
           <span> {{ userOnamae[index] }}</span>
         </div>
           <!-- {{   getVueCliUrlProfile(homeTable.userid,index) }} -->
-        
         <img class="home-photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
@@ -66,26 +65,49 @@ export default {
       this.showFollowings = false
       this.showRandoms = true
     },
-    home() {
-      Service.post("home", store.state.id
-      ).then(response => {
-        console.log(response);
-        this.homeTables = response.data;
-        //拡張for文でユーザ情報を取ってきてる
-        this.homeTables.forEach((homeTable) => {
-        Service.post('getuser', homeTable.userid).then(response => {
-          // alert(homeTable.userid)
-          console.log(response);
-          this.userOnamae.push(response.data.name);
-          this.userProfile.push(response.data.profile_picture);
-        }).catch(error => {
-          alert(error);
-        })
-      })
-      }).catch(error => {
-        alert(error)
-      })
-    },
+    // home() {
+    //   Service.post("home", store.state.id
+    //   ).then(response => {
+    //     console.log(response);
+    //     this.homeTables = response.data;
+    //     //拡張for文でユーザ情報を取ってきてる
+    //     this.homeTables.forEach((homeTable) => {
+    //     Service.post('getuser', homeTable.userid).then(response => {
+    //       // alert(homeTable.userid)
+    //       console.log(response);
+    //       this.userOnamae.push(response.data.name);
+    //       this.userProfile.push(response.data.profile_picture);
+          
+    //     }).catch(error => {
+    //       alert(error);
+    //     })
+    //   })
+    //   }).catch(error => {
+    //     alert(error)
+    //   })
+    // },
+    //プロフィールの順番を整えるために非同期処理を並列実行するようにした森上あああああああああああああああああああああ
+    async home() {
+    try {
+      const response = await Service.post("home", store.state.id);
+      console.log(response);
+      this.homeTables = response.data;
+
+      const getUserPromises = this.homeTables.map(homeTable => {
+        return Service.post('getuser', homeTable.userid);
+      });
+
+      const userResponses = await Promise.all(getUserPromises);
+      console.log(userResponses);
+
+      userResponses.forEach(response => {
+        this.userOnamae.push(response.data.name);
+        this.userProfile.push(response.data.profile_picture);
+      });
+    } catch (error) {
+      alert(error);
+    }
+  },
     showHomePages(index, postId, userId) {
       this.showHomeSearchComponent = true;
       this.homeTableObject = this.homeTables[index];

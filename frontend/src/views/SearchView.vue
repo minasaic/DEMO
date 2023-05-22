@@ -21,7 +21,7 @@
         <div class="photo-grid">
             <div class="photo" v-for="(searchTable, index) in searchTables " :key="searchTable.id"
                 @click="showSearchPages(index, searchTable.id, searchTable.userid)">
-                <div>
+                <div v-if="userProfile[index] != null">  <!--森上あああああああああ-->
                     <img class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
                     <span> {{ userOnamae[index] }}</span>
                 </div>
@@ -72,38 +72,80 @@ export default {
         }
     },
     methods: {
+        // getSearch() {
+        //     Service.post('search', this.searchInput).then(response => {
+        //         console.log(response);
+        //         this.searchTables = response.data;
+        //         this.ppp = false;
+        //         if (response.data[0] == undefined) {
+        //             this.ppp = true;
+        //         }
+        //         //拡張for文でユーザ情報を取ってきてる
+        //         this.searchTables.forEach((searchTable) => {
+        //             Service.post('getuser', searchTable.userid).then(response => {
+        //                 console.log(response);
+        //                 this.userOnamae.push(response.data.name);
+        //                 this.userProfile.push(response.data.profile_picture);
+        //             }).catch(error => {
+        //                 alert(error);
+        //             })
+        //         })
+        //     }).catch(error => {
+        //         alert(error)
+        //     }),
+        //     Service.post('searchUser', this.searchInput).then(response => {
+        //         console.log(response);
+        //         this.searchUserTables = response.data;
+        //         this.mori = false;
+        //         if (response.data[0] == undefined) {
+        //             this.mori = true;
+        //         }
+        //     }).catch(error => {
+        //         alert(error)
+        //     })
+        // },
+        //非同期処理を並列実行する森上あああああああああああああああああああああああああああああ
         getSearch() {
-            Service.post('search', this.searchInput).then(response => {
-                console.log(response);
-                this.searchTables = response.data;
-                this.ppp = false;
-                if (response.data[0] == undefined) {
-                    this.ppp = true;
-                }
-                //拡張for文でユーザ情報を取ってきてる
-                this.searchTables.forEach((searchTable) => {
-                    Service.post('getuser', searchTable.userid).then(response => {
-                        console.log(response);
-                        this.userOnamae.push(response.data.name);
-                        this.userProfile.push(response.data.profile_picture);
-                    }).catch(error => {
-                        alert(error);
-                    })
-                })
-            }).catch(error => {
-                alert(error)
-            })
-            Service.post('searchUser', this.searchInput).then(response => {
-                console.log(response);
-                this.searchUserTables = response.data;
-                this.mori = false;
-                if (response.data[0] == undefined) {
-                    this.mori = true;
-                }
-            }).catch(error => {
-                alert(error)
-            })
-        },
+  const searchPostPromise = Service.post('search', this.searchInput);
+  const searchUserPromise = Service.post('searchUser', this.searchInput);
+
+  Promise.all([searchPostPromise, searchUserPromise])
+    .then(([searchPostResponse, searchUserResponse]) => {
+      console.log(searchPostResponse);
+      console.log(searchUserResponse);
+
+      this.searchTables = searchPostResponse.data;
+      this.ppp = false;
+      if (searchPostResponse.data[0] == undefined) {
+        this.ppp = true;
+      }
+
+      this.searchUserTables = searchUserResponse.data;
+      this.mori = false;
+      if (searchUserResponse.data[0] == undefined) {
+        this.mori = true;
+      }
+
+      const getPostUserPromises = this.searchTables.map(searchTable => {
+        return Service.post('getuser', searchTable.userid);
+      });
+
+      const getPostUserResponses = Promise.all(getPostUserPromises);
+      console.log(getPostUserResponses);
+
+      return getPostUserResponses;
+    })
+    .then(userResponses => {
+      userResponses.forEach(response => {
+        console.log(response);
+        this.userOnamae.push(response.data.name);
+        this.userProfile.push(response.data.profile_picture);
+      });
+    })
+    .catch(error => {
+      alert(error);
+    });
+},
 
         showSearchPages(index, postId, userId) {
             this.showHomeSearchComponent = true;
