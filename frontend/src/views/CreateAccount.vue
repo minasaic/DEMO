@@ -74,7 +74,7 @@ export default {
             ).then(response => {
                 console.log(response);
                 store.commit('SETUSERDATA', response.data);
-                sessionStorage.setItem('userData', response.data);
+                sessionStorage.setItem('userData', JSON.stringify(response.data));
             }).catch(error => {
                 alert(error)
             })

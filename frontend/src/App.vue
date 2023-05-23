@@ -93,7 +93,7 @@ export default {
       store.commit("SETPROFILE", profilePicture);
       }
     }
-    store.commit("SETUSERDATA",sessionStorage.getItem("userData"))
+    store.commit("SETUSERDATA",JSON.parse(sessionStorage.getItem('userData')));
   },
   data() {
     return {

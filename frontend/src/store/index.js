@@ -11,6 +11,9 @@ export default new Vuex.Store({
     name: null,
     userId: null,
     profile: null,
+    introduction: null,
+    birthday: null,
+    sex: null,
     userData: null
   },
   actions:{
@@ -37,17 +40,19 @@ export default new Vuex.Store({
     SETPROFILE(state,value){
       return state.profile =  value;
     },
+    SETINTRODUCTION(state, value) {
+      return state.introduction = value;
+    },
+    SETBIRTHDAY(state,value){
+      return state.birthday = value;
+    },
+    SETSEX(state,value){
+      return state.sex = value;
+    },
     SETUSERDATA(state, value) {
       return state.userData = value;
     }
 
   },
-  getters: {
-    // setId(state,value) {
-    //   state.id = value
-    //   console.log(state.id)
-    //   return state.id;
-    // }
-  }
 });
 
