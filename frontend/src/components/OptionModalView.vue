@@ -6,7 +6,8 @@
           <h5 class="modal-title">アカウント情報編集</h5>
           <span>
             <nobr>
-              <img :src="path" alt="選択した画像" width="250px" height="250px">
+              <img v-if="!path" :src="getVueCliProfile($store.state.profile)" alt="現在のプロフィール画像" class="round-image">
+              <img v-else :src="path" alt="選択した画像" class="round-image">
               <br>
               <label for="file-upload" class="custom-file-upload">
                 <i class="fa fa-cloud-upload"></i> プロフィール写真
@@ -16,7 +17,7 @@
             <br>
             <nobr>
               アカウント名：
-              <input type="text" v-model="changeUserName" :placeholder="$store.state.name">
+              <input type="text" v-model="changeUserName" >
               <br>
               パスワード：
               <div style="position: relative;">
@@ -40,27 +41,21 @@
               <br>
               生年月日:
               <div>
-
                 <select @click.once="year" v-model="selectedYear" ref="yearSelect">
-                  <option value="">年</option>
-
+                  <option value=""> {{ y }} 年</option>
                   <!-- 他の年を追加することもできます -->
                 </select>
 
                 <select @click.once="month" v-model="selectedMonth" ref="monthSelect">
-                  <option value="">月</option>
+                  <option value=""> {{ m }} 月</option>
                   <!-- 他の月を追加することもできます -->
                 </select>
 
                 <select @click.once="date" v-model="selectedDay" ref="dateSelect">
-                  <option value="">日</option>
+                  <option value=""> {{ d }} 日</option>
                   <!-- 他の日を追加することもできます -->
                 </select>
-
               </div>
-
-
-
               <br>
             </nobr>
           </span>
@@ -85,18 +80,30 @@ import { Service } from '@/service/service'
 import store from '@/store';
 export default {
   name: 'OptionModalView',
+  props:{
+    user:{
+      type: Object,
+      require: true
+    }
+  },
+  created() {
+    // this.getVueCliProfile()
+  },
   data() {
     return {
       changeUserImg: null,
       path: null,
-      changeUserName: '',
-      changeUserPassword: '',
-      changeUserIntroduction: '',
-      changeUserSex: '',
+      changeUserName: this.user.name,
+      changeUserPassword: this.user.password,
+      changeUserIntroduction: this.user.introduction,
+      changeUserSex: this.user.sex,
       changeUserBirthday: '',
-      selectedYear: "",
-      selectedMonth: "",
-      selectedDay: "",
+      selectedYear:  '',
+      y: this.user.birthday.split('-')[0],
+      selectedMonth: '',
+      m: this.user.birthday.split('-')[1],
+      selectedDay: '',
+      d: this.user.birthday.split('-')[2],
       profile: null,
       showPassword: false
     }
@@ -108,29 +115,51 @@ export default {
       this.path = URL.createObjectURL(this.changeUserImg);
     },
     saveUserChange() {
-      this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
       const formData = new FormData()
+      if(this.selectedYear && this.selectedMonth && this.selectedDay) {
+        this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
+        formData.append('birthday', this.changeUserBirthday)
+      } else {
+        formData.append('birthday', this.user.birthday)
+      }
+
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)
       formData.append('password', this.changeUserPassword)
       formData.append('introduction', this.changeUserIntroduction)
       formData.append('sex', this.changeUserSex)
-      formData.append('birthday', this.changeUserBirthday)
       formData.append('id', store.state.id)
-      Service.post('update', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
+      if(this.changeUserImg) {
+        Service.post('update', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         }
+        ).then(response => {
+          console.log(response)
+          sessionStorage.setItem("profile_picture",response.data);
+          store.commit('SETNAME', this.changeUserName);
+          store.commit('SETPROFILE', response.data);
+          this.$emit('close');
+          this.$emit('reload');
+        }).catch(error => {
+          alert(error)
+        })
+      } else {
+        Service.post('update-noimage', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        ).then(response => {
+          console.log(response)
+          store.commit('SETNAME', this.changeUserName);
+          this.$emit('close');
+          this.$emit('reload');
+        }).catch(error => {
+          alert(error)
+        })
       }
-      ).then(response => {
-        console.log(response)
-        sessionStorage.setItem("profile_picture",response.data);
-        store.commit('SETNAME', this.changeUserName);
-        store.commit('SETPROFILE', response.data);
-        this.$emit('close')
-      }).catch(error => {
-        alert(error)
-      })
     },
     month() {
       for (let month = 1; month <= 12; month++) {
@@ -155,7 +184,10 @@ export default {
         option.text = `${date}日`;
         this.$refs.dateSelect.appendChild(option);
       }
-    }
+    },
+    getVueCliProfile(imgFileName) {
+        return require('../assets/profile/' + imgFileName);
+    },
   }
 }
 </script>

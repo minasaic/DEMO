@@ -25,63 +25,62 @@ import com.example.backend.service.TestService;
 
 @RestController
 @CrossOrigin
-class TestController{
+class TestController {
     @Autowired
     TestService testService;
 
     // ログイン
     @PostMapping(path = "/login")
     public User loginUser(@RequestBody User user) {
-        if(testService.loginUser(user.getName(),user.getPassword())){
-         user.setId(testService.getIdByName(user.getName()));
-         user.setProfile_picture(testService.getProfileById(user.getId()));
-        return user;
-        }
-        return user;
-        }
-
-    // 新規登録
-    @PostMapping(path = "/create")
-    public User createUser(@RequestBody User user) {
-        if(testService.createUser(user.getName(), user.getPassword())){
+        if (testService.loginUser(user.getName(), user.getPassword())) {
             user.setId(testService.getIdByName(user.getName()));
             user.setProfile_picture(testService.getProfileById(user.getId()));
             return user;
         }
         return user;
+    }
+
+    // 新規登録
+    @PostMapping(path = "/create")
+    public User createUser(@RequestBody User user) {
+        if (testService.createUser(user.getName(), user.getPassword())) {
+            user.setId(testService.getIdByName(user.getName()));
+            user.setProfile_picture(testService.getProfileById(user.getId()));
+            return user;
         }
-    
-    //ホーム画面
-    @PostMapping(path="/home")
-    public List<Posts> homepage(@RequestBody Integer id){
+        return user;
+    }
+
+    // ホーム画面
+    @PostMapping(path = "/home")
+    public List<Posts> homepage(@RequestBody Integer id) {
         return testService.getPosts(id);
     }
 
-    //マイページ
-    @PostMapping(path="/mypage")
-    public List<Posts> mypage(@RequestBody Integer id){
+    // マイページ
+    @PostMapping(path = "/mypage")
+    public List<Posts> mypage(@RequestBody Integer id) {
         return testService.mypage(id);
     }
 
-// アカウント編集・変更
+    // アカウント編集・変更
     @PostMapping(path = "/update")
     public String update(
-        @RequestParam("file") MultipartFile file,
-        @RequestParam("id") Integer id,
-        @RequestParam("name") String name,
-        @RequestParam("password") String password,
-        @RequestParam("introduction") String introduction,
-        @RequestParam("sex") String sex,
-        @RequestParam("birthday") Date birthday
-            ) {
-        //元のプロファイル画像削除
+            @RequestParam("file") MultipartFile file,
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name,
+            @RequestParam("password") String password,
+            @RequestParam("introduction") String introduction,
+            @RequestParam("sex") String sex,
+            @RequestParam("birthday") Date birthday) {
+        // 元のプロファイル画像削除
         String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
                 + testService.getprofilepath(id);
         File f = new File(imagePath);
         if (f.exists()) {
             f.delete();
         }
-        //ファイル保存、データベース更新
+        // ファイル保存、データベース更新
         String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
         try {
             String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/profile/"
@@ -89,49 +88,62 @@ class TestController{
                     + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
-            testService.update(staticPath, id, name, password,introduction,sex,birthday);
+            testService.update(staticPath, id, name, password, introduction, sex, birthday);
             return staticPath;
         } catch (IOException e) {
             return "失敗した";
         }
     }
 
-    //投稿数を取得
-    @PostMapping(value="/postdata")
+    // アカウント編集・変更
+    @PostMapping(path = "/update-noimage")
+    public boolean updateNoImage(
+            @RequestParam("id") Integer id,
+            @RequestParam("name") String name,
+            @RequestParam("password") String password,
+            @RequestParam("introduction") String introduction,
+            @RequestParam("sex") String sex,
+            @RequestParam("birthday") Date birthday) {
+        return testService.updateNo(id, name, password, introduction, sex, birthday);
+    }
+
+    // 投稿数を取得
+    @PostMapping(value = "/postdata")
     public Integer getpost(@RequestBody Integer id) {
         return testService.getPostCount(id);
     }
 
     // 新規投稿
     @PostMapping(path = "/post")
-    public String newPost(@RequestParam ("file") List<MultipartFile> file,@RequestParam ("id") Integer id,@RequestParam("text") String text) {
+    public String newPost(@RequestParam("file") List<MultipartFile> file, @RequestParam("id") Integer id,
+            @RequestParam("text") String text) {
         try {
             String staticPath = "";
-            for(int i = 0; i < file.size(); i++ ){
+            for (int i = 0; i < file.size(); i++) {
                 String timestamp = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMddHHmmssSSS"));
-                String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" 
-                + timestamp 
-                + file.get(i).getOriginalFilename();
+                String filePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/"
+                        + timestamp
+                        + file.get(i).getOriginalFilename();
                 file.get(i).transferTo(new File(filePath));
-                staticPath += timestamp + file.get(i).getOriginalFilename() + ","; //データベースに保存するファイルネーム
+                staticPath += timestamp + file.get(i).getOriginalFilename() + ","; // データベースに保存するファイルネーム
             }
             System.out.println(staticPath);
             Timestamp timestamps = new Timestamp(System.currentTimeMillis());
-            testService.createPost(id,staticPath,text,timestamps);
+            testService.createPost(id, staticPath, text, timestamps);
             return staticPath;
         } catch (IOException e) {
             return "sdfgh";
         }
     }
-    
-    @PostMapping(path="/test")
-    public String sai(@RequestBody Integer id){
+
+    @PostMapping(path = "/test")
+    public String sai(@RequestBody Integer id) {
         return testService.getPath(id);
     }
 
-    //コメントを表示させる
-    @PostMapping(path="/getcom")
-    public List<Comments> getcc(@RequestBody Integer id){
+    // コメントを表示させる
+    @PostMapping(path = "/getcom")
+    public List<Comments> getcc(@RequestBody Integer id) {
         return testService.getCom(id);
     }
 
@@ -141,47 +153,49 @@ class TestController{
         System.out.println(com.getUserid());
         System.out.println(com.getPostid());
         Timestamp timestamps = new Timestamp(System.currentTimeMillis());
-        return testService.createComment(com.getUserid(),com.getPostid(),com.getComment(),timestamps);
+        return testService.createComment(com.getUserid(), com.getPostid(), com.getComment(), timestamps);
     }
 
-    //フォロワーとフォロー数を取得
+    // フォロワーとフォロー数を取得
     @PostMapping(path = "/followdata")
     public List<Integer> getFollow(@RequestBody Integer id) {
         return testService.getFollowCount(id);
     }
 
-    //フォロワー一覧
+    // フォロワー一覧
     @PostMapping(path = "/getFollowers")
-    public List<User> minamina(@RequestBody Integer id){
+    public List<User> minamina(@RequestBody Integer id) {
         return testService.minamina(id);
     }
-    //フォロー一覧
+
+    // フォロー一覧
     @PostMapping(path = "/getFollowings")
-    public List<User> saisai(@RequestBody Integer id){
+    public List<User> saisai(@RequestBody Integer id) {
         return testService.saisai(id);
     }
 
-    //ユーザー情報取得
+    // ユーザー情報取得
     @PostMapping(path = "/getuser")
-    public User aaa(@RequestBody Integer id){
+    public User aaa(@RequestBody Integer id) {
         return testService.aaa(id);
     }
-    
-    //投稿を検索
+
+    // 投稿を検索
     @PostMapping(path = "/search")
-    public List<Posts> search(@RequestBody String keyword){
+    public List<Posts> search(@RequestBody String keyword) {
         return testService.search(keyword);
     }
-    //ユーザーを検索
+
+    // ユーザーを検索
     @PostMapping(path = "/searchUser")
-    public List<User> qwertyui(@RequestBody String keyword){
+    public List<User> qwertyui(@RequestBody String keyword) {
         return testService.searchUser(keyword);
     }
 
     // フォロー
     @PostMapping(path = "/follow")
     public Integer follow(@RequestBody Follows fol) {
-        return testService.followUser(fol.getFollowerid(),fol.getFollowingid());
+        return testService.followUser(fol.getFollowerid(), fol.getFollowingid());
     }
 
     // フォロー解除
@@ -193,34 +207,38 @@ class TestController{
     // いいね
     @PostMapping(path = "/like")
     public Integer like(@RequestBody Likes like) {
-        return testService.like(like.getPostid(),like.getUserid());
-    }
-    //いいね一覧
-    @PostMapping(path = "/getlikes")
-    public List<Posts> minaminaminamin(@RequestBody Integer id){
-        return testService.getLikes(id);
-    }
-    //いいね判断
-    @PostMapping(path = "/likejudge")
-    public boolean asdfdsd(@RequestBody Likes like){
-        return testService.likejudge(like.getPostid(),like.getUserid());
-    }
-    //いいね解除
-    @PostMapping(path = "/deletelikes")
-    public Integer fyjdhseafscvhmfdsafSZdcgmvhgchdf(@RequestBody Likes like){
-        return testService.dislike(like.getPostid(),like.getUserid());
+        return testService.like(like.getPostid(), like.getUserid());
     }
 
-    //フォローしてるかどうかの判断
-    @PostMapping(path="/followJudge")
-    public Integer aaa(@RequestBody Follows fol){
-        return testService.judge(fol.getFollowerid(),fol.getFollowingid());
+    // いいね一覧
+    @PostMapping(path = "/getlikes")
+    public List<Posts> minaminaminamin(@RequestBody Integer id) {
+        return testService.getLikes(id);
+    }
+
+    // いいね判断
+    @PostMapping(path = "/likejudge")
+    public boolean asdfdsd(@RequestBody Likes like) {
+        return testService.likejudge(like.getPostid(), like.getUserid());
+    }
+
+    // いいね解除
+    @PostMapping(path = "/deletelikes")
+    public Integer fyjdhseafscvhmfdsafSZdcgmvhgchdf(@RequestBody Likes like) {
+        return testService.dislike(like.getPostid(), like.getUserid());
+    }
+
+    // フォローしてるかどうかの判断
+    @PostMapping(path = "/followJudge")
+    public Integer aaa(@RequestBody Follows fol) {
+        return testService.judge(fol.getFollowerid(), fol.getFollowingid());
     }
 
     // 投稿削除
     @PostMapping(path = "/deletepost")
     public boolean deletePost(@RequestBody Integer id) {
-        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/" +testService.getPath(id);
+        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/"
+                + testService.getPath(id);
         File file = new File(imagePath);
         if (file.exists()) {
             file.delete();
@@ -233,16 +251,15 @@ class TestController{
 
     // ユーザーのプロフィール画像とアカウント名を取ってくる
     @PostMapping(path = "getusernameandimage")
-    public User getUserNameAndImage(@RequestBody Integer id){
+    public User getUserNameAndImage(@RequestBody Integer id) {
         return testService.getUserNameAndImage(id);
     }
 
-    //ユーザーの自己紹介と生年月日、性別を取得する
+    // ユーザーの自己紹介と生年月日、性別を取得する
     @PostMapping(path = "getUserIntroductionAndSexAndBirthday")
-    public User getUserIntroductionAndSexAndBirthday(@RequestBody Integer id) {  
+    public User getUserIntroductionAndSexAndBirthday(@RequestBody Integer id) {
         return testService.getUserIntroductionAndSexAndBirthday(id);
-        
+
     }
 
-    
 }

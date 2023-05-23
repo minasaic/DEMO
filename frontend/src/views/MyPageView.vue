@@ -4,7 +4,7 @@
       <nobr id="sub"><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
         <p v-else>プロフィール写真をアップロードしてください。</p>
       </nobr>
-      <option-modal-view v-if="showModal" @close="showModal = false" @save="showModal = false">
+      <option-modal-view v-if="showModal" @close="showModal = false" @save="showModal = false" :user="user" @reload="reloadPage()">
       </option-modal-view>
       <br>
       <br>
@@ -210,7 +210,7 @@ export default {
       })
     },
     getUserIntroductionAndSexAndBirthday() {
-      Service.post("getUserIntroductionAndSexAndBirthday", store.state.id
+      Service.post("getuser", store.state.id
       ).then(response => {
         //alert(response.data.introduction);
         console.log(response);
@@ -219,6 +219,9 @@ export default {
         alert(error)
       })
     },
+    reloadPage() {
+      location.reload();
+    }
   }
 }
 </script>

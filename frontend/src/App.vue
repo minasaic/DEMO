@@ -111,6 +111,7 @@ export default {
       sessionStorage.removeItem("name");
       sessionStorage.removeItem("profile_picture");
       store.commit('SETPAGEBOOLEAN', false);
+      store.commit('SETPROFILE', null);
     },
     getVueCliUrl() {
       if (store.state.profile != null) {

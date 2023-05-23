@@ -81,9 +81,10 @@ public class TestService {
     public List<Posts> mypage(Integer id) {
         return prepo.findByUserid(id);
     }
-    
+
     // アカウント編集 変更
-    public boolean update(String staticPath, Integer id, String name, String password, String introduction, String sex, Date birthday) {
+    public boolean update(String staticPath, Integer id, String name, String password, String introduction, String sex,
+            Date birthday) {
         User user = urepo.findById(id).get();
         user.setProfile_picture(staticPath);
         user.setName(name);
@@ -101,13 +102,30 @@ public class TestService {
         return true;
     }
 
+    // アカウント編集 変更
+    public boolean updateNo(Integer id, String name, String password, String introduction, String sex, Date birthday) {
+        User user = urepo.findById(id).get();
+        user.setName(name);
+        user.setPassword(password);
+        user.setIntroduction(introduction);
+        user.setSex(sex);
+        user.setBirthday(birthday);
+        urepo.save(user);
+        List<Comments> com = crepo.findByUserid(id);
+        for (int i = 0; i < com.size(); i++) {
+            com.get(i).setName(name);
+            crepo.save(com.get(i));
+        }
+        return true;
+    }
+
     // プロフィール画像を削除するためのパスをゲットする
     public String getprofilepath(Integer id) {
         return urepo.findById(id).get().getProfile_picture();
     }
 
     // 新規投稿
-    public boolean createPost(Integer id, String image, String caption,Timestamp timestamp) {
+    public boolean createPost(Integer id, String image, String caption, Timestamp timestamp) {
         Posts post = new Posts();
         post.setUserid(id);
         post.setImage(image);
@@ -124,7 +142,7 @@ public class TestService {
     }
 
     // コメント投稿
-    public boolean createComment(Integer user_id, Integer post_id, String comment,Timestamp timestamp) {
+    public boolean createComment(Integer user_id, Integer post_id, String comment, Timestamp timestamp) {
         Comments com = new Comments();
         User user = urepo.findById(user_id).get();
         com.setPostid(post_id);
@@ -164,8 +182,9 @@ public class TestService {
         }
         return null;
     }
-    //ユーザーを検索する
-    public List<User> searchUser(String keyword){
+
+    // ユーザーを検索する
+    public List<User> searchUser(String keyword) {
         List<User> a = urepo.findByNameLike("%" + keyword.replaceAll("\"", "") + "%");
         if (a != null) {
             return a;
@@ -259,9 +278,9 @@ public class TestService {
         return sai;
     }
 
-    public boolean likejudge(Integer postId,Integer userId) {
-        Optional<Likes> like = lrepo.findByPostidAndUserid(postId,userId);
-        if(like.isPresent()){
+    public boolean likejudge(Integer postId, Integer userId) {
+        Optional<Likes> like = lrepo.findByPostidAndUserid(postId, userId);
+        if (like.isPresent()) {
             return true;
         }
         return false;
@@ -271,12 +290,12 @@ public class TestService {
         Posts post = prepo.findById(postid).get();
         post.setLikes(post.getLikes() - 1);
         prepo.save(post);
-        lrepo.deleteById(lrepo.findByPostidAndUserid(postid,userid).get().getId());
+        lrepo.deleteById(lrepo.findByPostidAndUserid(postid, userid).get().getId());
         return post.getLikes();
     }
 
-    //ユーザーの自己紹介と生年月日、性別を取得する
-    public User getUserIntroductionAndSexAndBirthday(Integer id){
+    // ユーザーの自己紹介と生年月日、性別を取得する
+    public User getUserIntroductionAndSexAndBirthday(Integer id) {
         return urepo.findById(id).get();
 
     }
