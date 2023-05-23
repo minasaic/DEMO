@@ -8,12 +8,21 @@
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
             <div style="position: relative;">
-                <input v-if="!showPassword" type="passsword" name="userpass" v-model=valuePass @keyup.enter="logins"
-                    placeholder="パスワード" style="font-size:30px;" />
-                <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
-                    style="font-size:30px;" />
-                <a style="position: absolute; right: 40%; top: 50%; transform: translateY(-50%);"
-                    @click="showPassword = !showPassword">👀</a>
+                <div v-show="!showPassword">
+                    <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
+                        style="font-size:30px;" />
+                    <a @click="showPassword = !showPassword">
+                        <img style="width: 2%;" src="../assets/system/noeye.png" alt="">
+                    </a>
+                </div>
+
+                <div v-show="showPassword">
+                    <input type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
+                        style="font-size:30px;" />
+                    <a @click="showPassword = !showPassword">
+                        <img style="width: 2%;" src="../assets/system/eye.png" alt="">
+                    </a>
+                </div>
             </div>
 
             <br><br>
@@ -131,4 +140,5 @@ export default {
 
 .button001 a:hover:after {
     border-color: #FFF;
-}</style>
+}
+</style>

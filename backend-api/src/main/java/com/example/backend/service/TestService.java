@@ -83,7 +83,7 @@ public class TestService {
     }
 
     // アカウント編集 変更
-    public boolean update(String staticPath, Integer id, String name, String password, String introduction, String sex,
+    public User update(String staticPath, Integer id, String name, String password, String introduction, String sex,
             Date birthday) {
         User user = urepo.findById(id).get();
         user.setProfile_picture(staticPath);
@@ -99,11 +99,11 @@ public class TestService {
             com.get(i).setProfile(staticPath);
             crepo.save(com.get(i));
         }
-        return true;
+        return user;
     }
 
     // アカウント編集 変更
-    public boolean updateNo(Integer id, String name, String password, String introduction, String sex, Date birthday) {
+    public User updateNo(Integer id, String name, String password, String introduction, String sex, Date birthday) {
         User user = urepo.findById(id).get();
         user.setName(name);
         user.setPassword(password);
@@ -116,7 +116,7 @@ public class TestService {
             com.get(i).setName(name);
             crepo.save(com.get(i));
         }
-        return true;
+        return user;
     }
 
     // プロフィール画像を削除するためのパスをゲットする

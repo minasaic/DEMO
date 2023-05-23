@@ -121,7 +121,7 @@ export default {
 .selected-image {
   width: 400px;
   height: 400px;
-  background-image: url("../assets/system/drag.png");
+  /* background-image: url("../assets/system/drag.png"); */
 }
 
 .prev-button,

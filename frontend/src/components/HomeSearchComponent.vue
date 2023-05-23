@@ -67,7 +67,7 @@
                             <div class="comment-box">
                                 <textarea class="comment-input" v-model="commentText" cols="45" rows="1"></textarea>
                                 <nobr class="comment-btn-group">
-                                    <a class="chikara" @click="updateComment">送信</a>
+                                    <a class="chikara" @click="updateComment">投稿</a>
                                 </nobr>
                             </div>
                         </div>

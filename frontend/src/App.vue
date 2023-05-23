@@ -30,7 +30,7 @@
           <br>
           <router-link to="/mypage">
             <span class="btn_hover">
-              <img v-if="getVueCliUrl() !== 100" class="photo" :src="getVueCliUrl()" alt="LOGO">
+              <img v-if="getVueCliUrl() !== 100" class="photo-round" :src="getVueCliUrl()" alt="LOGO">
               <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
               プロフィール
             </span>
@@ -222,6 +222,14 @@ nav {
   width: 25px;
   height: 25%;
   margin-top: -10px;
+  /* transition: transform 0.1s ease-in-out; */
+}
+
+.photo-round {
+  width: 25px;
+  height: 25%;
+  margin-top: -10px;
+  border-radius: 50%;
   /* transition: transform 0.1s ease-in-out; */
 }
 </style>

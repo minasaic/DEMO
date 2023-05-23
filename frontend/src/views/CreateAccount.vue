@@ -8,13 +8,25 @@
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
             <div style="position: relative;">
-                <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
-                <input v-else type="text" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
-                <a style="position: absolute; right: 570px; top: 5px;" @click="showPassword = !showPassword">👀</a>
+                <div v-show="!showPassword">
+                    <input type="password" name="userpass" v-model=valuePass
+                        placeholder="パスワード" style="font-size:30px;" />
+                    <a @click="showPassword = !showPassword">
+                        <img style="width: 2%;" src="../assets/system/noeye.png" alt="">
+                    </a>
+                </div>
+
+                <div v-show="showPassword">
+                    <input type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
+                        style="font-size:30px;" />
+                    <a @click="showPassword = !showPassword">
+                        <img style="width: 2%;" src="../assets/system/eye.png" alt="">
+                    </a>
+                </div>
             </div>
             <br><br>
             <br>
-            <span class="button001"><a  type="button" @click="create">登録する</a></span> 
+            <span class="button001"><a  type="button" @click="create">アカウント作成する</a></span> 
             <br>
             <span class="button001"><a  type="button" @click="goToSign">戻る</a></span> 
             <br>

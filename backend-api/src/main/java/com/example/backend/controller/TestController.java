@@ -65,7 +65,7 @@ class TestController {
 
     // アカウント編集・変更
     @PostMapping(path = "/update")
-    public String update(
+    public User update(
             @RequestParam("file") MultipartFile file,
             @RequestParam("id") Integer id,
             @RequestParam("name") String name,
@@ -88,16 +88,16 @@ class TestController {
                     + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
-            testService.update(staticPath, id, name, password, introduction, sex, birthday);
-            return staticPath;
+            
+            return testService.update(staticPath, id, name, password, introduction, sex, birthday);
         } catch (IOException e) {
-            return "失敗した";
+            return null;
         }
     }
 
     // アカウント編集・変更
     @PostMapping(path = "/update-noimage")
-    public boolean updateNoImage(
+    public User updateNoImage(
             @RequestParam("id") Integer id,
             @RequestParam("name") String name,
             @RequestParam("password") String password,

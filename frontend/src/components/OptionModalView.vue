@@ -24,9 +24,18 @@
               <br>
               パスワード：
               <div style="position: relative;">
-                <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
-                <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
-                <a style="position: absolute; right: 580px; top: 5px;" @click="showPassword = !showPassword">👀</a>
+                <span v-show="!showPassword">
+                  <input  type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
+                  <a  @click="showPassword = !showPassword">
+                    <img style="width: 3%;" src="../assets/system/eye.png" alt="">
+                  </a>
+                </span>
+                <span v-show="showPassword">
+                  <input type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
+                  <a @click="showPassword = !showPassword">
+                    <img style="width: 2.8%;" src="../assets/system/noeye.png" alt="">
+                  </a>
+                </span>
               </div>
               <br>
               自己紹介:
@@ -120,7 +129,7 @@ export default {
         this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
         formData.append('birthday', this.changeUserBirthday)
       } else {
-        formData.append('birthday', this.user.birthday)
+        formData.append('birthday', store.state.userData.birthday)
       }
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)
@@ -136,9 +145,11 @@ export default {
         }
         ).then(response => {
           console.log(response)
-          sessionStorage.setItem("profile_picture", response.data);
+          sessionStorage.setItem("profile_picture", response.data.profile_picture);
+          sessionStorage.setItem('userData', JSON.stringify(response.data));
           store.commit('SETNAME', this.changeUserName);
-          store.commit('SETPROFILE', response.data);
+          store.commit('SETPROFILE', response.data.profile_picture);
+          store.commit('SETUSERDATA', response.data)
           this.$emit('close');
           this.$emit('reload');
         }).catch(error => {
@@ -152,7 +163,9 @@ export default {
         }
         ).then(response => {
           console.log(response)
+          sessionStorage.setItem('userData', JSON.stringify(response.data));
           store.commit('SETNAME', this.changeUserName);
+          store.commit('SETUSERDATA', response.data);
           this.$emit('close');
           this.$emit('reload');
         }).catch(error => {
