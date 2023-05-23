@@ -1,66 +1,55 @@
 <template>
   <div id="main" class="photo-gallery">
     <div class="moriii">
-    <nobr id="sub"  ><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
-      <p v-else>プロフィール写真をアップロードしてください。</p>
-    </nobr>
-    <option-modal-view v-if="showModal" 
-      :title="modalTitle"
-      :name="$store.state.name"
-     @close="showModal = false" @save="showModal = false">
-    </option-modal-view>
-    <br>
-    <br>
-    <br> 
-    <br>
-    <!--<b>ID：{{ $store.state.id }}</b>-->
-    <nobr class="saimina">
-    <b>{{ $store.state.name }} </b> 
+      <nobr id="sub"><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
+        <p v-else>プロフィール写真をアップロードしてください。</p>
+      </nobr>
+      <option-modal-view v-if="showModal" @close="showModal = false" @save="showModal = false" :user="user" @reload="reloadPage()">
+      </option-modal-view>
+      <br>
+      <br>
+      <br>
+      <br>
+      <!--<b>ID：{{ $store.state.id }}</b>-->
+      <nobr class="saimina">
+        <b class="userName">{{ $store.state.name }} </b>
 
-    <a @click="showModal = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-      <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
-    </a>
-    
-    
-    <br>
-    <br>
-    <br>
-    <br>
-    <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
-    <b><a @click="getFollowers">&nbsp;&nbsp;&nbsp;&nbsp;フォロワー&nbsp;{{ followerCount }}  人 </a></b>
-    <FollowingComponent v-show="showFollows" 
-      @close="showFollows = false"
-      :follows="ff"
-      :followComponentTitle="followComponentTitle"
-      />
-    <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中&nbsp;{{ followingCount }} 人 </a> </b>
-    <FollowingComponent v-show="showFollows" 
-      @close="showFollows = false"
-      :follows="ff"
-      :followComponentTitle="followComponentTitle"
-      />
-    <br>
-    <br>
-  </nobr>
-</div>
+        <a @click="showModal = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+          <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
+        </a>
+        <br>
+        <!-- <b> {{ user.birthday }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
+        <!-- <b> {{ user.sex }} </b> -->
+        <br>
+        <!-- <b class="introduction" style="text-align: left"> {{ user.introduction }} </b> -->
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+        <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
+        <b><a @click="getFollowers">&nbsp;&nbsp;&nbsp;&nbsp;フォロワー&nbsp;{{ followerCount }} 人 </a></b>
+        <FollowingComponent v-if="showFollows" :follows="ff" :followComponentTittle="followComponentTittle"
+          @close="showFollows = false" />
+        <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中&nbsp;{{ followingCount }} 人 </a> </b>
+        <FollowingComponent v-if="showFollows" :follows="ff" :followComponentTittle="followComponentTittle"
+          @close="showFollows = false" />
+        <br>
+        <br>
+      </nobr>
+    </div>
 
     <hr>
     <!-- postsテーブル     {{ postTables}}       -->
     <div class="photo-grid">
-      <div v-for="(postTable, index) in postTables " :key="postTable.id"
-        @click="showMyPages(index, postTable.id)">
+      <div v-for="(postTable, index) in postTables " :key="postTable.id" @click="showMyPages(index, postTable.id)">
         <img class="photo-grid-img" :src="getVueCliUrl(postTable.image)" alt="投稿画像">
       </div>
-      <HomeSearchComponent v-show="showMyPageComponent" 
-        :homeTableObject="postTableObject"
-        :commentTableObject="commentTableObject" 
-        :qwerty="qwerty"
-        :showDeleteButton="showDeleteButton"
-        :show="showLikeJudge"
-        @close="showMyPageComponent = false" 
-        @refresh-comment="showMyPages(clickImgIndex,postTableObject.id)"
-        @refresh-likes="updateLikes(clickImgIndex,postTableObject.id)"
-        />
+      <HomeSearchComponent v-if="showMyPageComponent" :homeTableObject="postTableObject"
+        :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
+        :show="showLikeJudge" @close="showMyPageComponent = false"
+        @refresh-comment="showMyPages(clickImgIndex, postTableObject.id)"
+        @refresh-likes="updateLikes(clickImgIndex, postTableObject.id)" />
       <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
   </div>
@@ -84,6 +73,7 @@ export default {
     this.myPage()
     this.getFollowerCount()
     this.getPostCount()
+    this.getUserIntroductionAndSexAndBirthday()
 
   },
   data() {
@@ -102,7 +92,7 @@ export default {
       modalTitle: 'アカウント情報変更',
       postCount: null,
       ff: null,
-      followComponentTitle: null,
+      followComponentTittle: null,
       showDeleteButton: true,
       showLikeJudge: false,
       qwerty: {
@@ -110,6 +100,7 @@ export default {
         "name": store.state.name,
         "profile_picture": store.state.profile
       },
+      user: null
     }
   },
   methods: {
@@ -155,22 +146,22 @@ export default {
         alert(error)
       })
     },
-    getFollowers(){
-      Service.post("getFollowers",store.state.id).then(response => {
+    getFollowers() {
+      Service.post("getFollowers", store.state.id).then(response => {
         console.log(response);
         this.showFollows = true;
         this.ff = response.data;
-        this.followComponentTitle = 'フォロワー一覧';
+        this.followComponentTittle = 'フォロワー';
       }).catch(error => {
-        alert(error) 
+        alert(error)
       })
     },
-    getFollowings(){
-      Service.post("getFollowings",store.state.id).then(response => {
+    getFollowings() {
+      Service.post("getFollowings", store.state.id).then(response => {
         console.log(response);
         this.showFollows = true;
         this.ff = response.data;
-        this.followComponentTitle = 'フォロー一覧';
+        this.followComponentTittle = 'フォロー中';
       }).catch(error => {
         alert(error)
       })
@@ -195,7 +186,8 @@ export default {
       }
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
     },
     //投稿数を取得
     getPostCount() {
@@ -206,17 +198,30 @@ export default {
         alert(error)
       })
     },
-    likeJudge(postId){
-      Service.post('/likejudge',{
-          postid: postId,
-          userid: store.state.id
+    likeJudge(postId) {
+      Service.post('/likejudge', {
+        postid: postId,
+        userid: store.state.id
       }).then(response => {
-          console.log(response);
-          this.showLikeJudge = response.data;
+        console.log(response);
+        this.showLikeJudge = response.data;
       }).catch(error => {
-          alert(error);
+        alert(error);
       })
     },
+    getUserIntroductionAndSexAndBirthday() {
+      Service.post("getuser", store.state.id
+      ).then(response => {
+        //alert(response.data.introduction);
+        console.log(response);
+        this.user = response.data;
+      }).catch(error => {
+        alert(error)
+      })
+    },
+    reloadPage() {
+      location.reload();
+    }
   }
 }
 </script>
@@ -224,14 +229,14 @@ export default {
 <style>
 .round-image {
   border-radius: 50%;
-  width: 170px ;
-  height:170px;
+  width: 170px;
+  height: 170px;
 }
 
 .photo-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-  grid-gap: 20px;
+  /* grid-gap: 20px; */
 }
 
 .photo-grid-img {
@@ -240,7 +245,7 @@ export default {
   object-fit: cover;
   cursor: pointer;
   /* grid-row: auto; */
-  margin-bottom: 70px;
+  margin-bottom: 10px;
 }
 
 .overlay {
@@ -252,6 +257,7 @@ export default {
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 1;
 }
+
 /* #main {
   box-sizing: border-box;
   margin-left: 180px;
@@ -264,8 +270,9 @@ export default {
   justify-content: space-between;
   flex-wrap: wrap;
 }
+
 .item {
-   width: 25%;
+  width: 25%;
 }
 
 #sub {
@@ -278,10 +285,15 @@ export default {
   /* display: block; */
 }
 
-.moriii{
+.moriii {
   display: flex;
 }
-.saimina{
+
+.saimina {
   padding: 30px;
+}
+
+.userName {
+  font-size: 25px;
 }
 </style>

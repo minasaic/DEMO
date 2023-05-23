@@ -3,24 +3,60 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">{{ title }}</h5>
+          <h5 class="modal-title">アカウント情報編集</h5>
           <span>
             <nobr>
-              <img :src="path" alt="選択した画像" width="250px" height="250px">
+              <img v-if="!path" :src="getVueCliProfile($store.state.profile)" alt="現在のプロフィール画像" class="round-image">
+              <img v-else :src="path" alt="選択した画像" class="round-image">
               <br>
               <label for="file-upload" class="custom-file-upload">
                 <i class="fa fa-cloud-upload"></i> プロフィール写真
               </label>
               <input id="file-upload" type="file" @change="saveUserImg">
             </nobr>
+            <br>
             <nobr>
               アカウント名：
-              <input type="text" v-model="changeUserName" :placeholder="name">
+              <input type="text" v-model="changeUserName" >
               <br>
               パスワード：
-              <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード" >
-              <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード" >
-              <a @click="showPassword = !showPassword">👀</a>
+              <div style="position: relative;">
+                <input v-if="!showPassword" type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
+                <input v-else type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
+                <a style="position: absolute; right: 580px; top: 5px;" @click="showPassword = !showPassword">👀</a>
+              </div>
+              <br>
+              自己紹介:
+              <br>
+              <textarea v-model="changeUserIntroduction" cols="30" rows="10" placeholder="例:はじめまして！〇〇といいます.."
+                style="display: inline-block;"></textarea>
+              <br>
+              性別:
+              <select v-model="changeUserSex">
+                <option disabled selected value="">選択してください</option>
+                <option value="男性">男性</option>
+                <option value="女性">女性</option>
+                <option value="答えたくない" selected>答えたくない</option>
+              </select>
+              <br>
+              生年月日:
+              <div>
+                <select @click.once="year" v-model="selectedYear" ref="yearSelect">
+                  <option value=""> {{ y }} 年</option>
+                  <!-- 他の年を追加することもできます -->
+                </select>
+
+                <select @click.once="month" v-model="selectedMonth" ref="monthSelect">
+                  <option value=""> {{ m }} 月</option>
+                  <!-- 他の月を追加することもできます -->
+                </select>
+
+                <select @click.once="date" v-model="selectedDay" ref="dateSelect">
+                  <option value=""> {{ d }} 日</option>
+                  <!-- 他の日を追加することもできます -->
+                </select>
+              </div>
+              <br>
             </nobr>
           </span>
           <button type="button" class="close-button" @click="$emit('close')">
@@ -44,26 +80,34 @@ import { Service } from '@/service/service'
 import store from '@/store';
 export default {
   name: 'OptionModalView',
-  props: {
-    title: {
-      type: String,
-      required: true
-    },
-    name: {
-      type: String,
-      required: true
+  props:{
+    user:{
+      type: Object,
+      require: true
     }
+  },
+  created() {
+    // this.getVueCliProfile()
   },
   data() {
     return {
       changeUserImg: null,
       path: null,
-      changeUserName: '',
-      changeUserPassword: '',
+      changeUserName: this.user.name,
+      changeUserPassword: this.user.password,
+      changeUserIntroduction: this.user.introduction,
+      changeUserSex: this.user.sex,
+      changeUserBirthday: '',
+      selectedYear:  '',
+      y: this.user.birthday.split('-')[0],
+      selectedMonth: '',
+      m: this.user.birthday.split('-')[1],
+      selectedDay: '',
+      d: this.user.birthday.split('-')[2],
       profile: null,
       showPassword: false
     }
-  }, 
+  },
   methods: {
     saveUserImg(event) {
       this.changeUserImg = event.target.files[0];
@@ -72,23 +116,77 @@ export default {
     },
     saveUserChange() {
       const formData = new FormData()
+      if(this.selectedYear && this.selectedMonth && this.selectedDay) {
+        this.changeUserBirthday = this.selectedYear + '-' + this.selectedMonth + '-' + this.selectedDay;
+        formData.append('birthday', this.changeUserBirthday)
+      } else {
+        formData.append('birthday', this.user.birthday)
+      }
+
       formData.append('file', this.changeUserImg)
       formData.append('name', this.changeUserName)
       formData.append('password', this.changeUserPassword)
+      formData.append('introduction', this.changeUserIntroduction)
+      formData.append('sex', this.changeUserSex)
       formData.append('id', store.state.id)
-      Service.post('update', formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        }}
-      ).then(response => {
-        console.log(response)
-        store.commit('SETNAME', this.changeUserName);
-        store.commit('SETPROFILE', this.profile);
-
-        this.$emit('close')
-      }).catch(error => {
-        alert(error)
-      })
+      if(this.changeUserImg) {
+        Service.post('update', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        ).then(response => {
+          console.log(response)
+          sessionStorage.setItem("profile_picture",response.data);
+          store.commit('SETNAME', this.changeUserName);
+          store.commit('SETPROFILE', response.data);
+          this.$emit('close');
+          this.$emit('reload');
+        }).catch(error => {
+          alert(error)
+        })
+      } else {
+        Service.post('update-noimage', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        }
+        ).then(response => {
+          console.log(response)
+          store.commit('SETNAME', this.changeUserName);
+          this.$emit('close');
+          this.$emit('reload');
+        }).catch(error => {
+          alert(error)
+        })
+      }
+    },
+    month() {
+      for (let month = 1; month <= 12; month++) {
+        const option = document.createElement('option');
+        option.value = month;
+        option.text = `${month}月`;
+        this.$refs.monthSelect.appendChild(option);
+      }
+    },
+    year() {
+      for (let year = 1950; year <= 2023; year++) {
+        const option = document.createElement('option');
+        option.value = year;
+        option.text = `${year}年`;
+        this.$refs.yearSelect.appendChild(option);
+      }
+    },
+    date() {
+      for (let date = 1; date <= 31; date++) {
+        const option = document.createElement('option');
+        option.value = date;
+        option.text = `${date}日`;
+        this.$refs.dateSelect.appendChild(option);
+      }
+    },
+    getVueCliProfile(imgFileName) {
+        return require('../assets/profile/' + imgFileName);
     },
   }
 }
@@ -120,6 +218,7 @@ export default {
 }
 
 .modal-header {}
+
 .modal-footer {
   padding: 10px;
   background-color: #f5f5f5;

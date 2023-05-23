@@ -6,16 +6,25 @@
                 <span v-else>プロフィール写真なし</span>
             </nobr>
             <nobr class="saimina">
-                <b>{{ userName.name }}</b>
+                <b class="userName">{{ userName.name }}</b>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <a v-show="aaa" @click="unfollow" class="btn-unfollow">unfollow</a>
+                <a v-show="aaa === false" @click="follow" class="btn-follow">follow</a>
                 <br><br><br><br>
                 <b> &nbsp;&nbsp;&nbsp;&nbsp;投稿 {{ postCount }} 件 </b>
-                <b><a @click="getFollowers"> &nbsp;&nbsp;&nbsp;&nbsp;フォロワー{{ followerCount }} 人</a> </b>
-                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
-                <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中{{ followingCount }} 人</a> </b>
-                <FollowingComponent v-if="showFollows" @close="showFollows = false" :follows="ff" />
-                <br>
-                <button v-show="aaa" @click="unfollow">unfollow</button>
-                <button v-show="aaa === false" @click="follow">follow</button>
+                <b><a @click="getFollowers"> &nbsp;&nbsp;&nbsp;&nbsp;フォロワー {{ followerCount }} 人</a> </b>
+                <FollowingComponent v-if="showFollows" 
+                :follows="ff" 
+                :followComponentTittle="followComponentTittle"
+                @close="showFollows = false" 
+                />
+                <b><a @click="getFollowings"> &nbsp;&nbsp;&nbsp;&nbsp;フォロー中 {{ followingCount }} 人</a> </b>
+                <FollowingComponent v-if="showFollows" 
+                @close="showFollows = false" 
+                :follows="ff" 
+                :followComponentTittle="followComponentTittle"
+                />
+                <br><br>
             </nobr>
         </div>
         <hr>
@@ -51,7 +60,6 @@ export default {
         if (userId) {
             store.commit('SETUSERID', userId)
             this.userId = userId
-            alert('getItem' + this.userId)
         }
 
         this.followJudgement()
@@ -84,7 +92,8 @@ export default {
             homeTableObject: null,
             commentTableObject: null,
             showLikeJudge: false,
-            postCount: null
+            postCount: null,
+            followComponentTittle:null
         }
     },
 
@@ -157,7 +166,7 @@ export default {
         unfollow() {
             Service.post("unfollow", this.followsid
             ).then(response => {
-                alert(response)
+                console.log(response)
                 this.aaa = false;
                 this.followerCount -= 1;
             }).catch(error => {
@@ -196,15 +205,15 @@ export default {
             }
         },
         getVueCliUrl(imgUrl) {
-            this.vueCliUrl = require('../assets/post/' + imgUrl);
-            return this.vueCliUrl;
+            const imgUrls = imgUrl.split(',')
+            return require(`../assets/post/${imgUrls[0]}`);
         },
         getFollowers() {
             Service.post("getFollowers", store.state.userId).then(response => {
                 console.log(response);
                 this.showFollows = true;
-                // this.followers = response.data;
                 this.ff = response.data;
+                this.followComponentTittle = 'フォロワー';
             }).catch(error => {
                 alert(error)
             })
@@ -213,7 +222,7 @@ export default {
             Service.post("getFollowings", store.state.userId).then(response => {
                 console.log(response);
                 this.showFollows = true;
-                // this.followings = response.data;
+                this.followComponentTittle = 'フォロー中';
                 this.ff = response.data;
             }).catch(error => {
                 alert(error)
@@ -243,10 +252,14 @@ export default {
 }
 </script>
 
-<!-- <style>
-#main {
-  box-sizing: border-box;
-  margin-left: 70px;
-  /* padding: 20px 40px; */
+<style>
+.btn-unfollow {
+    color: rgb(198, 21, 21);
+    font-weight: 700;
 }
-</style> -->
+
+.btn-follow {
+    color: rgb(2, 114, 220);
+    font-weight: 700;
+}
+</style>

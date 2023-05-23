@@ -1,18 +1,22 @@
 <template>
-  <div id="main">
+  <div id="main" v-cloak>
     <!-- homeTableObject: {{ homeTableObject }}
     qwerty: {{ qwerty }} -->
-    <div class="photo-grid">
+    <div class="home-photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
-        <img class="photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
+        <div v-if="userProfile[index] != null">   <!--- 値が入るまで実行されない森上あああああああああああああああああああああああああ -->
+          <img  class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+          <span> {{ userOnamae[index] }}</span>
+        </div>
+          <!-- {{   getVueCliUrlProfile(homeTable.userid,index) }} -->
+        <img class="home-photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
         :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
-        :show="showLikeJudge"
-        @close="showHomeSearchComponent = false"
+        :show="showLikeJudge" @close="showHomeSearchComponent = false"
         @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)"
-        @refresh-likes="updateLikes(clickImgIndex,homeTableObject.id)" />
+        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
   </div>
@@ -29,19 +33,28 @@ export default {
   data() {
     return {
       showFollowings: true,
-      homeTables: null,
+      homeTables: [],
       homeTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
       showHomeSearchComponent: false,
       clickImgIndex: null,
       commentTableObject: null,
       qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
       showDeleteButton: false,
-      showLikeJudge: false
+      showLikeJudge: false,
+      userDate: {},
+      userOnamae: [],
+      userProfile: []
 
     }
   },
   created() {
     this.home()
+    // if(this.homeTables) {
+    //   this.homeTables.forEach((homeTable,index) => {
+    //     alert(homeTable.userid + ' -------- ' + index)
+    //     this.getVueCliUrlProfile(homeTable.userid,index);
+    //   })
+    // }
   },
   methods: {
     showFollowing() {
@@ -52,15 +65,49 @@ export default {
       this.showFollowings = false
       this.showRandoms = true
     },
-    home() {
-      Service.post("home", store.state.id
-      ).then(response => {
-        console.log(response);
-        this.homeTables = response.data;
-      }).catch(error => {
-        alert(error)
-      })
-    },
+    // home() {
+    //   Service.post("home", store.state.id
+    //   ).then(response => {
+    //     console.log(response);
+    //     this.homeTables = response.data;
+    //     //拡張for文でユーザ情報を取ってきてる
+    //     this.homeTables.forEach((homeTable) => {
+    //     Service.post('getuser', homeTable.userid).then(response => {
+    //       // alert(homeTable.userid)
+    //       console.log(response);
+    //       this.userOnamae.push(response.data.name);
+    //       this.userProfile.push(response.data.profile_picture);
+          
+    //     }).catch(error => {
+    //       alert(error);
+    //     })
+    //   })
+    //   }).catch(error => {
+    //     alert(error)
+    //   })
+    // },
+    //プロフィールの順番を整えるために非同期処理を並列実行するようにした森上あああああああああああああああああああああ
+    async home() {
+    try {
+      const response = await Service.post("home", store.state.id);
+      console.log(response);
+      this.homeTables = response.data;
+
+      const getUserPromises = this.homeTables.map(homeTable => {
+        return Service.post('getuser', homeTable.userid);
+      });
+
+      const userResponses = await Promise.all(getUserPromises);
+      console.log(userResponses);
+
+      userResponses.forEach(response => {
+        this.userOnamae.push(response.data.name);
+        this.userProfile.push(response.data.profile_picture);
+      });
+    } catch (error) {
+      alert(error);
+    }
+  },
     showHomePages(index, postId, userId) {
       this.showHomeSearchComponent = true;
       this.homeTableObject = this.homeTables[index];
@@ -88,9 +135,8 @@ export default {
         alert(error)
       })
       this.likeJudge(postId);
-
     },
-    updateLikes(index,postId) {
+    updateLikes(index, postId) {
       Service.post("home", store.state.id).then(response => {
         console.log(response);
         this.homeTables = response.data;
@@ -102,7 +148,12 @@ export default {
       })
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
+    },
+    getVueCliUrlProfile(profileName) {
+        return require(`../assets/profile/${profileName}`);
+      
     },
     likeJudge(postId) {
       Service.post('/likejudge', {
@@ -118,3 +169,37 @@ export default {
   }
 }
 </script>
+<style>
+[v-cloak] {
+  display: none;
+}
+
+
+.home-photo-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  /* grid-gap: 0px; */
+}
+
+.home-photo-grid-img {
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  cursor: pointer;
+  /* grid-row: auto; */
+  margin-bottom: 10px;
+}
+
+.home-search-profile {
+  margin-right: 5px;
+    /* 画像と名前の間に余白を設ける */
+    margin-bottom: -4px;
+    /* 画像を少し下げる */
+    border-radius: 50%;
+    /* 角丸半径を50%にする(=円形にする) */
+    width: 30px;
+    /* ※縦横を同値に */
+    height: 30px;
+    /* ※縦横を同値に */
+}
+</style>

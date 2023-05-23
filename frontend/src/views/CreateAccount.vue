@@ -7,9 +7,11 @@
             <br><br>
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
-            <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
-            <input v-else type="text" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
-            <a @click="showPassword = !showPassword">👀</a>
+            <div style="position: relative;">
+                <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
+                <input v-else type="text" name="userpass" v-model=valuePass placeholder="パスワード" style="font-size:30px;"/>
+                <a style="position: absolute; right: 570px; top: 5px;" @click="showPassword = !showPassword">👀</a>
+            </div>
             <br><br>
             <br>
             <span class="button001"><a  type="button" @click="create">登録する</a></span> 
@@ -50,11 +52,13 @@ export default {
                     store.commit('SETPAGEBOOLEAN',true)
                     store.commit('SETID', response.data.id);  //responseされたIdをストア内stateのidにセット
                     store.commit('SETNAME', response.data.name);
-                    store.commit('SETPROFILE', response.data.profile_picture);
+                    if(response.data.profile_picture){
+                        store.commit('SETPROFILE', response.data.profile_picture);
+                        sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    }
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
-                    sessionStorage.setItem('profile_picture', response.data.profile_picture);
                     alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
                     alert('アカウント作成できません。');

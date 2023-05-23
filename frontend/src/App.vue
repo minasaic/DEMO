@@ -12,7 +12,8 @@
               ホーム</span></router-link>
           <br>
           <br>
-          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png" alt="LOGO">
+          <router-link to="/search"><span class="btn_hover"><img class="photo" src="./assets/system/search.png"
+                alt="LOGO">
               検索</span></router-link>
           <br>
           <br>
@@ -20,16 +21,20 @@
               作成</span></router-link>
           <br>
           <br>
-          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png" alt="LOGO">
+          <router-link to="/likespage"><span class="btn_hover"><img class="photo" src="./assets/system/heart.png"
+                alt="LOGO">
               いいね一覧
             </span>
           </router-link>
           <br>
           <br>
-          <router-link to="/mypage"><span class="btn_hover"><img class="photo" src="./assets/system/profile.png"
-                alt="LOGO" width="20" height="20">
+          <router-link to="/mypage">
+            <span class="btn_hover">
+              <img v-if="getVueCliUrl() !== 100" class="photo" :src="getVueCliUrl()" alt="LOGO">
+              <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
               プロフィール
-            </span></router-link>
+            </span>
+          </router-link>
           <br><br><br>
           <div>
             <a @click="toggleMenu" class="btn_hover"><img class="photo" src="./assets/system/menu.png" alt="LOGO"> その他</a>
@@ -38,8 +43,7 @@
               <li><a class="btn_hover" @click="showModal = true">
                   設定
                 </a>
-                <OptionModalView v-if="showModal" :title="modalTitle" @close="showModal = false"
-                  @save="showModal = false">
+                <OptionModalView v-if="showModal" @close="showModal = false" @save="showModal = false">
                 </OptionModalView>
               </li>
               <li><a class="btn_hover" @click="logOut">ログアウト</a></li>
@@ -75,7 +79,7 @@ import OptionModalView from "./components/OptionModalView.vue"
 export default {
   name: "App",
   created() {
-    //セッションストレージから情報を読み込む
+    //セッションストレージから情報を読み込む   
     const id = sessionStorage.getItem("id");
     const name = sessionStorage.getItem("name");
     const profilePicture = sessionStorage.getItem("profile_picture");
@@ -84,8 +88,10 @@ export default {
     if (id && name && pageBoolean) {
       store.commit("SETID", id);
       store.commit("SETNAME", name);
-      store.commit("SETPROFILE", profilePicture);
       store.commit("SETPAGEBOOLEAN", pageBoolean);
+      if(profilePicture != null){
+      store.commit("SETPROFILE", profilePicture);
+      }
     }
   },
   data() {
@@ -93,7 +99,6 @@ export default {
       login: false,
       isOpen: false, // メニューバーが開いているかどうかの状態を管理
       showModal: false,
-      modalTitle: 'アカウント情報変更'
     };
   },
   methods: {
@@ -106,7 +111,14 @@ export default {
       sessionStorage.removeItem("name");
       sessionStorage.removeItem("profile_picture");
       store.commit('SETPAGEBOOLEAN', false);
-    }
+      store.commit('SETPROFILE', null);
+    },
+    getVueCliUrl() {
+      if (store.state.profile != null) {
+        return require('./assets/profile/' + store.state.profile);
+      }
+      return 100;
+    },
   },
   components: {
     LoginView,

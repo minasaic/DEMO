@@ -5,13 +5,18 @@
     <div class="photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
+        <div>
+          <img class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+          <span> {{ userOnamae[index] }}</span>
+        </div>
         <img class="photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
-        :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton" :show="showLikeJudge"
-        @close="showHomeSearchComponent = false"
+        :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
+        :show="showLikeJudge" @close="showHomeSearchComponent = false"
         @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)"
-        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
+        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" 
+        @refresh-page="showHomeSearchComponent = false" />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
   </div>
@@ -35,8 +40,9 @@ export default {
       commentTableObject: null,
       qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
       showDeleteButton: false,
-      showLikeJudge: false
-
+      showLikeJudge: false,
+      userOnamae: [],
+      userProfile: []
     }
   },
   created() {
@@ -48,6 +54,16 @@ export default {
       ).then(response => {
         console.log(response);
         this.homeTables = response.data;
+        //拡張for文でユーザ情報を取ってきてる
+        this.homeTables.forEach((homeTable) => {
+          Service.post('getuser', homeTable.userid).then(response => {
+            console.log(response);
+            this.userOnamae.push(response.data.name);
+            this.userProfile.push(response.data.profile_picture);
+          }).catch(error => {
+            alert(error);
+          })
+        })
       }).catch(error => {
         alert(error)
       })
@@ -92,7 +108,11 @@ export default {
       })
     },
     getVueCliUrl(imgUrl) {
-      return require(`../assets/post/${imgUrl}`);
+      const imgUrls = imgUrl.split(',')
+      return require(`../assets/post/${imgUrls[0]}`);
+    },
+    getVueCliUrlProfile(imgUrl) {
+      return require(`../assets/profile/${imgUrl}`);
     },
     likeJudge(postId) {
       Service.post('/likejudge', {

@@ -7,9 +7,12 @@
             <br><br>
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
-            <input v-if="!showPassword" type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-            <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-            <a @click="showPassword = !showPassword">👀</a>
+            <div style="position: relative;">
+                <input v-if="!showPassword" type="passsword" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
+                <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
+                <a style="position: absolute; right: 40%; top: 50%; transform: translateY(-50%);" @click="showPassword = !showPassword">👀</a>
+            </div>
+
             <br><br>
             <br>
             <span class="button001"><a  type="button" @click="logins">ログイン</a></span>         
@@ -53,11 +56,15 @@ export default {
                     store.commit('SETPAGEBOOLEAN', true);
                     store.commit('SETID', response.data.id);        //responseされたIdをストア内stateのidにセット
                     store.commit('SETNAME', response.data.name);
+                    if(response.data.profile_picture != null){  //森上ああああああああああああああああああああああああああああああああああ
                     store.commit('SETPROFILE', response.data.profile_picture);
+                    }
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
+                    if(response.data.profile_picture != null){   //森上あああああああああああああああああああああああああああああああ
                     sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    }
                     sessionStorage.setItem('page_boolean', true);
                     alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
