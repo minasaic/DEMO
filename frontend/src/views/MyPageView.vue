@@ -4,7 +4,7 @@
       <nobr id="sub"><img v-if="profilea() !== null" :src="profilea()" class="round-image" alt="プロフィール画像">
         <p v-else>プロフィール写真をアップロードしてください。</p>
       </nobr>
-      <option-modal-view v-if="showModal" @close="showModal = false" @save="showModal = false" :user="user" @reload="reloadPage()">
+      <option-modal-view v-if="showModal" @close="showModal = false" @save="showModal = false">
       </option-modal-view>
       <br>
       <br>
@@ -16,14 +16,9 @@
 
         <a @click="showModal = true">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
           <img class="photo" src="../assets/system/set.png" alt="LOGO" width="20" height="20">
-        </a>
-        <br>
-        <!-- <b> {{ user.birthday }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; -->
-        <!-- <b> {{ user.sex }} </b> -->
-        <br>
-        <!-- <b class="introduction" style="text-align: left"> {{ user.introduction }} </b> -->
-        <br>
-        <br>
+        </a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b v-if="$store.state.userData && $store.state.userData.birthday !== null"> {{ $store.state.userData.birthday }} </b>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+        <b v-if="$store.state.userData && $store.state.userData.sex !== null"> {{ $store.state.userData.sex }} </b>
         <br>
         <br>
         <br>
@@ -35,6 +30,9 @@
         <FollowingComponent v-if="showFollows" :follows="ff" :followComponentTittle="followComponentTittle"
           @close="showFollows = false" />
         <br>
+        <br>
+        <br>
+        <b v-if="$store.state.userData && $store.state.userData.introduction !== null" class="introduction" style="text-align: left"> {{ $store.state.userData.introduction }} </b>
         <br>
       </nobr>
     </div>
@@ -73,8 +71,6 @@ export default {
     this.myPage()
     this.getFollowerCount()
     this.getPostCount()
-    this.getUserIntroductionAndSexAndBirthday()
-
   },
   data() {
     return {
@@ -86,10 +82,9 @@ export default {
       postTables: null,
       showModal: false,
       showMyPageComponent: null,
-      postTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
+      postTableObject: null,
       commentTableObject: null,
       clickImgIndex: null,
-      modalTitle: 'アカウント情報変更',
       postCount: null,
       ff: null,
       followComponentTittle: null,
@@ -100,7 +95,6 @@ export default {
         "name": store.state.name,
         "profile_picture": store.state.profile
       },
-      user: null
     }
   },
   methods: {
@@ -207,16 +201,6 @@ export default {
         this.showLikeJudge = response.data;
       }).catch(error => {
         alert(error);
-      })
-    },
-    getUserIntroductionAndSexAndBirthday() {
-      Service.post("getuser", store.state.id
-      ).then(response => {
-        //alert(response.data.introduction);
-        console.log(response);
-        this.user = response.data;
-      }).catch(error => {
-        alert(error)
       })
     },
     reloadPage() {

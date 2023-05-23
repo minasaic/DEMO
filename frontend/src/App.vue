@@ -93,13 +93,14 @@ export default {
       store.commit("SETPROFILE", profilePicture);
       }
     }
+    store.commit("SETUSERDATA",sessionStorage.getItem("userData"))
   },
   data() {
     return {
       login: false,
       isOpen: false, // メニューバーが開いているかどうかの状態を管理
       showModal: false,
-    };
+    }
   },
   methods: {
     toggleMenu() {
@@ -110,6 +111,7 @@ export default {
       sessionStorage.removeItem("id");
       sessionStorage.removeItem("name");
       sessionStorage.removeItem("profile_picture");
+      sessionStorage.removeItem("userData")
       store.commit('SETPAGEBOOLEAN', false);
       store.commit('SETPROFILE', null);
     },

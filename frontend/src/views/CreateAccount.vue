@@ -59,6 +59,7 @@ export default {
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
+                    this.getUserData();
                     alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
                     alert('アカウント作成できません。');
@@ -66,6 +67,16 @@ export default {
             }).catch(error => {
                 console.log(error);
                 alert('エラー起きました。')
+            })
+        },
+        getUserData() {
+            Service.post("getuser", store.state.id
+            ).then(response => {
+                console.log(response);
+                store.commit('SETUSERDATA', response.data);
+                sessionStorage.setItem('userData', response.data);
+            }).catch(error => {
+                alert(error)
             })
         },
     }

@@ -1,15 +1,15 @@
-INSERT INTO user(id,name,password,profile_picture)VALUES
-(1,'森上','pass','que-14237809059.jpeg'),
-(2,'qqq','qqq','imagesooo.png'),
-(3,'崔','pass','11b274c6-fa3a-4947-9612-333ebcccb750.jpg'),
-(4,'矢口','pass','yaguchyan.png'),
-(5,'稲垣','pass','images2.jpeg'),
-(6,'三間','pass','toris-1024x1024.png'),
-(7,'中村','pass','pkjhjkl.jpeg'),
-(8,'長澤','pass','pp.jpeg'),
-(9,'加藤','pass','images.jpeg'),
-(10,'宮澤','pass','aa.png'),
-(11,'古郡','pass','images.png');
+INSERT INTO user(id,name,password,profile_picture,introduction,sex,birthday )VALUES
+(1,'森上','pass','que-14237809059.jpeg','モーリやで','男性','1996-06-06'),
+(2,'qqq','qqq','imagesooo.png','私は誰?','答えたくない','2000-01-01'),
+(3,'崔','pass','11b274c6-fa3a-4947-9612-333ebcccb750.jpg','日本語普通に話せるよー！','女性','1996-06-29'),
+(4,'矢口','pass','yaguchyan.png','世界中の貧しい子どもたちが幸せになりますように。','男性','1996-03-28'),
+(5,'稲垣','pass','images2.jpeg','犬大好き!ワンちゃん!','女性','1996-05-31'),
+(6,'三間','pass','toris-1024x1024.png','最近髪赤く染めた','女性','1997-10-09'),
+(7,'中村','pass','pkjhjkl.jpeg','30歳までに結婚したい!!','女性','1997-11-17'),
+(8,'長澤','pass','pp.jpeg','神栖から来ました。都会の人仲良くしてください','男性','1997-08-16'),
+(9,'加藤','pass','images.jpeg','俺は九州男児だから偉い','男性','1997-01-02'),
+(10,'宮澤','pass','aa.png','筋肉増強中 プロテイン！生卵！','男性','1997-03-03'),
+(11,'古郡','pass','images.png','俺は1課!!','男性','1995-06-02');
 
 
 INSERT INTO posts(id,userid,image,caption,likes)VALUES

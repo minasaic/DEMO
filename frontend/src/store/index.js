@@ -11,6 +11,7 @@ export default new Vuex.Store({
     name: null,
     userId: null,
     profile: null,
+    userData: null
   },
   actions:{
     setid(context,value){
@@ -35,6 +36,9 @@ export default new Vuex.Store({
     },
     SETPROFILE(state,value){
       return state.profile =  value;
+    },
+    SETUSERDATA(state, value) {
+      return state.userData = value;
     }
 
   },

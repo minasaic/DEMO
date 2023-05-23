@@ -6,7 +6,7 @@
           <h5 class="modal-title">アカウント情報編集</h5>
           <span>
             <nobr>
-              <img v-if="!path" :src="getVueCliProfile($store.state.profile)" alt="現在のプロフィール画像" class="round-image">
+              <img v-if="!path && $store.state.profile" :src="getVueCliProfile($store.state.profile)" alt="現在のプロフィール画像" class="round-image">
               <img v-else :src="path" alt="選択した画像" class="round-image">
               <br>
               <label for="file-upload" class="custom-file-upload">
@@ -42,17 +42,20 @@
               生年月日:
               <div>
                 <select @click.once="year" v-model="selectedYear" ref="yearSelect">
-                  <option value=""> {{ y }} 年</option>
+                  <option v-if="store.state.userData.birthday" value=""> {{ y }} 年</option>
+                  <option v-else value="">年</option>
                   <!-- 他の年を追加することもできます -->
                 </select>
 
                 <select @click.once="month" v-model="selectedMonth" ref="monthSelect">
-                  <option value=""> {{ m }} 月</option>
+                  <option v-if="store.state.userData.birthday" value=""> {{ m }} 月</option>
+                  <option  v-else value="">月</option>
                   <!-- 他の月を追加することもできます -->
                 </select>
 
                 <select @click.once="date" v-model="selectedDay" ref="dateSelect">
-                  <option value=""> {{ d }} 日</option>
+                  <option  v-if="store.state.userData.birthday" value=""> {{ d }} 日</option>
+                  <option v-else value="">日</option>
                   <!-- 他の日を追加することもできます -->
                 </select>
               </div>
@@ -80,32 +83,28 @@ import { Service } from '@/service/service'
 import store from '@/store';
 export default {
   name: 'OptionModalView',
-  props:{
-    user:{
-      type: Object,
-      require: true
-    }
-  },
   created() {
-    // this.getVueCliProfile()
+    alert(store.state.userData)
+    
   },
   data() {
     return {
       changeUserImg: null,
       path: null,
-      changeUserName: this.user.name,
-      changeUserPassword: this.user.password,
-      changeUserIntroduction: this.user.introduction,
-      changeUserSex: this.user.sex,
+      changeUserName: store.state.userData.name,
+      changeUserPassword: store.state.userData.password,
+      changeUserIntroduction: store.state.userData.introduction,
+      changeUserSex: store.state.userData.sex,
       changeUserBirthday: '',
       selectedYear:  '',
-      y: this.user.birthday.split('-')[0],
+      y: store.state.userData.birthday.split('-')[0],
       selectedMonth: '',
-      m: this.user.birthday.split('-')[1],
+      m: store.state.userData.birthday.split('-')[1],
       selectedDay: '',
-      d: this.user.birthday.split('-')[2],
+      d: store.state.userData.birthday.split('-')[2],
       profile: null,
-      showPassword: false
+      showPassword: false,
+      store: store
     }
   },
   methods: {

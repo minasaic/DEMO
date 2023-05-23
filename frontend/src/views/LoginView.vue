@@ -8,18 +8,21 @@
             <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
             <br><br>
             <div style="position: relative;">
-                <input v-if="!showPassword" type="passsword" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-                <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード" style="font-size:30px;"/>
-                <a style="position: absolute; right: 40%; top: 50%; transform: translateY(-50%);" @click="showPassword = !showPassword">👀</a>
+                <input v-if="!showPassword" type="passsword" name="userpass" v-model=valuePass @keyup.enter="logins"
+                    placeholder="パスワード" style="font-size:30px;" />
+                <input v-else type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
+                    style="font-size:30px;" />
+                <a style="position: absolute; right: 40%; top: 50%; transform: translateY(-50%);"
+                    @click="showPassword = !showPassword">👀</a>
             </div>
 
             <br><br>
             <br>
-            <span class="button001"><a  type="button" @click="logins">ログイン</a></span>         
+            <span class="button001"><a type="button" @click="logins">ログイン</a></span>
             <br>
             <span>アカウントをお持ちではないですか？</span>
-            <span style="color:#0000FF;"><a  type="button" @click="goToSigup">登録する</a></span>
-            
+            <span style="color:#0000FF;"><a type="button" @click="goToSigup">登録する</a></span>
+
         </div>
 
     </div>
@@ -56,16 +59,17 @@ export default {
                     store.commit('SETPAGEBOOLEAN', true);
                     store.commit('SETID', response.data.id);        //responseされたIdをストア内stateのidにセット
                     store.commit('SETNAME', response.data.name);
-                    if(response.data.profile_picture != null){  //森上ああああああああああああああああああああああああああああああああああ
-                    store.commit('SETPROFILE', response.data.profile_picture);
+                    if (response.data.profile_picture != null) {  //森上ああああああああああああああああああああああああああああああああああ
+                        store.commit('SETPROFILE', response.data.profile_picture);
                     }
                     // セッションストレージに保存
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
-                    if(response.data.profile_picture != null){   //森上あああああああああああああああああああああああああああああああ
-                    sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                    if (response.data.profile_picture != null) {   //森上あああああああああああああああああああああああああああああああ
+                        sessionStorage.setItem('profile_picture', response.data.profile_picture);
                     }
                     sessionStorage.setItem('page_boolean', true);
+                    this.getUserData();
                     alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
                     alert("パスワードが間違ってます。");
@@ -75,12 +79,21 @@ export default {
                 alert("名前が間違っているか、アカウントが存在しません。")
             })
         },
+        getUserData() {
+            Service.post("getuser", store.state.id
+            ).then(response => {
+                console.log(response);
+                store.commit('SETUSERDATA', response.data);
+                sessionStorage.setItem('userData', response.data);
+            }).catch(error => {
+                alert(error)
+            })
+        },
     }
 }
 </script>
 
 <style>
-
 /* 001 */
 .button001 a {
     background: #eee;
@@ -96,10 +109,12 @@ export default {
     transition: 0.3s ease-in-out;
     font-weight: 500;
 }
+
 .button001 a:hover {
     background: #313131;
     color: #FFF;
 }
+
 .button001 a:after {
     content: '';
     width: 5px;
@@ -113,9 +128,7 @@ export default {
     border-radius: 1px;
     transition: 0.3s ease-in-out;
 }
+
 .button001 a:hover:after {
     border-color: #FFF;
-}
-
-
-</style>
+}</style>
