@@ -7,14 +7,16 @@
       <img :src="currentImagePath" class="selected-image">
       <a class="next-button" @click="nextImage">&gt;</a>
     </div>
+    <div v-show="qazx" style="color: red;">写真は最大4枚まで投稿できます</div>
     <div class="image-list">
       <div v-for="(path, index) in paths" :key="index" class="image-item"
         :class="{ 'active': index === currentImageIndex }" @click="setCurrentImage(index)">
         <img :src="path" :alt="'Image ' + (index + 1)">
         <a @click="deletefiles(index)">X</a>
       </div>
-      <label v-if="files[0] != null" for="file-upload" class="custom-file-upload">
-        <i class="fa fa-cloud-upload"></i> コンピューターから選択
+      
+      <label v-if="files[0] != null && files[3] == null" for="file-upload" class="custom-file-upload">
+        <i class="fa fa-cloud-upload"></i> 画像を追加
       </label>
       <input id="file-upload" type="file" multiple @change="uploadFile">
     </div>
@@ -41,6 +43,7 @@ export default {
       paths: [],
       currentImageIndex: 0,
       formData: new FormData(),
+      qazx: false
     };
   },
   computed: {
@@ -50,12 +53,23 @@ export default {
   },
   methods: {
     uploadFile(e) {
-      this.files = e.target.files;
-      for (let i = 0; i < this.files.length; i++) {
-        this.formData.append("file", this.files[i]);
-      }
-      for (let i = 0; i < this.files.length; i++) {
-        this.paths.push(URL.createObjectURL(this.files[i]));
+      const newFiles = Array.from(e.target.files);
+      const totalFiles = this.files.length + newFiles.length;
+
+      if (totalFiles <= 4) {
+        this.files.push(...newFiles);
+
+        for (let i = 0; i < newFiles.length; i++) {
+          this.formData.append("file", newFiles[i]);
+        }
+
+        for (let i = 0; i < newFiles.length; i++) {
+          this.paths.push(URL.createObjectURL(newFiles[i]));
+        }
+
+        this.qazx = false;
+      } else {
+        this.qazx = true;
       }
     },
     post() {
@@ -96,16 +110,15 @@ export default {
     },
     deletefiles(index) {
       this.paths.splice(index, 1);
-      const filess = this.formData.getAll('file');
+      this.files.splice(index, 1);
       this.formData.delete('file');
-      for(let i = 0; i < filess.length ;i++) {
-        if (i !== index) {
-          this.formData.append('file',filess[i]);
-        }
+
+      for (let i = 0; i < this.files.length; i++) {
+        this.formData.append("file", this.files[i]);
       }
-      //削除の時に削除後のformData('file')がコンソルされる
-      for (var pair of this.formData.entries()) {
-        console.log(pair[0], pair[1]);
+
+      if (this.files.length <= 4) {
+        this.qazx = false;
       }
     }
   }
