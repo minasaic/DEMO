@@ -42,7 +42,7 @@ public class TestService {
 
     // ログインチェック
     public boolean loginUser(String name, String password) {
-        User user = urepo.findByName(name);
+        User user = urepo.findByName(name).get();
         if (user.getPassword().equals(password)) {
             return true;
         }
@@ -50,7 +50,7 @@ public class TestService {
     }
 
     public Integer getIdByName(String username) {
-        return urepo.findByName(username).getId();
+        return urepo.findByName(username).get().getId();
     }
 
     public String getProfileById(Integer id) {
@@ -59,11 +59,14 @@ public class TestService {
 
     // 新規ユーザー登録
     public boolean createUser(String name, String password) {
+        if(!urepo.findByName(name).isPresent()){
         User user = new User();
         user.setName(name);
         user.setPassword(password);
         urepo.save(user);
         return true;
+        }
+        return false;
     }
 
     // ホームページ

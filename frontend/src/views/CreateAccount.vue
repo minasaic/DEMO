@@ -59,7 +59,7 @@ export default {
                 password: this.valuePass
             }).then(response => {           //ログイン成功時の処理(axios通信成功時)
                 console.log(response);
-                if (response.data.id !== null) {
+                if (response.data.id != null) {
                     this.login = true;
                     store.commit('SETPAGEBOOLEAN',true)
                     store.commit('SETID', response.data.id);  //responseされたIdをストア内stateのidにセット
@@ -74,7 +74,7 @@ export default {
                     this.getUserData();
                     alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
                 } else {
-                    alert('アカウント作成できません。');
+                    alert('既に同じ名前が存在しています。\n別の名前で登録してください。');
                 }
             }).catch(error => {
                 console.log(error);

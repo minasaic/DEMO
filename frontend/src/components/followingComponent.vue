@@ -5,6 +5,7 @@
             <div class="popup-body">
                 <div class="popup-header">
                     {{followComponentTittle}}
+                    <hr>
                 </div>
                 <div  v-if="follows[0] !== undefined">
                     <div v-for="(following, index) in follows" :key="following.id" >
