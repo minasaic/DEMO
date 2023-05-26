@@ -5,7 +5,7 @@
     <div class="photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
-        <div>
+        <div v-if="userProfile[index] != null" @click="goToUserPage(homeTable.userid)" class="profile-data">
           <img class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
           <span> {{ userOnamae[index] }}</span>
         </div>
@@ -15,8 +15,7 @@
         :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
         :show="showLikeJudge" @close="showHomeSearchComponent = false"
         @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)"
-        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" 
-        @refresh-page="showHomeSearchComponent = false" />
+        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" @refresh-page="showHomeSearchComponent = false" />
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
   </div>
@@ -49,24 +48,26 @@ export default {
     this.getLikes()
   },
   methods: {
-    getLikes() {
-      Service.post("getlikes", store.state.id
-      ).then(response => {
+    async getLikes() {
+      try {
+        const response = await Service.post("getlikes", store.state.id);
         console.log(response);
         this.homeTables = response.data;
-        //拡張for文でユーザ情報を取ってきてる
-        this.homeTables.forEach((homeTable) => {
-          Service.post('getuser', homeTable.userid).then(response => {
-            console.log(response);
-            this.userOnamae.push(response.data.name);
-            this.userProfile.push(response.data.profile_picture);
-          }).catch(error => {
-            alert(error);
-          })
+
+        const getUserPromises = this.homeTables.map(homeTable => {
+          return Service.post('getuser', homeTable.userid);
+
         })
-      }).catch(error => {
-        alert(error)
-      })
+        const userResponses = await Promise.all(getUserPromises);
+        console.log(userResponses);
+
+        userResponses.forEach(response => {
+          this.userOnamae.push(response.data.name);
+          this.userProfile.push(response.data.profile_picture);
+        });
+      } catch (error) {
+        alert(error);
+      }
     },
     showHomePages(index, postId, userId) {
       this.showHomeSearchComponent = true;
@@ -125,6 +126,15 @@ export default {
         alert(error);
       })
     },
+    goToUserPage(userId) {
+      if (userId == store.state.id) {
+        this.$router.push('/mypage');
+      } else {
+        sessionStorage.setItem('user_id', userId);
+        store.commit('SETUSERID', userId);
+        this.$router.push('/userpage');
+      }
+    }
   }
 }
 </script>

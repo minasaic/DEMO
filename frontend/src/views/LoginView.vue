@@ -5,22 +5,22 @@
             <img src="../assets/system/mainlogo.png" alt="LOGO" width="400" height="100">
             <br><br><br><br>
             <br><br>
-            <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
+            <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px; " @input="validateInput" />
             <br><br>
-            <div style="position: relative;">
-                <div v-show="!showPassword">
+            <div>
+                <div v-show="!showPassword" style="position: relative;">
                     <input type="password" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
                         style="font-size:30px;" />
-                    <a @click="showPassword = !showPassword">
-                        <img style="width: 2%;" src="../assets/system/noeye.png" alt="">
+                    <a @click="showPassword = !showPassword" style=" margin-left: -23px; ">
+                        <img style="width: 20px; height: 15px;margin-bottom: 2px;" src="../assets/system/eye.png" alt="">
                     </a>
                 </div>
 
-                <div v-show="showPassword">
+                <div v-show="showPassword" style="position: relative;">
                     <input type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
                         style="font-size:30px;" />
-                    <a @click="showPassword = !showPassword">
-                        <img style="width: 2%;" src="../assets/system/eye.png" alt="">
+                    <a @click="showPassword = !showPassword" style=" margin-left: -23px;">
+                        <img style="width: 20px; height: 20px;" src="../assets/system/noeye.png" alt="">
                     </a>
                 </div>
             </div>
@@ -48,8 +48,8 @@ export default {
     data() {
         return {
 
-            valueName: null,
-            valuePass: null,
+            valueName: '',
+            valuePass: '',
             showPassword: false
         }
     },
@@ -59,34 +59,44 @@ export default {
             store.commit('SETSIGNSIGU', false);
         },
         logins() {
-            Service.post("login", {
-                name: this.valueName,
-                password: this.valuePass
-            }).then(response => {       //ログイン成功時の処理(axios通信成功時)
-                console.log(response);
-                if (response.data.id !== null) {
-                    store.commit('SETPAGEBOOLEAN', true);
-                    store.commit('SETID', response.data.id);        //responseされたIdをストア内stateのidにセット
-                    store.commit('SETNAME', response.data.name);
-                    if (response.data.profile_picture != null) {  //森上ああああああああああああああああああああああああああああああああああ
-                        store.commit('SETPROFILE', response.data.profile_picture);
-                    }
-                    // セッションストレージに保存
-                    sessionStorage.setItem('id', response.data.id);
-                    sessionStorage.setItem('name', response.data.name);
-                    if (response.data.profile_picture != null) {   //森上あああああああああああああああああああああああああああああああ
-                        sessionStorage.setItem('profile_picture', response.data.profile_picture);
-                    }
-                    sessionStorage.setItem('page_boolean', true);
-                    this.getUserData();
-                    alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
-                } else {
-                    alert("パスワードが間違ってます。");
+            if (this.valueName == '' || this.valuePass == '' ) {
+                if (this.valueName == '' && this.valuePass != '' ) {
+                    alert('ユーザーネームを入力してください。');
+                } else if (this.valueName != '' && this.valuePass == '') {
+                    alert('パスワードを入力してください。');
+                } else if(this.valueName == '' && this.valuePass == '') {
+                    alert('ユーザーネームとパスワードを入力してください。');
                 }
-            }).catch(error => {
-                console.log(error);
-                alert("名前が間違っているか、アカウントが存在しません。")
-            })
+            } else {
+                Service.post("login", {
+                    name: this.valueName,
+                    password: this.valuePass
+                }).then(response => {       //ログイン成功時の処理(axios通信成功時)
+                    console.log(response);
+                    if (response.data.id !== null) {
+                        store.commit('SETPAGEBOOLEAN', true);
+                        store.commit('SETID', response.data.id);        //responseされたIdをストア内stateのidにセット
+                        store.commit('SETNAME', response.data.name);
+                        if (response.data.profile_picture != null) {  //森上ああああああああああああああああああああああああああああああああああ
+                            store.commit('SETPROFILE', response.data.profile_picture);
+                        }
+                        // セッションストレージに保存
+                        sessionStorage.setItem('id', response.data.id);
+                        sessionStorage.setItem('name', response.data.name);
+                        if (response.data.profile_picture != null) {   //森上あああああああああああああああああああああああああああああああ
+                            sessionStorage.setItem('profile_picture', response.data.profile_picture);
+                        }
+                        sessionStorage.setItem('page_boolean', true);
+                        this.getUserData();
+                        alert('ID : ' + store.state.id + '\nName : ' + response.data.name + '\n' + 'PASSWORD : ' + this.valuePass );
+                    } else {
+                        alert("パスワードが間違ってます。");
+                    }
+                }).catch(error => {
+                    console.log(error);
+                    alert("名前が間違っているか、アカウントが存在しません。")
+                })
+            }
         },
         getUserData() {
             Service.post("getuser", store.state.id
@@ -98,6 +108,9 @@ export default {
                 alert(error)
             })
         },
+        validateInput() {
+            this.valueName = this.valueName.replace(/[^A-Za-z0-9_]/g, '');
+        }
     }
 }
 </script>

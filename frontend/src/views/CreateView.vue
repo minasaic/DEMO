@@ -14,9 +14,9 @@
         <img :src="path" :alt="'Image ' + (index + 1)">
         <a @click="deletefiles(index)">X</a>
       </div>
-      
+
       <label v-if="files[0] != null && files[3] == null" for="file-upload" class="custom-file-upload">
-        <i class="fa fa-cloud-upload"></i> 画像を追加
+        <i class="fa fa-cloud-upload"></i> ＋
       </label>
       <input id="file-upload" type="file" multiple @change="uploadFile">
     </div>
@@ -88,7 +88,9 @@ export default {
         .then(response => {
           console.log(response);
           this.text = "";
-          this.$router.push("/");
+          setTimeout(() => {
+            this.$router.push("/");
+          }, 1500);
         })
         .catch(error => {
           console.log(error);

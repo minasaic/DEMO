@@ -36,7 +36,6 @@
         <br>
       </nobr>
     </div>
-
     <hr>
     <!-- postsテーブル     {{ postTables}}       -->
     <div class="photo-grid">
@@ -47,7 +46,8 @@
         :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
         :show="showLikeJudge" @close="showMyPageComponent = false"
         @refresh-comment="showMyPages(clickImgIndex, postTableObject.id)"
-        @refresh-likes="updateLikes(clickImgIndex, postTableObject.id)" />
+        @refresh-likes="updateLikes(clickImgIndex, postTableObject.id)"
+        @refresh-page="reloadPage()" />
       <div v-if="showMyPageComponent" class="overlay" @click="showMyPageComponent = null"></div>
     </div>
   </div>
@@ -242,12 +242,6 @@ export default {
   z-index: 1;
 }
 
-/* #main {
-  box-sizing: border-box;
-  margin-left: 180px;
-  padding:20px 90px; 
-} */
-
 #item-box {
   display: flex;
   flex-direction: row;
@@ -279,5 +273,11 @@ export default {
 
 .userName {
   font-size: 25px;
+}
+</style>
+<style scoped>
+.main{
+  width: 1600px;
+  height: 1000px;
 }
 </style>

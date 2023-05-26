@@ -4,13 +4,15 @@
             <button class="close-button" @click="$emit('close')">X</button>
             <div class="popup-body">
                 <div class="popup-header">
-                    {{followComponentTittle}}
+                    {{ followComponentTittle }}
                     <hr>
                 </div>
-                <div  v-if="follows[0] !== undefined">
-                    <div v-for="(following, index) in follows" :key="following.id" >
+                <div v-if="follows[0] !== undefined">
+                    <div v-for="(following, index) in follows" :key="following.id">
                         <a @click="setStoreUserId(index)" class="user-link">
-                            <img class="profile-image" :src="getVueCliUrlProfile(following.profile_picture)" alt="プロフィール画像">
+                            <img v-if="following.profile_picture !== null" class="profile-image"
+                                :src="getVueCliUrlProfile(following.profile_picture)" alt="プロフィール画像">
+                            <img v-else class="profile-image" src="../assets/system/profile.png" alt="">
                             <span class="username">
                                 {{ following.name }}
                             </span>
@@ -47,11 +49,19 @@ export default {
         getVueCliUrlProfile(imgUrl) {
             return require(`../assets/profile/${imgUrl}`);
         },
-        setStoreUserId(index){
+        setStoreUserId(index) {
             this.clickUserData = this.follows[index];
-            store.commit('SETUSERID',this.clickUserData.id);
-            sessionStorage.setItem('user_id',this.clickUserData.id);
-            this.$router.push('/userpage');
+            if (this.clickUserData.id == store.state.id) {
+                this.$router.push('mypage');
+            } else {
+                store.commit('SETUSERID', this.clickUserData.id);
+                sessionStorage.setItem('user_id', this.clickUserData.id);
+                if (window.location.pathname == '/userpage') {
+                    location.reload();
+                } else {
+                    this.$router.push('/userpage');
+                }
+            }
         },
     }
 }
@@ -68,11 +78,11 @@ export default {
 }
 
 .popup-header {
-  font-size: 24px;
-  color: #616161d3;
-  margin-bottom: 20px;
-  text-align: center;
-  
+    font-size: 24px;
+    color: #616161d3;
+    margin-bottom: 20px;
+    text-align: center;
+
 }
 
 .popup-body {
@@ -94,10 +104,10 @@ export default {
 }
 
 .user-link {
-  display: flex;
-  align-items: center;
-  color: #4d4d4dd7;
-  margin-bottom: 5px;
+    display: flex;
+    align-items: center;
+    color: #4d4d4dd7;
+    margin-bottom: 5px;
 }
 
 .close-button {
@@ -110,8 +120,8 @@ export default {
 
 .profile-image {
     border-radius: 50%;
-    width: 50px ;
-    height:50px;
+    width: 50px;
+    height: 50px;
     margin-right: 12px;
 }
 </style>

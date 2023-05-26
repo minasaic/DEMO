@@ -29,11 +29,13 @@
           <br>
           <br>
           <router-link to="/mypage">
-            <span class="btn_hover">
+            <div class="btn_hover">
               <img v-if="getVueCliUrl() !== 100" class="photo-round" :src="getVueCliUrl()" alt="LOGO">
               <img v-else class="photo" src="./assets/system/profile.png" alt="LOGO">
-              プロフィール
-            </span>
+              <span class="profile-name">
+                プロフィール
+              </span>
+            </div>
           </router-link>
           <br><br><br>
           <div>
@@ -43,12 +45,13 @@
               <li><a class="btn_hover" @click="showModal = true">
                   設定
                 </a>
-                <OptionModalView v-if="showModal" @close="showModal = false" @save="showModal = false">
-                </OptionModalView>
+                
               </li>
               <li><a class="btn_hover" @click="logOut">ログアウト</a></li>
               <!-- 必要な項目を追加 -->
             </ul>
+            <OptionModalView v-if="showModal" @close="showModal = false" @save="showModal = false">
+            </OptionModalView>
           </div>
         </nav>
       </div>
@@ -131,14 +134,13 @@ export default {
 </script>
 
 <style scoped>
-#app {
+/* #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  /* text-align: center; */
   color: #2c3e50;
   margin-top: 60px;
-}
+} */
 
 #title a {
   font-family: Comic Sans MS;
@@ -222,6 +224,7 @@ nav {
   width: 25px;
   height: 25%;
   margin-top: -10px;
+  margin-block-end: -5px;
   /* transition: transform 0.1s ease-in-out; */
 }
 
@@ -229,9 +232,10 @@ nav {
   width: 25px;
   height: 25%;
   margin-top: -10px;
+  margin-block-end: -5px;
   border-radius: 50%;
-  /* transition: transform 0.1s ease-in-out; */
 }
+
 </style>
 <style>
 #main {
@@ -249,4 +253,6 @@ nav {
   /* メニューバーのスタイルを指定 */
   /* 例えば、背景色や文字色、ポジションなどを設定 */
 }
+
+
 </style>

@@ -2,21 +2,24 @@
   <div id="main" v-cloak>
     <!-- homeTableObject: {{ homeTableObject }}
     qwerty: {{ qwerty }} -->
-    <div class="home-photo-grid">
+    <div v-if="homeTables != null" class="home-photo-grid">
       <div class="photo" v-for="(homeTable, index) in homeTables " :key="homeTable.id"
         @click="showHomePages(index, homeTable.id, homeTable.userid)">
-        <div v-if="userProfile[index] != null">   <!--- 値が入るまで実行されない森上あああああああああああああああああああああああああ -->
-          <img  class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+        <div  @click="goToUserPage(homeTable.userid)" class="profile-data">
+          <!--- 値が入るまで実行されない森上あああああああああああああああああああああああああ -->
+          <img v-if="userProfile[index] != null" class="home-search-profile" :src="getVueCliUrlProfile(userProfile[index])">
+          <img v-else class="home-search-profile" src="../assets/system/profile.png" alt="">
           <span> {{ userOnamae[index] }}</span>
         </div>
-          <!-- {{   getVueCliUrlProfile(homeTable.userid,index) }} -->
+        <!-- {{   getVueCliUrlProfile(homeTable.userid,index) }} -->
         <img class="home-photo-grid-img" :src="getVueCliUrl(homeTable.image)" alt="投稿画像">
       </div>
       <HomeSearchComponent v-if="showHomeSearchComponent" :homeTableObject="homeTableObject"
-        :commentTableObject="commentTableObject" :qwerty="qwerty" :showDeleteButton="showDeleteButton"
+        :commentTableObject="commentTableObject"  :showDeleteButton="showDeleteButton"
         :show="showLikeJudge" @close="showHomeSearchComponent = false"
         @refresh-comment="showHomePages(clickImgIndex, homeTableObject.id, homeTableObject.userid)"
-        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" />
+        @refresh-likes="updateLikes(clickImgIndex, homeTableObject.id)" 
+        :qwerty="qwerty"/>
       <div v-if="showHomeSearchComponent" class="overlay" @click="showHomeSearchComponent = null"></div>
     </div>
   </div>
@@ -34,11 +37,11 @@ export default {
     return {
       showFollowings: true,
       homeTables: [],
-      homeTableObject: { "id": 3, "userid": 4, "image": "jkl.jpeg", "caption": "post", "likes": 4 },
+      homeTableObject: null,
       showHomeSearchComponent: false,
       clickImgIndex: null,
       commentTableObject: null,
-      qwerty: { "id": 4, "name": "矢口", "password": "pass", "profile_picture": "images.png" },
+      qwerty: {},
       showDeleteButton: false,
       showLikeJudge: false,
       userDate: {},
@@ -65,49 +68,28 @@ export default {
       this.showFollowings = false
       this.showRandoms = true
     },
-    // home() {
-    //   Service.post("home", store.state.id
-    //   ).then(response => {
-    //     console.log(response);
-    //     this.homeTables = response.data;
-    //     //拡張for文でユーザ情報を取ってきてる
-    //     this.homeTables.forEach((homeTable) => {
-    //     Service.post('getuser', homeTable.userid).then(response => {
-    //       // alert(homeTable.userid)
-    //       console.log(response);
-    //       this.userOnamae.push(response.data.name);
-    //       this.userProfile.push(response.data.profile_picture);
-          
-    //     }).catch(error => {
-    //       alert(error);
-    //     })
-    //   })
-    //   }).catch(error => {
-    //     alert(error)
-    //   })
-    // },
     //プロフィールの順番を整えるために非同期処理を並列実行するようにした森上あああああああああああああああああああああ
     async home() {
-    try {
-      const response = await Service.post("home", store.state.id);
-      console.log(response);
-      this.homeTables = response.data;
+      try {
+        const response = await Service.post("home", store.state.id);
+        console.log(response);
+        this.homeTables = response.data;
 
-      const getUserPromises = this.homeTables.map(homeTable => {
-        return Service.post('getuser', homeTable.userid);
-      });
+        const getUserPromises = this.homeTables.map(homeTable => {
+          return Service.post('getuser', homeTable.userid);
+        });
 
-      const userResponses = await Promise.all(getUserPromises);
-      console.log(userResponses);
+        const userResponses = await Promise.all(getUserPromises);
+        console.log(userResponses);
 
-      userResponses.forEach(response => {
-        this.userOnamae.push(response.data.name);
-        this.userProfile.push(response.data.profile_picture);
-      });
-    } catch (error) {
-      alert(error);
-    }
-  },
+        userResponses.forEach(response => {
+          this.userOnamae.push(response.data.name);
+          this.userProfile.push(response.data.profile_picture);
+        });
+      } catch (error) {
+        alert(error);
+      }
+    },
     showHomePages(index, postId, userId) {
       this.showHomeSearchComponent = true;
       this.homeTableObject = this.homeTables[index];
@@ -152,8 +134,8 @@ export default {
       return require(`../assets/post/${imgUrls[0]}`);
     },
     getVueCliUrlProfile(profileName) {
-        return require(`../assets/profile/${profileName}`);
-      
+      return require(`../assets/profile/${profileName}`);
+
     },
     likeJudge(postId) {
       Service.post('/likejudge', {
@@ -166,6 +148,15 @@ export default {
         alert(error);
       })
     },
+    goToUserPage(userId) {
+      if (userId == store.state.id) {
+        this.$router.push('/mypage');
+      } else {
+        sessionStorage.setItem('user_id', userId);
+        store.commit('SETUSERID', userId);
+        this.$router.push('/userpage');
+      }
+    }
   }
 }
 </script>
@@ -192,14 +183,19 @@ export default {
 
 .home-search-profile {
   margin-right: 5px;
-    /* 画像と名前の間に余白を設ける */
-    margin-bottom: -4px;
-    /* 画像を少し下げる */
-    border-radius: 50%;
-    /* 角丸半径を50%にする(=円形にする) */
-    width: 30px;
-    /* ※縦横を同値に */
-    height: 30px;
-    /* ※縦横を同値に */
+  /* 画像と名前の間に余白を設ける */
+  margin-bottom: -4px;
+  /* 画像を少し下げる */
+  border-radius: 50%;
+  /* 角丸半径を50%にする(=円形にする) */
+  width: 30px;
+  /* ※縦横を同値に */
+  height: 30px;
+  /* ※縦横を同値に */
+}
+
+.profile-data {
+  cursor: pointer;
+
 }
 </style>

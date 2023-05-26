@@ -3,7 +3,7 @@
     <div class="modal-dialog">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title">アカウント情報編集</h5>
+          <h2 class="modal-title">プロフィール編集</h2>
           <span>
             <nobr>
               <div v-if="!path && $store.state.profile">
@@ -13,37 +13,38 @@
               <img v-else :src="path" alt="選択した画像" class="round-image">
               <br>
               <label for="file-upload" class="custom-file-upload">
-                <i class="fa fa-cloud-upload"></i> プロフィール写真
+                <i class="fa fa-cloud-upload"></i>プロフィール写真を変更
               </label>
-              <input id="file-upload" type="file" @change="saveUserImg">
+              <input id="file-upload" type="file"   @change="saveUserImg">
             </nobr>
             <br>
+            <br>
             <nobr>
-              アカウント名：
+              アカウント名
               <input type="text" v-model="changeUserName">
               <br>
-              パスワード：
-              <div style="position: relative;">
-                <span v-show="!showPassword">
-                  <input  type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
-                  <a  @click="showPassword = !showPassword">
-                    <img style="width: 3%;" src="../assets/system/eye.png" alt="">
+              パスワード
+              <span >
+                <span v-show="!showPassword" style="position: relative;">
+                  <input type="password" v-model="changeUserPassword" placeholder="新しいパスワード">
+                  <a  @click="showPassword = !showPassword" style=" margin-left: -18px; ">
+                    <img  style="width: 13px; height: 8px;margin-bottom: 1px;" src="../assets/system/eye.png" alt="">
                   </a>
                 </span>
-                <span v-show="showPassword">
+                <span v-show="showPassword" style="position: relative;">
                   <input type="text" v-model="changeUserPassword" placeholder="新しいパスワード">
-                  <a @click="showPassword = !showPassword">
-                    <img style="width: 2.8%;" src="../assets/system/noeye.png" alt="">
+                  <a  @click="showPassword = !showPassword" style=" margin-left: -18px; ">
+                    <img style="width: 13px; height: 10px;" src="../assets/system/noeye.png" alt="">
                   </a>
                 </span>
-              </div>
+              </span>
               <br>
-              自己紹介:
+              自己紹介
               <br>
               <textarea v-model="changeUserIntroduction" cols="30" rows="10" placeholder="例:はじめまして！〇〇といいます.."
                 style="display: inline-block;"></textarea>
               <br>
-              性別:
+              性別
               <select v-model="changeUserSex">
                 <option disabled selected value="">選択してください</option>
                 <option value="男性">男性</option>
@@ -51,7 +52,7 @@
                 <option value="答えたくない" selected>答えたくない</option>
               </select>
               <br>
-              生年月日:
+              生年月日
               <div>
                 <select @click.once="year" v-model="selectedYear" ref="yearSelect">
                   <option value=""> {{ y }} 年</option>
@@ -71,7 +72,7 @@
               <br>
             </nobr>
           </span>
-          <button type="button" class="close-button" @click="$emit('close')">
+          <button  class="close-button" @click="$emit('close')">
             <span>&times;</span>
           </button>
         </div>
@@ -79,9 +80,10 @@
           <slot></slot>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-primary" @click="saveUserChange">保存</button>
-          <button type="button" class="btn btn-secondary" @click="$emit('close')">キャンセル</button>
+          <button type="button" class="btn btn-primary" @click="saveUserChange">送信する</button>
+          <!--<button type="button" class="btn btn-secondary" @click="$emit('close')">キャンセル</button>-->
         </div>
+        <br>
       </div>
     </div>
   </div>
@@ -221,7 +223,8 @@ export default {
 }
 </script>
   
-<style>
+<style >
+
 .modal {
   display: block;
   position: fixed;
@@ -235,7 +238,8 @@ export default {
 }
 
 .modal-dialog {
-  margin: 10% auto;
+  margin: auto;
+  margin-top: 5%;
   width: 50%;
   min-width: 300px;
 }
@@ -244,13 +248,20 @@ export default {
   background-color: #fefefe;
   border-radius: 5px;
   box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  text-align: center;
+}
+.modal-content-large {
+  width: 30px; /* モーダルの幅を変更するスタイル */
+}
+.modal-large {
+  width: 80000000px; /* モーダルの幅を変更するスタイル */
 }
 
 .modal-header {}
 
 .modal-footer {
   padding: 10px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   border-radius: 5px 5px 0 0;
 }
 
@@ -266,7 +277,7 @@ export default {
   position: absolute;
   right: 10px;
   top: 5px;
-  color: #aaa;
+  color: #ffffff;
   font-size: 28px;
   font-weight: bold;
 }
@@ -277,4 +288,30 @@ export default {
   text-decoration: none;
   cursor: pointer;
 }
+
+.custom-file-upload {
+  background-color: #ffffff;
+  color: #0878f0bf;
+  border: 1px solid #ffffff;
+  display: inline-block;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 11px;
+}
+
+input[type="file"]{
+  display: none;
+
+}
+
+button[type="button"]{
+  background-color: #0878f09a;
+  color: #ffffff;
+  border: none;
+  border-radius: 9px;
+  padding: 5px;
+  margin-top: 0px;
+  cursor: pointer;
+}
+
 </style>

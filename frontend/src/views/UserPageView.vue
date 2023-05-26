@@ -25,7 +25,7 @@
                 :followComponentTittle="followComponentTittle"
                 />
                 <br><br>
-            </nobr>
+            </nobr> 
         </div>
         <hr>
         <!-- poststable {{ userDatas }} <br>

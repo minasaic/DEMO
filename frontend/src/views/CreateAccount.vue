@@ -5,22 +5,22 @@
             <img src="../assets/system/mainlogo.png" alt="LOGO" width="400" height="100">
             <br><br><br><br>
             <br><br>
-            <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" />
+            <input type="id" name="username" v-model=valueName placeholder="ユーザーネーム" style="font-size:30px;" @input="validateInput"/>
             <br><br>
             <div style="position: relative;">
-                <div v-show="!showPassword">
+                <div v-show="!showPassword" style="position: relative;">
                     <input type="password" name="userpass" v-model=valuePass
                         placeholder="パスワード" style="font-size:30px;" />
-                    <a @click="showPassword = !showPassword">
-                        <img style="width: 2%;" src="../assets/system/noeye.png" alt="">
+                    <a @click="showPassword = !showPassword" style=" margin-left: -23px;">
+                        <img style="width: 20px; height: 15px;margin-bottom: 2px;" src="../assets/system/eye.png" alt="">
                     </a>
                 </div>
 
-                <div v-show="showPassword">
+                <div v-show="showPassword" style="position: relative;">
                     <input type="text" name="userpass" v-model=valuePass @keyup.enter="logins" placeholder="パスワード"
                         style="font-size:30px;" />
-                    <a @click="showPassword = !showPassword">
-                        <img style="width: 2%;" src="../assets/system/eye.png" alt="">
+                    <a @click="showPassword = !showPassword" style=" margin-left: -23px;">
+                        <img style="width: 20px; height: 20px;" src="../assets/system/noeye.png" alt="">
                     </a>
                 </div>
             </div>
@@ -72,7 +72,7 @@ export default {
                     sessionStorage.setItem('id', response.data.id);
                     sessionStorage.setItem('name', response.data.name);
                     this.getUserData();
-                    alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass + '\n' + store.state.profile);
+                    alert('アカウントが新規作成しました。' + '\nID : ' + store.state.id + '\n' + 'PASSWORD : ' + this.valuePass);
                 } else {
                     alert('既に同じ名前が存在しています。\n別の名前で登録してください。');
                 }
@@ -91,6 +91,9 @@ export default {
                 alert(error)
             })
         },
+        validateInput() {
+            this.valueName = this.valueName.replace(/[^A-Za-z0-9_]/g, '');
+        }
     }
 }
 </script>

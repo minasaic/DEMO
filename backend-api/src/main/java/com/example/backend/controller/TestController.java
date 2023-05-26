@@ -88,7 +88,7 @@ class TestController {
                     + file.getOriginalFilename();
             file.transferTo(new File(filePath));
             String staticPath = timestamp + file.getOriginalFilename(); // データベースに保存するファイルネーム
-            
+
             return testService.update(staticPath, id, name, password, introduction, sex, birthday);
         } catch (IOException e) {
             return null;
@@ -234,19 +234,22 @@ class TestController {
         return testService.judge(fol.getFollowerid(), fol.getFollowingid());
     }
 
+    
     // 投稿削除
     @PostMapping(path = "/deletepost")
     public boolean deletePost(@RequestBody Integer id) {
-        String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/"
-                + testService.getPath(id);
-        File file = new File(imagePath);
-        if (file.exists()) {
-            file.delete();
-            testService.deletePost(id);
-            return true;
-        } else {
-            return false;
+        String[] s = testService.getPath(id).split(",");
+
+        for (int i = 0; i < s.length - 1; i++) {
+            String imagePath = "/Users/saimina/project/ojt-training/DEMO/frontend/src/assets/post/"
+                    + s[i];
+            File file = new File(imagePath);
+            if (file.exists()) {
+                file.delete();
+            }
         }
+        testService.deletePost(id);
+        return true;
     }
 
     // ユーザーのプロフィール画像とアカウント名を取ってくる

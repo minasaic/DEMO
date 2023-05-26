@@ -5,19 +5,18 @@
                 <div class="sua">
                     <a class="prev-button" @click="prevImage">&lt;</a>
                     <img class="suba" :src="getVueCliUrlPost" alt="post">
-                    <!-- <div v-for="(imageName) in imageNames" :key="imageName">
-                    </div> -->
+                    <div class="current-image">{{ currentImageIndex + 1 }} / {{ imageNames.length }}</div>
                     <a class="next-button" @click="nextImage">&gt;</a>
                 </div>
                 <nobr class="qaz">
                     <div class="post-info">
                         <div class="post-top">
                             <a v-if="!showDeleteButton" @click="setStoreUserId" class="qwe">
-                                <img v-if="qwerty.profile_picture" id="aaa"
+                                <img v-if="qwerty.profile_picture != null" id="aaa"
                                     :src="getVueCliUrlProfile(qwerty.profile_picture)" alt="asdf"><b>{{ qwerty.name }}</b>
                             </a>
                             <a v-else @click="goToMyPage" class="qwe">
-                                <img v-if="qwerty.profile_picture" id="aaa"
+                                <img v-if="qwerty.profile_picture != null" id="aaa"
                                     :src="getVueCliUrlProfile(qwerty.profile_picture)" alt="asdf"><b>{{ qwerty.name }}</b>
                             </a>
                             <span class="mypage-caption">&nbsp;{{ homeTableObject.caption }}</span><br>
@@ -41,7 +40,6 @@
                                         </span>
                                     </li>
                                 </ul>
-
                             </div>
                         </div>
                     </div>
@@ -53,8 +51,8 @@
                                         <div class="heart">
                                         </div>
                                     </a>
-                                    <a v-show="show" class="heart-button" v-bind:class="{ active: show }"
-                                        @click="deleteLike">
+                                    <!-- <a v-show="show" class="heart-button" v-bind:class="{ active: show }" -->
+                                    <a v-show="show" class="heart-button active" @click="deleteLike">
                                         <div class="heart">
                                         </div>
                                     </a>
@@ -74,7 +72,6 @@
                     </div>
                 </nobr>
                 <a class="close-button" @click="$emit('close')">X</a>
-
             </div>
         </div>
     </div>
@@ -116,10 +113,9 @@ export default {
             currentImageIndex: 0,
         }
     },
-
     computed: {
         getVueCliUrlPost() {
-            if(this.imageNames[0] == undefined) {
+            if (this.imageNames[0] == undefined) {
                 const imgs = this.homeTableObject.image.split(',')
                 const imgss = imgs.filter(img => img.trim() !== '');
                 imgss.forEach(img => {
@@ -136,11 +132,14 @@ export default {
 
     },
     methods: {
-        
         setStoreUserId() {
             store.commit('SETUSERID', this.homeTableObject.userid);
             sessionStorage.setItem('user_id', this.homeTableObject.userid);
-            this.$router.push('/userpage')
+            if (window.location.pathname === '/userpage') {
+                location.reload();
+            } else {
+                this.$router.push('/userpage');
+            }
         },
         showTextarea() {
             this.showText = true
@@ -180,22 +179,29 @@ export default {
         deletePost() {
             Service.post('deletepost', this.homeTableObject.id).then(response => {
                 console.log(response);
-                alert('削除しました。')
+                alert('削除しました。');
+                this.$emit('refresh-page');
             }).catch(error => {
                 alert(error)
             })
         },
 
         goToMyPage() {
-            this.$router.push('/mypage');
+            if (this.$route.path != '/mypage') {
+                this.$router.push('/mypage');
+            }
         },
         goToUserPage(userId) {
             if (userId == store.state.id) {
                 this.goToMyPage();
             } else {
-                store.commit('SETUSERID', userId);
                 sessionStorage.setItem('user_id', userId);
-                this.$router.push('/userpage')
+                store.commit('SETUSERID', userId);
+                if (window.location.pathname === '/userpage') {
+                    location.reload();
+                } else {
+                    this.$router.push('/userpage');
+                }
             }
         },
         deleteLike() {
@@ -220,28 +226,25 @@ export default {
                 this.currentImageIndex++;
             }
         },
-        
-
     },
     filters: {
         formatDate(dateString) {
             // 日付文字列をDateオブジェクトに変換する
             const date = new Date(dateString);
-
+            console.log(date);
             // 現在の日付を取得する
             const now = new Date();
 
             // 日付の差をミリ秒単位で計算する
             const diff = now - date;
-
             // 日付の差を日数に変換する
             const dayDiff = Math.floor(diff / (1000 * 60 * 60 * 24));
             const hourDiff = Math.floor(diff / (1000 * 60 * 60));
             const minDiff = Math.floor(diff / (1000 * 60));
             // 日付の差に応じて適切な表記に変換する
-            if (dayDiff === 0) {
+            if (dayDiff <= 0) {
                 // 今日の場合
-                if (hourDiff === 0) {
+                if (hourDiff <= 0) {
                     // 1時間以内の場合
                     if (minDiff <= 1) {
                         return '1分以内';
@@ -265,6 +268,17 @@ export default {
 </script>
 
 <style>
+.current-image {
+    position: absolute;
+    top: 10px;
+    right: 420px;
+    background-color: rgba(39, 38, 38, 0.5);
+    color: white;
+    padding: 5px;
+    font-size: 12px;
+    border-radius: 20%;
+}
+
 #aaa {
     margin-right: 5px;
     /* 画像と名前の間に余白を設ける */
@@ -280,6 +294,7 @@ export default {
 
 .post-top {
     text-align: left;
+    max-width: 407px;
     margin-left: 5px;
     margin-top: 10px;
 }
@@ -296,6 +311,7 @@ hr {
     width: 100%;
     height: 100%;
     max-width: 600px;
+    min-width: 588px;
     display: block;
     border-radius: 5px;
 }
@@ -318,17 +334,13 @@ hr {
     /* ボタン要素の大きさや色 */
     position: relative;
     display: inline-block;
-    background-color: #f2eaea;
     padding: 0.5em 1em;
     border-radius: 10px;
-    border: 0px solid transparent;
+    /* border: 0px solid transparent; こここ*/
+    border: none;
 
     /* ボタンの文字の設定 */
-    font-family: 'Quicksand', sans-serif;
-    font-weight: bold;
     font-size: 10px;
-    color: #ed7878;
-    letter-spacing: 0.3em;
 
     /* その他必要なスタイル */
     transition: all 0.3s ease;
@@ -340,7 +352,7 @@ hr {
 .heart-button::before,
 .heart-button::after {
     content: "";
-    background-size: contain;
+    /* background-size: contain; */
     background-repeat: no-repeat;
     width: 20px;
     height: 20px;
@@ -365,19 +377,23 @@ hr {
 /* ========= ホバー時のスタイル ======== */
 
 /* ボタンホバー時のスタイル */
-.heart-button:hover {
-    background-color: #ed7878;
-    border-color: #ffffff;
-    color: #e3d7d7;
-}
+.heart-button:hover {}
 
 /* ボタンホバー時の左上のハートのスタイル */
 .heart-button:hover::before {
     animation: heart 1.5s infinite ease-out;
 }
 
+.heart-button.active::before {
+    animation: heart 1.5s infinite ease-out;
+}
+
 /* ボタンホバー時の右下のハートのスタイル */
 .heart-button:hover::after {
+    animation: heart 1.5s 0.2s infinite ease-out;
+}
+
+.heart-button.active::after {
     animation: heart 1.5s 0.2s infinite ease-out;
 }
 
@@ -407,9 +423,6 @@ hr {
 
     /* ボタン本体のスタイル */
     .heart-button {
-        background-color: #fff;
-        border-color: #ef4b53;
-        color: #ef4b53;
         align-items: center;
         justify-content: flex-start;
     }
@@ -425,9 +438,66 @@ hr {
     }
 }
 
+/* ハートアイコン */
+.heart {
+    position: relative;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    margin-right: 0.3em;
+    margin-left: -0.3em;
+    margin-top: 3px;
+}
+
+.heart::before,
+.heart::after {
+    position: absolute;
+    content: "";
+    left: 12.5px;
+    top: 0;
+    width: 12.5px;
+    height: 20px;
+    border-radius: 12.5px 12.5px 0 0;
+    transform: rotate(-45deg);
+    transform-origin: 0 100%;
+}
+
+.heart::before {
+    background-color: #bebebe;
+    /* 灰色の塗りつぶし */
+    border: 1px solid #bebebe;
+}
+
+.heart::after {
+    left: 0;
+    transform: rotate(45deg);
+    transform-origin: 100% 100%;
+    background-color: #bebebe;
+    /* 灰色の塗りつぶし */
+    border: 1px solid #bebebe;
+
+
+}
+
+.heart-button:hover .heart::before,
+.heart-button:hover .heart::after {
+    background-color: #e41515;
+    border: 1px solid #e41515;
+    /* 赤線の色 */
+}
+
+/* いいねした時のスタイル */
+.heart-button.active .heart::before,
+.heart-button.active .heart::after {
+    background-color: #e41515;
+    border: 1px solid #e41515;
+    /* 赤線の色 */
+}
+
+
 .chikara {
     display: inline-block;
-    border-radius: 5%;
+    border-radius: 12%;
     /* 角丸       */
     font-size: 12pt;
     /* 文字サイズ */
@@ -437,24 +507,24 @@ hr {
     /* カーソル   */
     padding: 6px 8px;
     /* 余白       */
-    background: #37a3ea;
+    background: #ffffff;
     /* 背景色     */
-    color: #ffffff;
+    color: #666666b7;
     /* 文字色     */
     line-height: 1em;
     /* 1行の高さ  */
     transition: .3s;
     /* なめらか変化 */
-    border: 2px solid #ffffff;
+    border: 1px solid #7c7c7c65;
     /* 枠の指定 */
 }
 
 .chikara:hover {
     box-shadow: none;
     /* カーソル時の影消去 */
-    color: #33a1d4;
+    color: #21262861;
     /* 背景色     */
-    background: #ffffff;
+    background: #cacaca2b;
     /* 文字色     */
 }
 
@@ -513,6 +583,8 @@ a:hover {
     margin-top: 10px;
     margin-left: 10px;
     margin-bottom: 5px;
+    max-width: 405px;
+    word-wrap: break-word;
 }
 
 .mypage-time {
@@ -547,7 +619,8 @@ a:hover {
 }
 
 .comment-box {
-    margin-top: 0px;
+    margin-top: -3px;
+    margin-bottom: px;
     display: flex;
     /* flex-direction: column; */
 }
@@ -613,73 +686,24 @@ a:hover {
     cursor: pointer;
 }
 
-/* ハートアイコン */
-.heart {
-    position: relative;
-    display: inline-block;
-    width: 18px;
-    height: 18px;
-    margin-right: 0.3em;
-    margin-left: -0.3em;
-    margin-top: 3px;
-}
-
-.heart:before,
-.heart:after {
-    position: absolute;
-    content: "";
-    left: 12.5px;
-    top: 0;
-    width: 12.5px;
-    height: 20px;
-    background: rgb(255, 47, 47);
-    border-radius: 12.5px 12.5px 0 0;
-    transform: rotate(-45deg);
-    transform-origin: 0 100%;
-}
-
-.heart:after {
-    left: 0;
-    transform: rotate(45deg);
-    transform-origin: 100% 100%;
-}
-
-.heart-button:hover .heart:before,
-.heart-button:hover .heart:after {
-    background-color: rgb(239, 229, 230);
-}
-
-/* いいねした時のスタイル */
-
-.heart-button.active {
-    background-color: #ed7878;
-    border-color: #ffffff;
-    color: #e3d7d7;
-}
-
-.heart-button.active .heart:before,
-.heart-button.active .heart:after {
-    background-color: #fff;
-}
-
 .prev-button,
 .next-button {
-  position: absolute;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 10px;
-  color: #1616165e;
-  font-weight: bold;
-  /* border: none; */
-  font-size: 40px;
-  
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    padding: 10px;
+    color: #1616165e;
+    font-weight: bold;
+    /* border: none; */
+    font-size: 40px;
+
 }
 
 .prev-button {
-  left: -1%;
+    left: -1%;
 }
 
 .next-button {
-  right: 40.5%;
+    right: 40.5%;
 }
 </style>
